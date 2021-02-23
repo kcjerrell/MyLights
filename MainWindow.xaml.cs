@@ -64,7 +64,7 @@ namespace MyLights
 
         private void LightPanel_FlyoutRequest(object sender, Views.FlyoutRequestEventArgs e)
         {
-            //MessageBoxResult result = System.Windows.MessageBox.Show(((LightViewModel)e.Source.DataContext).Name);
+            MessageBoxResult result = System.Windows.MessageBox.Show(((LightViewModel)e.Source.DataContext).Name);
         }
     }
 

@@ -12,6 +12,7 @@
 
   <ItemGroup>
     <PackageReference Include="Extended.Wpf.Toolkit" Version="4.0.2" />
+    <PackageReference Include="FluentWPF" Version="0.8.0" />
     <PackageReference Include="Flurl.Http" Version="3.0.1" />
     <PackageReference Include="Fody" Version="6.3.0">
       <PrivateAssets>all</PrivateAssets>

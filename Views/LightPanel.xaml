@@ -57,16 +57,20 @@
                     <ControlTemplate TargetType="{x:Type ToggleButton}">
                         <Grid>
 
-                            <Ellipse x:Name="border" Fill="{DynamicResource LightPowerFillBrush}" StrokeThickness="{TemplateBinding BorderThickness}" 
-                                Stroke="{TemplateBinding BorderBrush}" SnapsToDevicePixels="true">
+                            <Ellipse x:Name="border" Fill="{DynamicResource LightPowerFillBrush}" 
+                                     StrokeThickness="{TemplateBinding BorderThickness}" 
+                                     Stroke="{TemplateBinding BorderBrush}" SnapsToDevicePixels="true">
 
                                 <Ellipse.Resources>
-                                    <SolidColorBrush x:Key="LightPowerFillBrush" Color="{Binding Power, Converter={StaticResource PowerCircleColorConverter}}"/>
+                                    <SolidColorBrush x:Key="LightPowerFillBrush" 
+                                                     Color="{Binding Power, Converter={StaticResource PowerCircleColorConverter}}"/>
                                 </Ellipse.Resources>
                             </Ellipse>
 
-                            <ContentPresenter x:Name="contentPresenter" Focusable="False" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" 
-                                              Margin="{TemplateBinding Padding}" RecognizesAccessKey="True" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" 
+                            <ContentPresenter x:Name="contentPresenter" Focusable="False" 
+                                              HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" 
+                                              Margin="{TemplateBinding Padding}" RecognizesAccessKey="True" 
+                                              SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" 
                                               VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
 
                         </Grid>
@@ -74,7 +78,8 @@
                         <ControlTemplate.Triggers>
 
                             <Trigger Property="Button.IsDefaulted" Value="true">
-                                <Setter Property="Stroke" TargetName="border" Value="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}"/>
+                                <Setter Property="Stroke" TargetName="border" 
+                                        Value="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}"/>
                             </Trigger>
 
                             <Trigger Property="IsMouseOver" Value="true">
@@ -90,7 +95,8 @@
                             <Trigger Property="IsEnabled" Value="false">
                                 <Setter Property="Fill" TargetName="border" Value="{StaticResource Button.Disabled.Background}"/>
                                 <Setter Property="Stroke" TargetName="border" Value="{StaticResource Button.Disabled.Border}"/>
-                                <Setter Property="TextElement.Foreground" TargetName="contentPresenter" Value="{StaticResource Button.Disabled.Foreground}"/>
+                                <Setter Property="TextElement.Foreground" TargetName="contentPresenter" 
+                                        Value="{StaticResource Button.Disabled.Foreground}"/>
                             </Trigger>
 
                         </ControlTemplate.Triggers>
@@ -106,15 +112,9 @@
 
     </UserControl.Resources>
 
-    <Border Background="#DDD">
+    <Border Background="#0000">
         <Grid>
-            <ListBox ItemsSource="{Binding LightVMs, Mode=OneWay, Source={StaticResource Locator}}">
-                <ListBox.ItemContainerStyle>
-                    <Style TargetType="ListBoxItem">
-                        <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
-                        <EventSetter/>
-                    </Style>
-                </ListBox.ItemContainerStyle>
+            <ItemsControl ItemsSource="{Binding LightVMs, Mode=OneWay, Source={StaticResource Locator}}">
 
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
@@ -136,17 +136,7 @@
 
                             <Border x:Name="lightItemLeft" Grid.Column="0"  Margin="0" Background="{DynamicResource LightItemBackground}" BorderBrush="{DynamicResource LightItemBorder}" BorderThickness="1,1,0,1" 
                                     CornerRadius="0" Padding="4" SnapsToDevicePixels="True">
-                                <ToggleButton Style="{DynamicResource LightPowerButton}" IsChecked="{Binding Power}" Content="{Binding Index}" SnapsToDevicePixels="True" BorderBrush="#44222222">
-
-                                    <!--
-                                    <Ellipse MouseEnter="Ellipse_MouseEnter" MouseLeave="Ellipse_MouseLeave" Margin="0" 
-                                         Fill="{DynamicResource fillBrush}" 
-                                         Stroke="#FFCCCCCC" StrokeThickness="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
-                                         >
-                                       
-                                    </Ellipse>
-                                    -->
-                                </ToggleButton>
+                                <ToggleButton Style="{DynamicResource LightPowerButton}" IsChecked="{Binding Power}" Content="{Binding Index}" SnapsToDevicePixels="True" BorderBrush="#44222222"/>
                             </Border>
 
                             <Border x:Name="lightItemMiddle" Grid.Column="1"  Margin="0" Background="{DynamicResource LightItemBackground}" BorderBrush="{DynamicResource LightItemBorder}" BorderThickness="0,1,0,1" SnapsToDevicePixels="True">
@@ -178,7 +168,7 @@
                         </Grid>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
-            </ListBox>
+            </ItemsControl>
         </Grid>
     </Border>
 </UserControl>

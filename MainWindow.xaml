@@ -5,8 +5,9 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
         xmlns:local="clr-namespace:MyLights" xmlns:vm="clr-namespace:MyLights.ViewModels" xmlns:views="clr-namespace:MyLights.Views"
+        xmlns:fw="clr-namespace:SourceChord.FluentWPF;assembly=FluentWPF"
         xmlns:wpft="http://schemas.xceed.com/wpf/xaml/toolkit"
-        mc:Ignorable="d"
+        mc:Ignorable="d" fw:AcrylicWindow.Enabled="True"
         Title="MainWindow" Height="450" Width="800" MouseLeftButtonDown="Window_MouseLeftButtonDown">
 
     <Window.DataContext>
@@ -15,53 +16,73 @@
 
     <Window.Resources>
         <local:SelectableBehaviorSelection x:Key="mainBoardSelection" GroupName="mainBoard"/>
+        <SolidColorBrush x:Key="overlayShade" Color="#00222222"/>
     </Window.Resources>
-    <Border Background="Gray">
 
-        <Grid>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="200"/>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="200"/>
-            </Grid.ColumnDefinitions>
+    <Grid x:Name="windowRoot">
 
-            <views:LightPanel FlyoutRequest="LightPanel_FlyoutRequest"/>
+        <Canvas x:Name="overlayCanvas" Panel.ZIndex="100" Background="{DynamicResource overlayShade}">
 
-            <Canvas Background="LightGray" Margin="5" Grid.Column="1">
+            <Canvas.Effect>
+                <DropShadowEffect/>
+            </Canvas.Effect>
 
-                <local:LampA x:Name="lampA" Margin="0" Height="200" Canvas.Left="125" Canvas.Top="90">
-                    <i:Interaction.Behaviors>
-                        <local:SelectableBehavior SelectionGroup="mainBoard"/>
-                    </i:Interaction.Behaviors>
+            <Border Width="150" Height="150" Background="#DDD" Canvas.Left="217" Canvas.Top="17" Visibility="Collapsed">
+                <TextBlock TextWrapping="Wrap">I am a flyout with lots of info or buttons or something</TextBlock>
+            </Border>
 
-                </local:LampA>
+        </Canvas>
 
-            </Canvas>
+        <Border Background="#88AAAAAA" Panel.ZIndex="0">
 
-            <Grid Grid.Column="2" DataContext="{Binding SelectedItem, ElementName=lightList}">
+            <Grid x:Name="layoutRoot">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="200"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="200"/>
                 </Grid.ColumnDefinitions>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="*"/>
-                    <RowDefinition Height="Auto"/>
-                </Grid.RowDefinitions>
+
+                <views:LightPanel FlyoutRequest="LightPanel_FlyoutRequest"/>
+
+                <Canvas Background="LightGray" Margin="5" Grid.Column="1">
+
+                    <local:LampA x:Name="lampA" Margin="0" Height="200" Canvas.Left="125" Canvas.Top="90">
+                        <i:Interaction.Behaviors>
+                            <local:SelectableBehavior SelectionGroup="mainBoard"/>
+                        </i:Interaction.Behaviors>
+
+                    </local:LampA>
+
+                </Canvas>
+
+                <Grid Grid.Column="2" DataContext="{Binding SelectedItem, ElementName=lightList}">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
 
 
-                <TextBlock Margin="5" Text="{Binding Name, Mode=OneWay}" Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2"/>
-                <TextBlock Margin="5" Text="Power" Grid.Row="1"/>
-                <CheckBox Margin="5" Grid.Row="1" Grid.Column="1" IsChecked="{Binding Power}"/>
+                    <TextBlock Margin="5" Text="{Binding Name, Mode=OneWay}" Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2"/>
+                    <TextBlock Margin="5" Text="Power" Grid.Row="1"/>
+                    <CheckBox Margin="5" Grid.Row="1" Grid.Column="1" IsChecked="{Binding Power}"/>
 
-                <TextBlock Margin="5" Text="Color" Grid.Row="2"/>
-                <wpft:ColorPicker x:Name="colorPicker" Margin="5" Grid.Row="2" Grid.Column="1" ColorMode="ColorCanvas" SelectedColor="{Binding Color}"/>
+                    <TextBlock Margin="5" Text="Color" Grid.Row="2"/>
+                    <wpft:ColorPicker x:Name="colorPicker" Margin="5" Grid.Row="2" Grid.Column="1" ColorMode="ColorCanvas" SelectedColor="{Binding Color}"/>
 
-                <Button Content="Fun" Grid.Row="4" Margin="5" Command="{Binding DataContext.FunCommand, ElementName=window, Mode=OneWay}"/>
-                <Button Content="Blink" Grid.Row="4" Grid.Column="1" Margin="5" Command="{Binding DataContext.BlinkCommand, ElementName=window, Mode=OneWay}"/>
+                    <Button Content="Fun" Grid.Row="4" Margin="5" Command="{Binding DataContext.FunCommand, ElementName=window, Mode=OneWay}"/>
+                    <Button Content="Blink" Grid.Row="4" Grid.Column="1" Margin="5" Command="{Binding DataContext.BlinkCommand, ElementName=window, Mode=OneWay}"/>
+                </Grid>
             </Grid>
-        </Grid>
-    </Border>
+        </Border>
+
+    </Grid>
+
+
 </Window>
