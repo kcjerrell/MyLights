@@ -1,0 +1,46 @@
+Authorization Key
+Access ID/Client ID: vc8ksfa5achz2qp2arkx
+Access Secret/Client Secret: 9a8248a546844b6e80b7bc2a952e05fe
+
+iOS Bundle ID: com.chimerax.mylights
+Android Package Name: com.chimerax.mylights
+URL Scheme: chimeraxmylights
+
+Device VirtualIDs
+ebf1e92bd63d8c059dbcvn
+ebf8d36fec611039bbggej
+
+ id                        key                 ip              name
+'eba040c47ea782ca16eiad', '920ebd015ebfd481', '192.168.0.21', 'Up'))
+'eb2773e38adbb12683puvk', 'aa736ffedbe56ec8', '192.168.0.23', 'UpRight'))
+'ebf1e92bd63d8c059dbcvn', '1022bf390de07246', '192.168.0.18', 'DownRight'))
+'eb32d7cd40417c0f6addl9', '4b29203ead0de281', '192.168.0.22', 'DownLeft'))
+'ebf8d36fec611039bbggej', '50dad0673f4febbc', '192.168.0.17', 'UpLeft'))
+
+
+DPS indexes:
+	Type A:
+		1: Power
+		2: Mode
+		3: Brightness
+		4: Colortemp
+		5: Color
+
+	Type B:
+		20: Power
+		21: Mode
+		22: Brightness
+		23: Colortemp
+		24: Color
+		25: Scene?
+		26: Timer?
+		27: Music?
+
+DPS_INDEX_ON = {'A': '1', 'B': '20'}         
+    DPS_INDEX_MODE = {'A': '2', 'B': '21'}
+    DPS_INDEX_BRIGHTNESS = {'A': '3', 'B': '22'}
+    DPS_INDEX_COLOURTEMP = {'A': '4', 'B': '23'}
+    DPS_INDEX_COLOUR = {'A': '5', 'B': '24'}
+    DPS_INDEX_SCENE = {'A': '2', 'B': '25'}
+    DPS_INDEX_TIMER = {'A': None, 'B': '26'}
+    DPS_INDEX_MUSIC = {'A': None, 'B': '27'}
