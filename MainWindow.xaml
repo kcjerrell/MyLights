@@ -25,7 +25,7 @@
                 <ColumnDefinition Width="200"/>
             </Grid.ColumnDefinitions>
 
-            <views:LightPanel/>
+            <views:LightPanel FlyoutRequest="LightPanel_FlyoutRequest"/>
 
             <Canvas Background="LightGray" Margin="5" Grid.Column="1">
 

@@ -23,6 +23,34 @@ namespace MyLights.Views
         public LightPanel()
         {
             InitializeComponent();
+            AddHandler(MouseLeftButtonUpEvent, new MouseButtonEventHandler(SomeMouseLeftButtonUp), true);
         }
+
+
+        private void SomeMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            if (clicked_on != null && clicked_on.IsMouseOver)
+            {
+                var handler = FlyoutRequest;
+                handler?.Invoke(this, new FlyoutRequestEventArgs() { Source = clicked_on });
+            }
+            clicked_on = null;
+        }
+
+        private FrameworkElement clicked_on;
+        private void lightItemRoot_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            clicked_on = (FrameworkElement)sender;
+        }
+
+        public event FlyoutRequestEventHandler FlyoutRequest;
+
+    }
+
+    public delegate void FlyoutRequestEventHandler(object sender, FlyoutRequestEventArgs e);
+
+    public class FlyoutRequestEventArgs : EventArgs
+    {
+        public FrameworkElement Source { get; set; }
     }
 }

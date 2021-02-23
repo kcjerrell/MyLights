@@ -14,6 +14,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Flurl;
 using Flurl.Http;
+using MyLights.ViewModels;
 using Xceed.Wpf.Toolkit;
 
 namespace MyLights
@@ -59,6 +60,11 @@ namespace MyLights
         private void Window_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
 
+        }
+
+        private void LightPanel_FlyoutRequest(object sender, Views.FlyoutRequestEventArgs e)
+        {
+            //MessageBoxResult result = System.Windows.MessageBox.Show(((LightViewModel)e.Source.DataContext).Name);
         }
     }
 

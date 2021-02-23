@@ -18,7 +18,7 @@
 
         <Util:BoolToObjectsConverter x:Key="PowerCircleColorConverter" FalseValue="Red" TrueValue="#FF5DFF00" />
 
-        <xctk:ColorToSolidColorBrushConverter x:Key="ColorToSolidColorBrushConverter"/>
+        <Util:BrushCache x:Key="BrushCache"/>
 
         <Style x:Key="FocusVisual">
             <Setter Property="Control.Template">
@@ -108,7 +108,14 @@
 
     <Border Background="#DDD">
         <Grid>
-            <ItemsControl ItemsSource="{Binding LightVMs, Mode=OneWay, Source={StaticResource Locator}}" >
+            <ListBox ItemsSource="{Binding LightVMs, Mode=OneWay, Source={StaticResource Locator}}">
+                <ListBox.ItemContainerStyle>
+                    <Style TargetType="ListBoxItem">
+                        <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                        <EventSetter/>
+                    </Style>
+                </ListBox.ItemContainerStyle>
+
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
                         <StackPanel/>
@@ -117,7 +124,7 @@
 
                 <ItemsControl.ItemTemplate>
                     <DataTemplate DataType="vm:LightViewModel">
-                        <Grid x:Name="lightItemRoot" Height="35" Margin="0,2,2,2">
+                        <Grid x:Name="lightItemRoot" Height="35" Margin="0,2,2,2" MouseLeftButtonDown="lightItemRoot_MouseLeftButtonDown">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="{Binding Height, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Grid}}}"/>
                                 <ColumnDefinition Width="*"/>
@@ -148,17 +155,30 @@
                             </Border>
 
                             <Border x:Name="lightItemRight" Grid.Column="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="0"
-                                        Background="{Binding Color, Converter={StaticResource ColorToSolidColorBrushConverter}}" 
-                                        CornerRadius="0,16,16,0" BorderBrush="{DynamicResource LightItemBorder}" BorderThickness="0,1,1,1" SnapsToDevicePixels="True">
+                                    Background="{Binding Color, Converter={StaticResource BrushCache}, ConverterParameter=fullv}" 
+                                    CornerRadius="0,16,16,0" BorderBrush="{DynamicResource LightItemBorder}" BorderThickness="0,1,1,1" 
+                                    Panel.ZIndex="0" SnapsToDevicePixels="True">
                                 <i:Interaction.Behaviors>
                                     <Util:CornerRadiusAdjusterBehavior Side="Right"/>
                                 </i:Interaction.Behaviors>
                             </Border>
 
+                            <Border x:Name="lightItemRightBright" Grid.Column="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="0"
+                                    Background="{Binding Color, Converter={StaticResource BrushCache}}" 
+                                    CornerRadius="0,16,16,0" BorderBrush="#00000000" BorderThickness="0,1,1,1" 
+                                    Panel.ZIndex="20" SnapsToDevicePixels="True">
+                                <i:Interaction.Behaviors>
+                                    <Util:CornerRadiusAdjusterBehavior Side="Right"/>
+                                    <Util:ItemClipBehavior ValueMax="0.0" ValueMin="1.0" Value="{Binding V}" FillDirection="Down"/>
+                                </i:Interaction.Behaviors>
+                            </Border>
+
+
+
                         </Grid>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
-            </ItemsControl>
+            </ListBox>
         </Grid>
     </Border>
 </UserControl>

@@ -1,4 +1,5 @@
 ﻿using MyLights.Models;
+using MyLights.Util;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -47,6 +48,15 @@ namespace MyLights.ViewModels
                 color = value;
                 light.SetColor(value);
             }
+        }
+
+        public double V 
+        {
+            get
+            {
+                Helpers.ColorToHSV(Color, out _, out _, out double v);
+                return v;
+            } 
         }
 
         public int Index { get => light.Index; }
