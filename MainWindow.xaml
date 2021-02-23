@@ -25,15 +25,7 @@
                 <ColumnDefinition Width="200"/>
             </Grid.ColumnDefinitions>
 
-            <ListBox x:Name="lightList" ItemsSource="{Binding LightVMs}">
-                <ListBox.ItemTemplate>
-                    <DataTemplate DataType="vm:LightViewModel">
-                        <Border>
-                            <TextBlock Text="{Binding Name}"/>
-                        </Border>
-                    </DataTemplate>
-                </ListBox.ItemTemplate>
-            </ListBox>
+            <views:LightPanel/>
 
             <Canvas Background="LightGray" Margin="5" Grid.Column="1">
 

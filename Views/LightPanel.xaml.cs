@@ -18,9 +18,9 @@ namespace MyLights.Views
     /// <summary>
     /// Interaction logic for LightTrack.xaml
     /// </summary>
-    public partial class LightTrack : UserControl
+    public partial class LightPanel : UserControl
     {
-        public LightTrack()
+        public LightPanel()
         {
             InitializeComponent();
         }

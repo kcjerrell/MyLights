@@ -49,6 +49,8 @@ namespace MyLights.ViewModels
             }
         }
 
+        public int Index { get => light.Index; }
+
         //using the vm should have everything abstracted away
         //lvm.Color = Color.FromRGB(25,,0,0);
         //lvm.Power = false;
