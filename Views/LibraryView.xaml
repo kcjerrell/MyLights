@@ -1,0 +1,61 @@
+﻿<UserControl
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:vm="clr-namespace:MyLights.ViewModels"
+             xmlns:local="clr-namespace:MyLights.Views"
+             xmlns:Util="clr-namespace:MyLights.Util" x:Class="MyLights.Views.LibraryView"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="355.116" d:Background="AliceBlue">
+    <UserControl.Resources>
+        <Util:BrushCache x:Key="BrushCache"/>
+        <Style x:Key="LibraryHeaderStyle" TargetType="{x:Type TextBlock}">
+            <Setter Property="TextWrapping" Value="NoWrap"/>
+            <Setter Property="TextTrimming" Value="None"/>
+        </Style>
+        <Style x:Key="LibraryListBoxStyle" TargetType="{x:Type ListBox}">
+            <Setter Property="ItemsPanel">
+                <Setter.Value>
+                    <ItemsPanelTemplate>
+                        <WrapPanel Orientation="Horizontal" ScrollViewer.VerticalScrollBarVisibility="Disabled"/>
+                    </ItemsPanelTemplate>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="ItemTemplate" Value="{DynamicResource LibraryListItemTemplate}"/>
+        </Style>
+
+        <DataTemplate x:Key="LibraryListItemTemplate" DataType="{x:Type vm:LibraryItemViewModel}">
+            <Border Height="80" Width="80" Background="{Binding Color, Converter={StaticResource BrushCache}}"
+                    BorderBrush="#222222" BorderThickness="1"/>
+        </DataTemplate>
+
+    </UserControl.Resources>
+
+    <UserControl.DataContext>
+        <Binding Mode="OneWay" Path="Library" Source="{StaticResource Locator}"/>
+    </UserControl.DataContext>
+
+    <Grid>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+
+            <TextBlock Grid.Row="0" Style="{DynamicResource LibraryHeaderStyle}" Text="Scenes..."/>
+
+        <ListBox Grid.Row="1" Style="{DynamicResource LibraryListBoxStyle}" ItemsSource="{Binding Scenes}"/>
+
+        <TextBlock Grid.Row="2" Style="{DynamicResource LibraryHeaderStyle}" Text="Sequences..."/>
+
+        <ListBox Grid.Row="3" Style="{DynamicResource LibraryListBoxStyle}"  ItemsSource="{Binding Sequences}"/>
+
+
+
+
+    </Grid>
+</UserControl>

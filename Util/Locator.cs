@@ -13,6 +13,8 @@ namespace MyLights.Util
             IsInDesignMode = DesignerProperties.GetIsInDesignMode(new DependencyObject());
 
             LightBridge = new LightBridge(IsInDesignMode);
+
+            Library = new LibraryViewModel();
         }
 
         internal LightBridge LightBridge { get; }
@@ -20,5 +22,7 @@ namespace MyLights.Util
         public ObservableCollection<LightViewModel> LightVMs { get => LightBridge.LightVMs; }
 
         public bool IsInDesignMode { get; }
+
+        public LibraryViewModel Library { get; private set; }
     }
 }

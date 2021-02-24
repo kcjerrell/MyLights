@@ -7,7 +7,7 @@
         xmlns:local="clr-namespace:MyLights" xmlns:vm="clr-namespace:MyLights.ViewModels" xmlns:views="clr-namespace:MyLights.Views"
         xmlns:fw="clr-namespace:SourceChord.FluentWPF;assembly=FluentWPF"
         xmlns:wpft="http://schemas.xceed.com/wpf/xaml/toolkit"
-        mc:Ignorable="d" fw:AcrylicWindow.Enabled="True"
+        mc:Ignorable="d" 
         Title="MainWindow" Height="450" Width="800" MouseLeftButtonDown="Window_MouseLeftButtonDown">
 
     <Window.DataContext>
@@ -21,7 +21,7 @@
 
     <Grid x:Name="windowRoot">
 
-        <Canvas x:Name="overlayCanvas" Panel.ZIndex="100" Background="{DynamicResource overlayShade}">
+        <Canvas x:Name="overlayCanvas" Panel.ZIndex="100" Background="{DynamicResource overlayShade}" IsHitTestVisible="False" Visibility="Collapsed">
 
             <Canvas.Effect>
                 <DropShadowEffect/>
@@ -44,16 +44,7 @@
 
                 <views:LightPanel FlyoutRequest="LightPanel_FlyoutRequest"/>
 
-                <Canvas Background="LightGray" Margin="5" Grid.Column="1">
-
-                    <local:LampA x:Name="lampA" Margin="0" Height="200" Canvas.Left="125" Canvas.Top="90">
-                        <i:Interaction.Behaviors>
-                            <local:SelectableBehavior SelectionGroup="mainBoard"/>
-                        </i:Interaction.Behaviors>
-
-                    </local:LampA>
-
-                </Canvas>
+                <views:LibraryView Grid.Column="1"/>
 
                 <Grid Grid.Column="2" DataContext="{Binding SelectedItem, ElementName=lightList}">
                     <Grid.ColumnDefinitions>
