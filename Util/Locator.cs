@@ -24,5 +24,17 @@ namespace MyLights.Util
         public bool IsInDesignMode { get; }
 
         public LibraryViewModel Library { get; private set; }
+
+
+        private MainWindowViewModel _mainWindowViewModel;
+        public MainWindowViewModel MainWindowViewModel
+        {
+            get
+            {
+                if (_mainWindowViewModel == null) { _mainWindowViewModel = new MainWindowViewModel(); }
+                return _mainWindowViewModel;
+            }
+        }
+
     }
 }

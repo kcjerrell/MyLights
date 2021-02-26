@@ -8,27 +8,37 @@
         xmlns:fw="clr-namespace:SourceChord.FluentWPF;assembly=FluentWPF"
         xmlns:wpft="http://schemas.xceed.com/wpf/xaml/toolkit"
         mc:Ignorable="d" 
-        Title="MainWindow" Height="450" Width="800" MouseLeftButtonDown="Window_MouseLeftButtonDown">
-
-    <Window.DataContext>
-        <vm:MainWindowViewModel/>
-    </Window.DataContext>
+        Title="MainWindow" Height="450" Width="800" MouseLeftButtonDown="Window_MouseLeftButtonDown"
+        DataContext="{Binding MainWindowViewModel, Source={StaticResource Locator}}">
 
     <Window.Resources>
         <local:SelectableBehaviorSelection x:Key="mainBoardSelection" GroupName="mainBoard"/>
-        <SolidColorBrush x:Key="overlayShade" Color="#00222222"/>
+        <SolidColorBrush x:Key="overlayShade" Color="#77222222"/>
     </Window.Resources>
 
     <Grid x:Name="windowRoot">
 
-        <Canvas x:Name="overlayCanvas" Panel.ZIndex="100" Background="{DynamicResource overlayShade}" IsHitTestVisible="False" Visibility="Collapsed">
+        <Canvas x:Name="overlayCanvas" Panel.ZIndex="100" Visibility="Visible">
 
             <Canvas.Effect>
                 <DropShadowEffect/>
             </Canvas.Effect>
 
-            <Border Width="150" Height="150" Background="#DDD" Canvas.Left="217" Canvas.Top="17" Visibility="Collapsed">
-                <TextBlock TextWrapping="Wrap">I am a flyout with lots of info or buttons or something</TextBlock>
+            <Border x:Name="flyoutShade" Panel.ZIndex="99" Width="{Binding ActualWidth, ElementName=overlayCanvas, Mode=OneWay}" 
+                    Height="{Binding ActualHeight, ElementName=overlayCanvas, Mode=OneWay}"  Background="{DynamicResource overlayShade}"
+                    MouseLeftButtonDown="overlayCanvas_MouseLeftButtonDown" Visibility="Collapsed"/>
+
+            <Border x:Name="flyoutFrame" Width="150" Height="150" Background="#DDD" Canvas.Left="217" Canvas.Top="17" Visibility="Collapsed" Panel.ZIndex="100">
+                <ContentPresenter x:Name="flyoutContent">
+                    <ContentPresenter.Resources>
+                        <DataTemplate DataType="{x:Type vm:LightViewModel}">
+                            <StackPanel>
+                                <Slider/>
+                                <Slider/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ContentPresenter.Resources>
+                </ContentPresenter>
             </Border>
 
         </Canvas>

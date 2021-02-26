@@ -59,6 +59,15 @@ namespace MyLights.ViewModels
             } 
         }
 
+        private double _hue;
+
+        public double Hue
+        {
+            get { return _hue; }
+            set { _hue = value; }
+        }
+
+
         public int Index { get => light.Index; }
 
         //using the vm should have everything abstracted away

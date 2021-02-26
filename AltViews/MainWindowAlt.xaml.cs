@@ -10,20 +10,18 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace MyLights.Views
+namespace MyLights.AltViews
 {
     /// <summary>
-    /// Interaction logic for LibraryView.xaml
+    /// Interaction logic for MainWindowAlt.xaml
     /// </summary>
-    public partial class LibraryView : UserControl
+    public partial class MainWindowAlt : Window
     {
-        public LibraryView()
+        public MainWindowAlt()
         {
-            InitializeComponent();          
-
+            InitializeComponent();
         }
     }
 }

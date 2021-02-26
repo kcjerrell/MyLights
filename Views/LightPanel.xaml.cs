@@ -32,7 +32,11 @@ namespace MyLights.Views
             if (clicked_on != null && clicked_on.IsMouseOver)
             {
                 var handler = FlyoutRequest;
-                handler?.Invoke(this, new FlyoutRequestEventArgs() { Source = clicked_on });
+                handler?.Invoke(this, new FlyoutRequestEventArgs() 
+                { 
+                    Source = clicked_on,
+                    FlyoutPosition = clicked_on.TranslatePoint(new Point(clicked_on.ActualWidth, 0.0), null)
+                });
             }
             clicked_on = null;
         }
@@ -52,5 +56,6 @@ namespace MyLights.Views
     public class FlyoutRequestEventArgs : EventArgs
     {
         public FrameworkElement Source { get; set; }
+        public Point FlyoutPosition { get; set; }
     }
 }

@@ -64,7 +64,22 @@ namespace MyLights
 
         private void LightPanel_FlyoutRequest(object sender, Views.FlyoutRequestEventArgs e)
         {
-            MessageBoxResult result = System.Windows.MessageBox.Show(((LightViewModel)e.Source.DataContext).Name);
+            //MessageBoxResult result = System.Windows.MessageBox.Show(((LightViewModel)e.Source.DataContext).Name);
+
+            if (sender is FrameworkElement element)
+            {
+                Canvas.SetLeft(flyoutFrame, e.FlyoutPosition.X);
+                Canvas.SetTop(flyoutFrame, e.FlyoutPosition.Y);
+                flyoutContent.Content = element.DataContext;
+                flyoutShade.Visibility = Visibility.Visible;
+                flyoutFrame.Visibility = Visibility.Visible;
+            }
+        }
+
+        private void overlayCanvas_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            flyoutShade.Visibility = Visibility.Collapsed;
+            flyoutFrame.Visibility = Visibility.Collapsed;
         }
     }
 

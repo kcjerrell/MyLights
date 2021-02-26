@@ -13,6 +13,11 @@ namespace MyLights.Models
     public class Light
     {
         private JsonBulb jsonBulb;
+        private DateTime lastRESTcall;
+
+        private GatedRESTProperty<bool> powerREST;
+        private GatedRESTProperty<Color> colorREST;
+
 
         public Light(JsonBulb jsonBulb)
         {
@@ -22,6 +27,13 @@ namespace MyLights.Models
             this.Power = jsonBulb.power;
             this.Index = jsonBulb.index;
             this.Name = jsonBulb.name;
+
+            string powerUrl = @"http://localhost:1337/bulbs"
+                                .AppendPathSegment(this.Index.ToString())
+                                .AppendPathSegment("power");
+            Func<bool, string> powerQuery = (b) => "".SetQueryParam("v", b);
+
+            powerREST = new GatedRESTProperty<bool>(powerUrl,powerQuery);
         }
 
 
@@ -47,19 +59,32 @@ namespace MyLights.Models
             this.Color = res.Data[0].Dps.Color.ToColor();
         }
 
-        public async void SetPower(bool power)
+        public void SetPower(bool power)
         {
-            if (this.Power == power)
-                return;
+            //if (this.Power == power)
+            //    return;
+            //
+            //string url = @"http://localhost:1337/bulbs"
+            //                .AppendPathSegment(this.Index.ToString())
+            //                .AppendPathSegment("power")
+            //                .SetQueryParam("v", power);
+            //
+            //var res = await url.GetJsonAsync<JsonDpsRoot>();
+            //
+            //this.Power = res.Data[0].Dps.Power;
 
-            string url = @"http://localhost:1337/bulbs"
-                            .AppendPathSegment(this.Index.ToString())
-                            .AppendPathSegment("power")
-                            .SetQueryParam("v", power);
+            powerREST.SetAndForget(power);
 
-            var res = await url.GetJsonAsync<JsonDpsRoot>();
+            //I generally think this is a good idea. that is, using another class
+            //to limit/schedule calls to lightREST. eitherway, at somewhere in the chain, 
+            //from sliding a thumb for for Hue, to the command received by the lightbulb, 
+            //I forgot how I was gonna end that sentence, so I probably should stop
+            //programming now.
 
-            this.Power = res.Data[0].Dps.Power;
+            //at a minimum, changes sent to the bulb should wait until the previous request
+            //closes. right?
+
+            
         }
 
         //-Scenes

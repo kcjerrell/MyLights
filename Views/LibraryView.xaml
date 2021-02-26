@@ -9,26 +9,102 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="355.116" d:Background="AliceBlue">
     <UserControl.Resources>
+        <Util:MathConverter x:Key="MathConverter"/>
         <Util:BrushCache x:Key="BrushCache"/>
         <Style x:Key="LibraryHeaderStyle" TargetType="{x:Type TextBlock}">
             <Setter Property="TextWrapping" Value="NoWrap"/>
             <Setter Property="TextTrimming" Value="None"/>
+            <Setter Property="FontSize" Value="20"/>
+            <Setter Property="Margin" Value="10,5,0,0"/>
+            <Setter Property="Foreground" Value="#FF222222"/>
+            <Setter Property="HorizontalAlignment" Value="Left"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+        </Style>
+        <Style x:Key="FocusVisual">
+            <Setter Property="Control.Template">
+                <Setter.Value>
+                    <ControlTemplate>
+                        <Rectangle Margin="2" StrokeDashArray="1 2" SnapsToDevicePixels="true" StrokeThickness="1" Stroke="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"/>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <SolidColorBrush x:Key="Button.Static.Background" Color="#FFDDDDDD"/>
+        <SolidColorBrush x:Key="Button.Static.Border" Color="#FF707070"/>
+        <SolidColorBrush x:Key="Button.MouseOver.Background" Color="#FFBEE6FD"/>
+        <SolidColorBrush x:Key="Button.MouseOver.Border" Color="#FF3C7FB1"/>
+        <SolidColorBrush x:Key="Button.Pressed.Background" Color="#FFC4E5F6"/>
+        <SolidColorBrush x:Key="Button.Pressed.Border" Color="#FF2C628B"/>
+        <SolidColorBrush x:Key="Button.Disabled.Background" Color="#FFF4F4F4"/>
+        <SolidColorBrush x:Key="Button.Disabled.Border" Color="#FFADB2B5"/>
+        <SolidColorBrush x:Key="Button.Disabled.Foreground" Color="#FF838383"/>
+        <Style x:Key="LibraryItemButtonStyle" TargetType="{x:Type Button}">
+            <Setter Property="FocusVisualStyle" Value="{StaticResource FocusVisual}"/>
+            <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"/>
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="Padding" Value="1"/>
+            <Setter Property="Margin" Value="2"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <Border x:Name="border" Background="#00000000" BorderThickness="0" SnapsToDevicePixels="true" Opacity=".2">
+                            <ContentPresenter x:Name="contentPresenter" Focusable="False" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="{TemplateBinding Padding}" RecognizesAccessKey="True" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                        </Border>
+                        <ControlTemplate.Triggers>                     
+                            <Trigger Property="IsMouseOver" Value="true">
+                                <Setter Property="Background" TargetName="border" Value="#22FFFFFF"/>
+                                <Setter Property="Opacity" TargetName="border" Value="0.8"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="true">
+                                <Setter Property="Opacity" TargetName="border" Value="1"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
         </Style>
         <Style x:Key="LibraryListBoxStyle" TargetType="{x:Type ListBox}">
             <Setter Property="ItemsPanel">
                 <Setter.Value>
                     <ItemsPanelTemplate>
-                        <WrapPanel Orientation="Horizontal" ScrollViewer.VerticalScrollBarVisibility="Disabled"/>
+                        <WrapPanel x:Name="wrapPanel" Orientation="Horizontal" MaxWidth="{Binding ActualWidth, ElementName=layoutRoot, Mode=OneWay}" />
                     </ItemsPanelTemplate>
                 </Setter.Value>
             </Setter>
-            <Setter Property="ItemTemplate" Value="{DynamicResource LibraryListItemTemplate}"/>
+            <Setter Property="ItemTemplate">
+                <Setter.Value>
+                    <DataTemplate DataType="{x:Type vm:LibraryItemViewModel}">
+                        <Border Height="80" Width="80" Background="{Binding Color, Converter={StaticResource BrushCache}}"
+                    BorderBrush="#222222" BorderThickness="1">
+                            <Grid VerticalAlignment="Bottom">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="{Binding ActualWidth, Converter={StaticResource MathConverter}, ConverterParameter=*0.3, Mode=OneWay, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Grid}}}"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock x:Name="textBlock" Text="{Binding Name}" TextWrapping="Wrap" d:LayoutOverrides="Height" Grid.Row="1" Grid.ColumnSpan="3"/>
+                                <Button Style="{DynamicResource LibraryItemButtonStyle}" x:Name="button">
+                                    <Image Source="/Resource/Delete-256-w.png"/>
+                                </Button>
+                                <Button x:Name="button1" Grid.Column="1" Style="{DynamicResource LibraryItemButtonStyle}">
+                                    <Image Source="/Resource/Pencil-256-w.png" />
+                                </Button>
+                                <Button x:Name="button2" Grid.Column="2" Style="{DynamicResource LibraryItemButtonStyle}">
+                                    <Image Source="/Resource/Media-Play-256-w.png" />
+                                </Button>
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+                </Setter.Value>
+            </Setter>
         </Style>
 
-        <DataTemplate x:Key="LibraryListItemTemplate" DataType="{x:Type vm:LibraryItemViewModel}">
-            <Border Height="80" Width="80" Background="{Binding Color, Converter={StaticResource BrushCache}}"
-                    BorderBrush="#222222" BorderThickness="1"/>
-        </DataTemplate>
+
 
     </UserControl.Resources>
 
@@ -36,7 +112,7 @@
         <Binding Mode="OneWay" Path="Library" Source="{StaticResource Locator}"/>
     </UserControl.DataContext>
 
-    <Grid>
+    <Grid x:Name="layoutRoot">
 
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -46,13 +122,13 @@
         </Grid.RowDefinitions>
 
 
-            <TextBlock Grid.Row="0" Style="{DynamicResource LibraryHeaderStyle}" Text="Scenes..."/>
+        <TextBlock Grid.Row="0" Style="{DynamicResource LibraryHeaderStyle}" Text="Scenes..."/>
 
-        <ListBox Grid.Row="1" Style="{DynamicResource LibraryListBoxStyle}" ItemsSource="{Binding Scenes}"/>
+        <ListBox x:Name="scenesList" Grid.Row="1" Style="{DynamicResource LibraryListBoxStyle}" ItemsSource="{Binding Scenes}"/>
 
         <TextBlock Grid.Row="2" Style="{DynamicResource LibraryHeaderStyle}" Text="Sequences..."/>
 
-        <ListBox Grid.Row="3" Style="{DynamicResource LibraryListBoxStyle}"  ItemsSource="{Binding Sequences}"/>
+        <ListBox x:Name="sequencesList" Grid.Row="3" Style="{DynamicResource LibraryListBoxStyle}"  ItemsSource="{Binding Sequences}"/>
 
 
 
