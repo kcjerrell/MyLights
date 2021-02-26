@@ -36,5 +36,7 @@ namespace MyLights.Util
             }
         }
 
+        public LightViewModel DesignLightVM { get => LightVMs[0]; }
+
     }
 }

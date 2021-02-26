@@ -25,11 +25,5 @@ namespace MyLights.Util
 
             return array;
         }
-
-        public static Color ToColor(this JsonColor jsonColor)
-        {
-            return Color.FromRgb((byte)jsonColor.r, (byte)jsonColor.g, (byte)jsonColor.b);
-        }
-
     }
 }

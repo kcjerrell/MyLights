@@ -8,15 +8,6 @@ using System.Threading.Tasks;
 namespace MyLights.Models
 {
     // Root myDeserializedClass = JsonConvert.DeserializeObject<Root>(myJsonResponse); 
-    public class JsonColor
-    {
-        public double h { get; set; }
-        public double s { get; set; }
-        public double v { get; set; }
-        public int r { get; set; }
-        public int g { get; set; }
-        public int b { get; set; }
-    }
 
     public class JsonBulb
     {
@@ -24,7 +15,7 @@ namespace MyLights.Models
         public string name { get; set; }
         public string whatever { get; set; }
         public bool power { get; set; }
-        public JsonColor color { get; set; }
+        public HSV color { get; set; }
     }
 
     public class JsonBulbRoot
@@ -33,7 +24,7 @@ namespace MyLights.Models
     }
 
     // Root myDeserializedClass = JsonConvert.DeserializeObject<Root>(myJsonResponse); 
-    public class JsonDps
+    public class JsonDpsX
     {
         [JsonProperty("20")]
         public bool Power { get; set; }
@@ -48,7 +39,7 @@ namespace MyLights.Models
         public int ColorTemp { get; set; }
 
         [JsonProperty("24")]
-        public JsonColor Color { get; set; }
+        public HSV Color { get; set; }
 
         [JsonProperty("25")]
         public string Scene { get; set; }
@@ -69,7 +60,12 @@ namespace MyLights.Models
         public List<JsonDatum> Data { get; set; }
     }
 
+    public class JsonDps
+    {
+        [JsonProperty("power")]
+        public bool Power { get; set; }
 
-
-
+        [JsonProperty("color")]
+        public HSV Color { get; set; }
+    }
 }

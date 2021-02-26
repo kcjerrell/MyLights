@@ -66,7 +66,7 @@ namespace MyLights.Models
 
 
         }
-
-        public delegate string BuildURI<in T>(T value);
-        public delegate void UpdateCallback<T>(T value);
     }
+    public delegate string BuildURI<in T>(T value);
+    public delegate void UpdateCallback<T>(T value);
+}

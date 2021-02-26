@@ -86,7 +86,7 @@ namespace MyLights.Etc
                 Color c = fade.Next();
                 for (int bi = 0; bi < lights.Count; bi++)
                 {
-                    lights[bi].SetColor(c);
+                   // lights[bi].SetColor(c);
                 }
 
                 await Task.Delay(interval);

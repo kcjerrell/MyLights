@@ -13,36 +13,36 @@ namespace MyLights.Models
     public class Light
     {
         private JsonBulb jsonBulb;
-        private DateTime lastRESTcall;
+        //private DateTime lastRESTcall;
 
-        private GatedRESTProperty<bool> powerREST;
-        private GatedRESTProperty<Color> colorREST;
+        //private GatedRESTProperty<bool> powerREST;
+        //private GatedRESTProperty<Color> colorREST;
 
 
         public Light(JsonBulb jsonBulb)
         {
             this.jsonBulb = jsonBulb;
 
-            this.Color = jsonBulb.color.ToColor();
+            this.Color = jsonBulb.color;
             this.Power = jsonBulb.power;
             this.Index = jsonBulb.index;
             this.Name = jsonBulb.name;
 
-            string powerUrl = @"http://localhost:1337/bulbs"
-                                .AppendPathSegment(this.Index.ToString())
-                                .AppendPathSegment("power");
-            Func<bool, string> powerQuery = (b) => "".SetQueryParam("v", b);
+            //string powerUrl = @"http://localhost:1337/bulbs"
+            //                    .AppendPathSegment(this.Index.ToString())
+            //                    .AppendPathSegment("power");
+            //Func<bool, string> powerQuery = (b) => "".SetQueryParam("v", b);
 
-            powerREST = new GatedRESTProperty<bool>(powerUrl,powerQuery);
+            //powerREST = new GatedRESTProperty<bool>(powerUrl,powerQuery);
         }
 
 
-        public Color Color { get; private set; }
+        public HSV Color { get; private set; }
         public bool Power { get; private set; }
         public int Index { get; private set; }
         public string Name { get; private set; }
 
-        public async void SetColor(Color color)
+        public async void SetColor(HSV color)
         {
             if (this.Color == color)
                 return;
@@ -50,30 +50,30 @@ namespace MyLights.Models
             string url = @"http://localhost:1337/bulbs"
                 .AppendPathSegment(this.Index.ToString())
                 .AppendPathSegment("color")
-                .SetQueryParam("r", color.R)
-                .SetQueryParam("g", color.G)
-                .SetQueryParam("b", color.B);
+                .SetQueryParam("h", color.H)
+                .SetQueryParam("s", color.S)
+                .SetQueryParam("v", color.V);
 
             var res = await url.GetJsonAsync<JsonDpsRoot>();
 
-            this.Color = res.Data[0].Dps.Color.ToColor();
+            this.Color = res.Data[0].Dps.Color;
         }
 
-        public void SetPower(bool power)
+        public async void SetPower(bool power)
         {
-            //if (this.Power == power)
-            //    return;
-            //
-            //string url = @"http://localhost:1337/bulbs"
-            //                .AppendPathSegment(this.Index.ToString())
-            //                .AppendPathSegment("power")
-            //                .SetQueryParam("v", power);
-            //
-            //var res = await url.GetJsonAsync<JsonDpsRoot>();
-            //
-            //this.Power = res.Data[0].Dps.Power;
+            if (this.Power == power)
+                return;
+            
+            string url = @"http://localhost:1337/bulbs"
+                            .AppendPathSegment(this.Index.ToString())
+                            .AppendPathSegment("power")
+                            .SetQueryParam("v", power);
+            
+            var res = await url.GetJsonAsync<JsonDpsRoot>();
+            
+            this.Power = res.Data[0].Dps.Power;
 
-            powerREST.SetAndForget(power);
+            //powerREST.SetAndForget(power);
 
             //I generally think this is a good idea. that is, using another class
             //to limit/schedule calls to lightREST. eitherway, at somewhere in the chain, 

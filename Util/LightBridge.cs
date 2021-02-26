@@ -33,14 +33,14 @@ namespace MyLights.Util
                 {
                     index = 0,
                     name = "DesignBulb1",
-                    color = new JsonColor() { r = 200, g = 200, b = 100 },
+                    color = new HSV() { H = 0.2, S = 0.8, V = 1 },
                     power = true,
                 });
                 jbulbs.Add(new JsonBulb()
                 {
                     index = 1,
                     name = "DesignBulb2",
-                    color = new JsonColor() { r = 200, g = 100, b = 200 },
+                    color = new HSV() { H = 0.5, S = 0.6, V = 1 },
                     power = true,
                 });
             }

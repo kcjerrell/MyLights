@@ -12,23 +12,23 @@ namespace MyLights.ViewModels
 {
     public class LightViewModel : INotifyPropertyChanged
     {
-        private bool power;
 
         public LightViewModel(Light light)
         {
-            TogglePowerCommand = new RelayCommand(s => TogglePower());
-
             this.light = light;
 
             Name = light.Name;
-            Power = light.Power;
-            Color = light.Color;
+            power = light.Power;
+            h = light.Color.H;
+            s = light.Color.S;
+            v = light.Color.V;
+            color = HSV.ToColor();
         }
 
-        private void TogglePower()
-        {
-            throw new NotImplementedException();
-        }
+        private bool power;
+        private Light light;
+        private Color color;
+        private double h, s, v;
 
         public string Name { get; }
         public bool Power
@@ -40,59 +40,77 @@ namespace MyLights.ViewModels
                 light.SetPower(value);
             }
         }
-        public Color Color 
+
+        public Color Color
         { 
             get => color;
             set
             {
-                color = value;
-                light.SetColor(value);
+                UpdateColor(value);
             }
         }
 
-        public double V 
+        public HSV HSV
         {
-            get
+            get => new HSV(h, s, v);
+            set
             {
-                Helpers.ColorToHSV(Color, out _, out _, out double v);
-                return v;
-            } 
+                UpdateColor(value);
+            }
         }
 
-        private double _hue;
-
-        public double Hue
+        public double H
         {
-            get { return _hue; }
-            set { _hue = value; }
+            get => this.h;
+            set
+            {
+                UpdateColor(value, this.s, this.v);
+            }
         }
 
+        public double S
+        {
+            get => this.s;
+            set
+            {
+                UpdateColor(this.h, value, this.v);
+            }
+        }
+
+        public double V
+        {
+            get => this.v;
+            set
+            {
+                UpdateColor(this.h, this.s, value);
+            }
+        }
+
+        private void UpdateColor(double h, double s, double v)
+        {
+            UpdateColor(new HSV(h, s, v));
+        }
+
+        private void UpdateColor(HSV hsv)
+        {
+            this.h = hsv.H;
+            this.s = hsv.S;
+            this.v = hsv.V;
+            this.color = hsv.ToColor();
+            light.SetColor(hsv);
+        }
+
+        private void UpdateColor(Color color)
+        {
+            this.color = color;
+            var hsv = HSV.FromColor(color);
+            this.h = hsv.H;
+            this.s = hsv.S;
+            this.v = hsv.V;
+            light.SetColor(hsv);
+        }
 
         public int Index { get => light.Index; }
-
-        //using the vm should have everything abstracted away
-        //lvm.Color = Color.FromRGB(25,,0,0);
-        //lvm.Power = false;
-
-        //and of course the vm should have no idea how the lights actually work except for
-        //I don't think i'm going to use direct property accessors, since "getting" or "setting"
-        //the value on a bulb /is/ an operation 
-        //so using the model will resemeble:
-
-        //l.SetColor(Color.FromRGB(255,0,0));          <-actually I might skip using the Color struct
-        //                                               since it can just use parameters
-
-        //Now I think I might have property GETTERS for power/color and just keep their current values
-        //cached. again, on the model.
-
-        //but wait! how am I going to combine commands across bulbs? I dunno yet. probably doing all this wrong
-
-
-
-        public RelayCommand TogglePowerCommand { get; }
-
-        private Light light;
-        private Color color;
 
         public event PropertyChangedEventHandler PropertyChanged;
     }

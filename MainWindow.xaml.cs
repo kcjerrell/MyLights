@@ -70,7 +70,7 @@ namespace MyLights
             {
                 Canvas.SetLeft(flyoutFrame, e.FlyoutPosition.X);
                 Canvas.SetTop(flyoutFrame, e.FlyoutPosition.Y);
-                flyoutContent.Content = element.DataContext;
+                flyoutFrame.DataContext = e.Source.DataContext;
                 flyoutShade.Visibility = Visibility.Visible;
                 flyoutFrame.Visibility = Visibility.Visible;
             }
