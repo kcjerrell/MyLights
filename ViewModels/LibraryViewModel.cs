@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MyLights.Models;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -14,6 +15,8 @@ namespace MyLights.ViewModels
         public LibraryViewModel()
         {
             LoadDesignLibrary();
+
+            SelectCommand = new RelayCommand<LibraryItemViewModel>(vm => vm.Activate());
         }
 
         private void LoadDesignLibrary()
@@ -26,6 +29,11 @@ namespace MyLights.ViewModels
                 DateCreated = DateTime.Now - TimeSpan.FromDays(7),
                 DateUpdated = DateTime.Now - TimeSpan.FromDays(1)
             };
+
+            var br = new BulbRef() { Name = "UpRight" };
+            sceneA.Add(new ColorSetter(br, new HSV(0.5, 0.8, 1)));
+            sceneA.Add(new PowerSetter(br, true));
+
             var sceneB = new SceneViewModel()
             {
                 Color = Colors.Blue,
@@ -80,6 +88,10 @@ namespace MyLights.ViewModels
 
         public ObservableCollection<SequenceViewModel> Sequences { get; private set; }
         public ObservableCollection<SceneViewModel> Scenes { get; private set; }
+
+        public RelayCommand<LibraryItemViewModel> SelectCommand { get; }
+        public RelayCommand<LibraryItemViewModel> EditCommand { get; }
+        public RelayCommand<LibraryItemViewModel> DeleteCommand { get; }
 
         public event PropertyChangedEventHandler PropertyChanged;
     }

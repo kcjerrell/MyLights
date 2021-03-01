@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MyLights.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -26,36 +27,87 @@ namespace MyLights.Views
             AddHandler(MouseLeftButtonUpEvent, new MouseButtonEventHandler(SomeMouseLeftButtonUp), true);
         }
 
+        private void FlyoutClosedCallBack()
+        {           
+                lightGroup?.Ungroup();
+        }
 
         private void SomeMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
-            if (clicked_on != null && clicked_on.IsMouseOver)
+            if (mouseDragging)
             {
+                mouseDragging = false;
+
+                var args = new FlyoutRequestEventArgs();
+
+                var selected = (from LightViewModel lvm in itemsControl.Items
+                                where lvm.IsSelected
+                                select lvm).ToList();
+
+                if (selected.Count == 0)
+                    return;
+
+                else if (selected.Count > 1)
+                    lightGroup = new LightGroupViewModel(selected);
+
+                args.Source = selected[0];
+                args.FlyoutClosedCallBack = FlyoutClosedCallBack;
+
+                var container = (FrameworkElement)itemsControl.ItemContainerGenerator.ContainerFromItem(selected.First());
+                args.FlyoutPosition = container.TranslatePoint(new Point(container.ActualWidth, 0.0), null);
+
                 var handler = FlyoutRequest;
-                handler?.Invoke(this, new FlyoutRequestEventArgs() 
-                { 
-                    Source = clicked_on,
-                    FlyoutPosition = clicked_on.TranslatePoint(new Point(clicked_on.ActualWidth, 0.0), null)
-                });
-            }
-            clicked_on = null;
+                handler?.Invoke(this, args);
+            }            
         }
 
-        private FrameworkElement clicked_on;
-        private void lightItemRoot_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        private bool mouseDragging = false;
+        private bool selecting = false;
+        private LightGroupViewModel lightGroup;
+
+        private void LightPanelItem_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            clicked_on = (FrameworkElement)sender;
+            var item = (LightPanelItem)sender;
+            var vm = (LightViewModel)item.DataContext;
+            selecting = !vm.IsSelected;
+            vm.IsSelected = selecting;
+
+            mouseDragging = true;
         }
 
         public event FlyoutRequestEventHandler FlyoutRequest;
 
+        private void LightPanelItem_MouseEnter(object sender, MouseEventArgs e)
+        {
+            if (mouseDragging)
+            {
+                var item = (LightPanelItem)sender;
+                var vm = (LightViewModel)item.DataContext;
+                vm.IsSelected = selecting;
+            }
+        }
+
+        private void LightPanelItem_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            var item = (LightPanelItem)sender;
+            var vm = (LightViewModel)item.DataContext;
+
+            foreach (LightViewModel lvm in itemsControl.Items)
+            {
+                lvm.IsSelected = false;
+            }
+
+            vm.IsSelected = true;
+        }
     }
 
     public delegate void FlyoutRequestEventHandler(object sender, FlyoutRequestEventArgs e);
 
     public class FlyoutRequestEventArgs : EventArgs
     {
-        public FrameworkElement Source { get; set; }
+        public object Source { get; set; }
         public Point FlyoutPosition { get; set; }
+
+        public Action FlyoutClosedCallBack { get; set; }
     }
 }

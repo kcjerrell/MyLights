@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MyLights.Models;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -37,6 +38,7 @@ namespace MyLights.Util
 
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
+            Color outColor;
             if (value is Color color)
             {
                 if (parameter is string param)
@@ -44,11 +46,32 @@ namespace MyLights.Util
                     if (param.ToLower() == "fullv")
                     {
                         Helpers.ColorToHSV(color, out double h, out double s, out double v);
-                        color = Helpers.ColorFromHSV(h, s, 1.0);
+                        outColor = Helpers.ColorFromHSV(h, s, 1.0);
                     }
                 }
+                else
+                {
+                    outColor = color;
+                }
 
-                return GetBrush(color);
+                return GetBrush(outColor);
+            }
+
+            if (value is HSV hsv)
+            {
+                if (parameter is string param)
+                {
+                    if (param.ToLower() == "fullv")
+                    {
+                        outColor = new HSV(hsv.H, hsv.S, 1.0).ToColor();
+                    }
+                }
+                else
+                {
+                    outColor = hsv.ToColor();
+                }
+
+                return GetBrush(outColor);
             }
 
             return value;

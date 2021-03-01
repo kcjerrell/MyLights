@@ -15,102 +15,116 @@ namespace MyLights.ViewModels
 
         public LightViewModel(Light light)
         {
-            this.light = light;
+            this.Light = light;
 
             Name = light.Name;
             power = light.Power;
-            h = light.Color.H;
-            s = light.Color.S;
-            v = light.Color.V;
-            color = HSV.ToColor();
+            hsv = light.Color;
+            mode = light.Mode;
         }
 
         private bool power;
-        private Light light;
-        private Color color;
-        private double h, s, v;
+        private HSV hsv;
+        private string mode;
 
+        public Light Light { get; }
         public string Name { get; }
+
+        public string Mode
+        {
+            get => mode;
+            set
+            {
+                mode = value;
+                if (Group != null)
+                {
+                    if (Group.Mode != value)
+                        Group.SetMode(value);
+                }
+                else
+                    Light.SetMode(value);
+            }
+        }
+
         public bool Power
         {
             get => power;
             set
             {
                 power = value;
-                light.SetPower(value);
-            }
-        }
-
-        public Color Color
-        { 
-            get => color;
-            set
-            {
-                UpdateColor(value);
+                if (Group != null)
+                {
+                    if (Group.Power != value)
+                        Group.SetPower(value);
+                }
+                else
+                    Light.SetPower(value);
             }
         }
 
         public HSV HSV
         {
-            get => new HSV(h, s, v);
+            get => hsv;
             set
             {
-                UpdateColor(value);
+                if (HSV != value)
+                {
+                    hsv = value;
+                    UpdateColor(value);
+                }
             }
         }
 
         public double H
         {
-            get => this.h;
+            get => this.hsv.H;
             set
             {
-                UpdateColor(value, this.s, this.v);
+                if (HSV.H != value)
+                    UpdateColor(value, hsv.S, hsv.V);
             }
         }
 
         public double S
         {
-            get => this.s;
+            get => this.hsv.S;
             set
             {
-                UpdateColor(this.h, value, this.v);
+                if (hsv.S != value)
+                    UpdateColor(hsv.H, value, hsv.V);
             }
         }
 
         public double V
         {
-            get => this.v;
+            get => this.hsv.V;
             set
             {
-                UpdateColor(this.h, this.s, value);
+                if (hsv.V != value)
+                    UpdateColor(hsv.H, hsv.S, value);
             }
-        }
-
-        private void UpdateColor(double h, double s, double v)
-        {
-            UpdateColor(new HSV(h, s, v));
         }
 
         private void UpdateColor(HSV hsv)
         {
-            this.h = hsv.H;
-            this.s = hsv.S;
-            this.v = hsv.V;
-            this.color = hsv.ToColor();
-            light.SetColor(hsv);
+            if (Group != null)
+            {
+                if (Group.HSV != hsv)
+                    Group.SetColor(hsv);
+            }
+            else
+                Light.SetColor(hsv);
         }
 
-        private void UpdateColor(Color color)
+        private void UpdateColor(double h, double s, double v)
         {
-            this.color = color;
-            var hsv = HSV.FromColor(color);
-            this.h = hsv.H;
-            this.s = hsv.S;
-            this.v = hsv.V;
-            light.SetColor(hsv);
+            HSV = new HSV(h, s, v);
         }
 
-        public int Index { get => light.Index; }
+        public bool IsSelected { get; set; }
+        public LightGroupViewModel Group { get; set; }
+
+        public int Index { get => Light.Index; }
 
         public event PropertyChangedEventHandler PropertyChanged;
     }

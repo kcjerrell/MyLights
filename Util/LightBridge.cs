@@ -10,20 +10,49 @@ using System.Threading.Tasks;
 
 namespace MyLights.Util
 {
-    internal class LightBridge
+    public class LightBridge
     {
         public LightBridge(bool isInDesignMode)
         {
             this.isInDesignMode = isInDesignMode;
-            GetLights();
+            GetLightsCommand = new RelayCommand((p) => GetLights());
+
+            //GetLights();
         }
 
         private bool isInDesignMode;
 
         private List<Light> lights = new List<Light>();
-        public ObservableCollection<LightViewModel> LightVMs { get; private set; } = new ObservableCollection<LightViewModel>();
 
-        private async void GetLights()
+        internal bool TryFindBulb(BulbRef key, out Light light)
+        {
+            var match = (from l in lights
+                         where l.Name == key.Name
+                         select l).ToArray();
+
+            if (match.Length == 1)
+            {
+                light = match[0];
+                return true;
+            }
+            else
+            {
+                light = null;
+                return false;
+            }
+        }
+
+        public ObservableCollection<LightViewModel> LightVMs { get; private set; } = new ObservableCollection<LightViewModel>();
+        public RelayCommand GetLightsCommand { get; set; }
+
+        public LightViewModel GetLightViewModel(Light light)
+        {
+            return (from lvm in LightVMs
+                    where lvm.Light == light
+                    select lvm).Single();
+        }
+
+        public async void GetLights()
         {
             List<JsonBulb> jbulbs = new List<JsonBulb>();
 
@@ -35,6 +64,7 @@ namespace MyLights.Util
                     name = "DesignBulb1",
                     color = new HSV() { H = 0.2, S = 0.8, V = 1 },
                     power = true,
+                    mode = "white"
                 });
                 jbulbs.Add(new JsonBulb()
                 {
@@ -42,6 +72,7 @@ namespace MyLights.Util
                     name = "DesignBulb2",
                     color = new HSV() { H = 0.5, S = 0.6, V = 1 },
                     power = true,
+                    mode = "color"
                 });
             }
 
@@ -58,8 +89,9 @@ namespace MyLights.Util
                     if (!isInDesignMode)
                         throw;
                 }
-
             }
+
+            LightVMs.Clear();
 
             foreach (var jBulb in jbulbs)
             {

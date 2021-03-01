@@ -33,6 +33,8 @@ namespace MyLights
 
         }
 
+        private Action flyoutCallback;
+
         private async void MainWindow_Loaded(object sender, RoutedEventArgs e)
         {
             colorPicker.AvailableColors.Clear();
@@ -70,9 +72,10 @@ namespace MyLights
             {
                 Canvas.SetLeft(flyoutFrame, e.FlyoutPosition.X);
                 Canvas.SetTop(flyoutFrame, e.FlyoutPosition.Y);
-                flyoutFrame.DataContext = e.Source.DataContext;
+                flyoutFrame.DataContext = e.Source;
                 flyoutShade.Visibility = Visibility.Visible;
                 flyoutFrame.Visibility = Visibility.Visible;
+                flyoutCallback = e.FlyoutClosedCallBack;
             }
         }
 
@@ -80,6 +83,16 @@ namespace MyLights
         {
             flyoutShade.Visibility = Visibility.Collapsed;
             flyoutFrame.Visibility = Visibility.Collapsed;
+
+            if (flyoutCallback != null)
+                flyoutCallback();
+
+            flyoutCallback = null;
+        }
+
+        private void TabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            
         }
     }
 

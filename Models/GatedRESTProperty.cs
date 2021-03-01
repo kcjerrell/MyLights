@@ -9,42 +9,26 @@ using System.Threading.Tasks;
 
 namespace MyLights.Models
 {
-    internal class GatedRESTProperty<T> where T : IComparable<T>
+    internal class GatedRESTProperty<T> where T : IEquatable<T>
     {
-        public GatedRESTProperty(BuildURI<T> uriBuilderFunction, T initialValue, UpdateCallback<T> updateCallback)
+        public GatedRESTProperty(string url, QueryBuilder<T> queryBuilder, ResponseSelector<T> responseSelector)
         {
-            BuildURI = uriBuilderFunction;
-            changeTo = initialValue;
-            Value = initialValue;
-            UpdateCallback = updateCallback;
+            PropURL = url;
+            QueryBuilder = queryBuilder;
+            ResponseSelector = responseSelector;
         }
 
         public string PropURL { get; }
-        public BuildURI<T> BuildURI { get; }
+        public QueryBuilder<T> QueryBuilder { get; }
 
-        public UpdateCallback<T> UpdateCallback { get; }
+        public ResponseSelector<T> ResponseSelector { get; }
 
-        public T Value { get; }
+        public T Value { get; private set; }
+        private T changeTo;
 
-        private T changeTo
-        {
-            get
-            {
-                lock (lockObject)
-                    return changeTo;
-            }
-
-            set
-            {
-                lock (lockObject)
-                    changeTo = value;
-            }
-        }
-
-        private object lockObject = new object();
         private bool updating;
 
-        public async Task Set(T value)
+        public void Set(T value)
         {
             if (updating)
             {
@@ -52,21 +36,30 @@ namespace MyLights.Models
             }
             else
             {
-                updating = true;
-                Update(value);
+                Update();
             }
         }
 
-        private async void Update(T newValue)
-        {
-            if (updating)
-                return;
+        public async Task<T> GetValue()
+        {           
+            var res = await PropURL.GetJsonAsync<JsonDpsRoot>();
+            Value = ResponseSelector(res);
+            return Value;
+        }
 
+        private async void Update()
+        {
+            updating = true;
             T to = changeTo;
 
+            var query = QueryBuilder(to);
+            var res = await string.Concat(PropURL, query).GetJsonAsync<JsonDpsRoot>();
+            Value = ResponseSelector(res);
 
+           // if (Value == changeTo)
+                Update();
         }
     }
-    public delegate string BuildURI<in T>(T value);
-    public delegate void UpdateCallback<T>(T value);
+    public delegate string QueryBuilder<in T>(T value);
+    public delegate T ResponseSelector<out T>(JsonDpsRoot response);
 }

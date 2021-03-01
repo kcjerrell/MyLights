@@ -12,5 +12,7 @@
 
     <Application.Resources>
         <util:Locator x:Key="Locator"/>
+        <util:BoolToObjectsConverter x:Key="PowerCircleColorConverter" FalseValue="Red" TrueValue="#FF5DFF00" />
+        <util:BrushCache x:Key="BrushCache"/>
     </Application.Resources>
 </Application>

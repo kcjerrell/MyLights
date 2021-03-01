@@ -16,6 +16,9 @@ namespace MyLights.Models
         public string whatever { get; set; }
         public bool power { get; set; }
         public HSV color { get; set; }
+        public string mode { get; set; }
+        public int colortemp { get; set; }
+        public int brightness { get; set; }
     }
 
     public class JsonBulbRoot

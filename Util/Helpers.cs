@@ -23,7 +23,7 @@ namespace MyLights.Util
 
         internal static void HsvToRgb(double h, double S, double V, out int r, out int g, out int b)
         {
-            double H = h;
+            double H = h * 360.0;
             while (H < 0) { H += 360; };
             while (H >= 360) { H -= 360; };
             double R, G, B;
