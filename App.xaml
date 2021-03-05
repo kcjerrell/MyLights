@@ -6,10 +6,6 @@
 
     <Application.StartupUri>MainWindow.xaml</Application.StartupUri>
 
-    <!--
-    <Application.StartupUri>AltViews/MainWindowAlt.xaml</Application.StartupUri>
-    -->
-
     <Application.Resources>
         <util:Locator x:Key="Locator"/>
         <util:BoolToObjectsConverter x:Key="PowerCircleColorConverter" FalseValue="Red" TrueValue="#FF5DFF00" />

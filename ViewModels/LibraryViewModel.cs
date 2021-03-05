@@ -17,6 +17,12 @@ namespace MyLights.ViewModels
             LoadDesignLibrary();
 
             SelectCommand = new RelayCommand<LibraryItemViewModel>(vm => vm.Activate());
+            EditCommand = new RelayCommand<LibraryItemViewModel>(vm => Edit(vm));
+        }
+
+        private void Edit(LibraryItemViewModel vm)
+        {
+            
         }
 
         private void LoadDesignLibrary()
@@ -32,6 +38,12 @@ namespace MyLights.ViewModels
 
             var br = new BulbRef() { Name = "UpRight" };
             sceneA.Add(new ColorSetter(br, new HSV(0.5, 0.8, 1)));
+            sceneA.Add(new PowerSetter(br, true));
+            br = new BulbRef() { Name = "Face" };
+            sceneA.Add(new ColorSetter(br, new HSV(1, 0.8, 1)));
+            sceneA.Add(new PowerSetter(br, true));
+            br = new BulbRef() { Name = "Up" };
+            sceneA.Add(new ColorSetter(br, new HSV(0.7, 1, 1)));
             sceneA.Add(new PowerSetter(br, true));
 
             var sceneB = new SceneViewModel()

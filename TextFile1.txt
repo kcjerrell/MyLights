@@ -11,11 +11,12 @@ ebf1e92bd63d8c059dbcvn
 ebf8d36fec611039bbggej
 
  id                        key                 ip              name
-'eba040c47ea782ca16eiad', '920ebd015ebfd481', '192.168.0.21', 'Up'))
-'eb2773e38adbb12683puvk', 'aa736ffedbe56ec8', '192.168.0.23', 'UpRight'))
-'ebf1e92bd63d8c059dbcvn', '1022bf390de07246', '192.168.0.18', 'DownRight'))
-'eb32d7cd40417c0f6addl9', '4b29203ead0de281', '192.168.0.22', 'DownLeft'))
-'ebf8d36fec611039bbggej', '50dad0673f4febbc', '192.168.0.17', 'UpLeft'))
+{ id: 'eba040c47ea782ca16eiad', key: 'e5cbe0a10dad9c93', ip: '192.168.0.21', name: 'Face' }
+{ id: 'eb2773e38adbb12683puvk', key: 'aa736ffedbe56ec8', ip: '192.168.0.23', name: 'UpRight' }
+{ id: 'ebf1e92bd63d8c059dbcvn', key: '1022bf390de07246', ip: '192.168.0.18', name: 'DownRight' }
+{ id: 'eb32d7cd40417c0f6addl9', key: '4b29203ead0de281', ip: '192.168.0.22', name: 'DownLeft' }
+{ id: 'ebf8d36fec611039bbggej', key: '50dad0673f4febbc', ip: '192.168.0.17', name: 'UpLeft' }
+{ id: 'ebfc8703b8fcfab217ot0v', key: '1a13a246e713fe58', ip: '192.168.0.24', name: 'Up' }
 
 
 DPS indexes:
@@ -44,3 +45,11 @@ DPS_INDEX_ON = {'A': '1', 'B': '20'}
     DPS_INDEX_SCENE = {'A': '2', 'B': '25'}
     DPS_INDEX_TIMER = {'A': None, 'B': '26'}
     DPS_INDEX_MUSIC = {'A': None, 'B': '27'}
+
+
+So, it seems that these bulbs automatically fade to new settings if the change is...
+H: >= 0.4		S: >= 0.3		V: >= 0.2
+
+Which kind of sucks. if it faded for smaller values, then that would be perfect. I noticed on 
+some docs online, through the cloud api, you can set a fade duration. So I'm pretty sure it's
+possible to do it locally, I just don't know how. :(

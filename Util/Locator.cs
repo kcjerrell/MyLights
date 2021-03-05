@@ -13,7 +13,7 @@ namespace MyLights.Util
             IsInDesignMode = DesignerProperties.GetIsInDesignMode(new DependencyObject());
 
             LightBridge = new LightBridge(IsInDesignMode);
-            LightBridge.GetLights();
+            //LightBridge.GetLights();
 
             Library = new LibraryViewModel();
         }

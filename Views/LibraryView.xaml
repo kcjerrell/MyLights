@@ -9,6 +9,7 @@
              xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="355.116" d:Background="AliceBlue">
+
     <UserControl.Resources>
         <Util:MathConverter x:Key="MathConverter"/>
         <Util:BrushCache x:Key="BrushCache"/>
@@ -50,8 +51,12 @@
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type Button}">
                         <Border x:Name="border" Background="#00000000" BorderThickness="0" SnapsToDevicePixels="true" Opacity=".2">
-                            <ContentPresenter x:Name="contentPresenter" Focusable="False" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="{TemplateBinding Padding}" RecognizesAccessKey="True" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                            <ContentPresenter x:Name="contentPresenter" Focusable="False"
+                                              HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="{TemplateBinding Padding}" 
+                                              RecognizesAccessKey="True" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" 
+                                              VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
                         </Border>
+
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver" Value="true">
                                 <Setter Property="Background" TargetName="border" Value="#22FFFFFF"/>
@@ -61,6 +66,7 @@
                                 <Setter Property="Opacity" TargetName="border" Value="1"/>
                             </Trigger>
                         </ControlTemplate.Triggers>
+
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
@@ -69,86 +75,8 @@
             <Setter Property="ItemsPanel">
                 <Setter.Value>
                     <ItemsPanelTemplate>
-                        <!--
-                        <WrapPanel x:Name="wrapPanel" Orientation="Horizontal" MaxWidth="{Binding ActualWidth, ElementName=layoutRoot, Mode=OneWay}" />
-                        -->
                         <StackPanel Orientation="Vertical"/>
                     </ItemsPanelTemplate>
-                </Setter.Value>
-            </Setter>
-            <Setter Property="ItemTemplate">
-                <Setter.Value>
-                    <DataTemplate DataType="{x:Type vm:LibraryItemViewModel}">
-                        <!--
-                        <Border Height="80" Width="80" Background="{Binding Color, Converter={StaticResource BrushCache}}"
-                                BorderBrush="#222222" BorderThickness="1">
-
-                            <i:Interaction.Triggers>
-                                <i:EventTrigger EventName="MouseLeftButtonDown">
-                                    <i:InvokeCommandAction/>
-                                </i:EventTrigger>                                
-                            </i:Interaction.Triggers>
-                            
-                            
-                            <Grid VerticalAlignment="Bottom">
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="{Binding ActualWidth, Converter={StaticResource MathConverter}, ConverterParameter=*0.3, Mode=OneWay, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Grid}}}"/>
-                                    <RowDefinition Height="Auto"/>
-                                </Grid.RowDefinitions>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition/>
-                                    <ColumnDefinition/>
-                                </Grid.ColumnDefinitions>
-
-                                <Button/>
-
-                                <TextBlock x:Name="textBlock" Text="{Binding Name}" TextWrapping="Wrap" d:LayoutOverrides="Height" Grid.Row="1" Grid.ColumnSpan="3"/>
-                                <Button Style="{DynamicResource LibraryItemButtonStyle}" x:Name="button">
-                                    <Image Source="/Resource/Delete-256-w.png"/>
-                                </Button>
-                                <Button x:Name="button1" Grid.Column="1" Style="{DynamicResource LibraryItemButtonStyle}">
-                                    <Image Source="/Resource/Pencil-256-w.png" />
-                                </Button>
-                               
-                                <Button x:Name="button2" Grid.Column="2" Style="{DynamicResource LibraryItemButtonStyle}">
-                                    <Image Source="/Resource/Media-Play-256-w.png" />
-                                </Button>
-                                
-                            </Grid>
-                        </Border>
-                        -->
-
-
-                        <Border Height="40" HorizontalAlignment="Stretch">
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="40"/>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="Auto"/>
-                                    <ColumnDefinition Width="Auto"/>
-                                </Grid.ColumnDefinitions>
-
-                                <Border Background="{Binding Color, Converter={StaticResource BrushCache}}" Margin="3"/>
-                                <TextBlock Grid.Column="1" Text="{Binding Name}" VerticalAlignment="Center" FontSize="16" Margin="10,0"/>
-
-                                <Button Style="{DynamicResource LibraryItemButtonStyle}" x:Name="button" Grid.Column="2">
-                                    <Image Source="/Resource/Delete-256-w.png">
-                                        <Image.Effect>
-                                            <DropShadowEffect/>
-                                        </Image.Effect>
-                                    </Image>
-                                </Button>
-                                <Button x:Name="button1" Grid.Column="3" Style="{DynamicResource LibraryItemButtonStyle}">
-                                    <Image Source="/Resource/Pencil-256-w.png">
-                                        <Image.Effect>
-                                            <DropShadowEffect/>
-                                        </Image.Effect>
-                                    </Image>
-                                </Button>
-                            </Grid>
-                        </Border>
-
-                    </DataTemplate>
                 </Setter.Value>
             </Setter>
 
@@ -156,12 +84,11 @@
                 <Setter.Value>
                     <Style TargetType="{x:Type ListBoxItem}">
                         <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
-                    </Style>                    
+                    </Style>
                 </Setter.Value>
             </Setter>
 
         </Style>
-
 
 
     </UserControl.Resources>
@@ -179,10 +106,52 @@
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-
         <TextBlock Grid.Row="0" Style="{DynamicResource LibraryHeaderStyle}" Text="Scenes..."/>
 
-        <ListBox x:Name="scenesList" Grid.Row="1" Style="{DynamicResource LibraryListBoxStyle}" ItemsSource="{Binding Scenes}" SelectionChanged="scenesList_SelectionChanged"/>
+        <ListBox x:Name="scenesList" Grid.Row="1" Style="{DynamicResource LibraryListBoxStyle}" 
+                 ItemsSource="{Binding Scenes}" SelectionChanged="scenesList_SelectionChanged">
+
+            <ListBox.ItemTemplate>
+                <DataTemplate DataType="{x:Type vm:LibraryItemViewModel}">
+
+                    <Border Height="40" HorizontalAlignment="Stretch">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="40"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+
+                            <Border x:Name="border" Background="{Binding Color, Converter={StaticResource BrushCache}}" Margin="3"/>
+                            <TextBlock Grid.Column="1" Text="{Binding Name}" VerticalAlignment="Center" FontSize="16" Margin="10,0"/>
+
+                            <Button Style="{DynamicResource LibraryItemButtonStyle}" x:Name="button" Grid.Column="2" 
+                                    Command="{Binding DataContext.EditCommand, ElementName=layoutRoot}">
+                                
+                                <Image Source="/Resource/Delete-256-w.png">
+                                    <Image.Effect>
+                                        <DropShadowEffect/>
+                                    </Image.Effect>
+                                </Image>
+                                
+                            </Button>
+                            
+                            <Button x:Name="button1" Grid.Column="3" Style="{DynamicResource LibraryItemButtonStyle}" Command="">
+                                <Image Source="/Resource/Pencil-256-w.png">
+                                    <Image.Effect>
+                                        <DropShadowEffect/>
+                                    </Image.Effect>
+                                </Image>
+                            </Button>
+                            
+                        </Grid>
+                    </Border>
+
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+
+        </ListBox>
 
         <!--
         TextBlock Grid.Row="2" Style="{DynamicResource LibraryHeaderStyle}" Text="Sequences..."/>

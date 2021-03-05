@@ -42,6 +42,8 @@ namespace MyLights.Util
             }
         }
 
+        public event EventHandler LightsUpdated;
+
         public ObservableCollection<LightViewModel> LightVMs { get; private set; } = new ObservableCollection<LightViewModel>();
         public RelayCommand GetLightsCommand { get; set; }
 
@@ -52,7 +54,7 @@ namespace MyLights.Util
                     select lvm).Single();
         }
 
-        public async void GetLights()
+        public async Task GetLights()
         {
             List<JsonBulb> jbulbs = new List<JsonBulb>();
 
@@ -92,6 +94,7 @@ namespace MyLights.Util
             }
 
             LightVMs.Clear();
+            lights.Clear();
 
             foreach (var jBulb in jbulbs)
             {
@@ -100,7 +103,9 @@ namespace MyLights.Util
                 LightVMs.Add(new LightViewModel(light));
                 lights.Add(light);
             }
-        }
 
+            var handler = LightsUpdated;
+            handler?.Invoke(this, EventArgs.Empty);
+        }
     }
 }
