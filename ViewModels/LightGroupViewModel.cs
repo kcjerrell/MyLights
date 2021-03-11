@@ -6,6 +6,7 @@ using System.Linq;
 
 namespace MyLights.ViewModels
 {
+// #lightgroup 
     public class LightGroupViewModel : INotifyPropertyChanged
     {
         private List<LightViewModel> lightvms;
@@ -24,8 +25,8 @@ namespace MyLights.ViewModels
                          select lvm.Light;
 
             lightGroup = new LightGroup(lights.ToList());
-
         }
+
         public HSV HSV { get; private set; }
         public bool Power { get; private set; }
         public string Mode { get; private set; }

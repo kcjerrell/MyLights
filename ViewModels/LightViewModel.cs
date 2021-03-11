@@ -36,6 +36,7 @@ namespace MyLights.ViewModels
             set
             {
                 mode = value;
+                // #lightgroup 
                 if (Group != null)
                 {
                     if (Group.Mode != value)
@@ -52,6 +53,7 @@ namespace MyLights.ViewModels
             set
             {
                 power = value;
+                // #lightgroup
                 if (Group != null)
                 {
                     if (Group.Power != value)
@@ -107,6 +109,7 @@ namespace MyLights.ViewModels
 
         private void UpdateColor(HSV hsv)
         {
+            // #lightgroup 
             if (Group != null)
             {
                 if (Group.HSV != hsv)
@@ -122,6 +125,7 @@ namespace MyLights.ViewModels
         }
 
         public bool IsSelected { get; set; }
+        // #lightgroup 
         public LightGroupViewModel Group { get; set; }
 
         public int Index { get => Light.Index; }

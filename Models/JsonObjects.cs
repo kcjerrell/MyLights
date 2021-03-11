@@ -70,5 +70,8 @@ namespace MyLights.Models
 
         [JsonProperty("color")]
         public HSV Color { get; set; }
+
+        [JsonProperty("mode")]
+        public string Mode { get; set; }
     }
 }

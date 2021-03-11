@@ -168,7 +168,7 @@ namespace MyLights.Models
 
             var res = await url.GetJsonAsync<JsonDpsRoot>();
 
-            this.Power = res.Data[0].Dps.Power;
+            this.Mode = res.Data[0].Dps.Mode;
         }
 
         private bool CloseEnough(HSV a, HSV b)

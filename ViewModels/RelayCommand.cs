@@ -55,19 +55,10 @@ namespace MyLights.ViewModels
 
         public bool CanExecute(object parameter)
         {
-            if (parameter is T t)
-            {
-                if (_canExecute != null)
-                    return _canExecute(t);
-                else
-                    return true;
-            }
-
-            //else if (DesignTimeHelpers.IsRunningInEnhancedDesignerMode)
-            //    return true;
-
+            if (_canExecute != null)
+                return _canExecute((T)parameter);
             else
-                throw new ArgumentException($"Wrong parameter type. Expected {typeof(T)} and got {parameter.GetType()}");
+                return true;
         }
 
         public void Execute(object parameter)

@@ -7,10 +7,9 @@
         xmlns:local="clr-namespace:MyLights" xmlns:vm="clr-namespace:MyLights.ViewModels" xmlns:views="clr-namespace:MyLights.Views"
         xmlns:fw="clr-namespace:SourceChord.FluentWPF;assembly=FluentWPF"
         xmlns:wpft="http://schemas.xceed.com/wpf/xaml/toolkit"
-        xmlns:Util="clr-namespace:MyLights.Util" x:Name="window" x:Class="MyLights.MainWindow"
+        xmlns:util="clr-namespace:MyLights.Util" x:Name="window" x:Class="MyLights.MainWindow"
         mc:Ignorable="d" 
-        Title="MainWindow" Height="450" Width="800" MouseLeftButtonDown="Window_MouseLeftButtonDown"
-        >
+        Title="MainWindow" Height="450" Width="800" MouseLeftButtonDown="Window_MouseLeftButtonDown">
 
     <Window.Resources>
         <local:SelectableBehaviorSelection x:Key="mainBoardSelection" GroupName="mainBoard"/>
@@ -22,7 +21,6 @@
     </Window.DataContext>
 
     <Grid x:Name="windowRoot">
-
         <Canvas x:Name="overlayCanvas" Panel.ZIndex="100" Visibility="Visible">
 
             <Canvas.Effect>
@@ -55,6 +53,9 @@
                                         </DataTemplate>
                                     </TabItem.HeaderTemplate>
                                     <Grid>
+                                        <i:Interaction.Behaviors>
+                                            <util:LightModeTabAdapterBehavior/>
+                                        </i:Interaction.Behaviors>
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="Auto"/>
                                             <ColumnDefinition Width="*"/>
@@ -82,7 +83,6 @@
                                         <Slider Maximum="1" SmallChange="0.05" TickFrequency="0.1" TickPlacement="BottomRight" Value="{Binding V}" Margin="3,3,3,3" Foreground="#FF636363" LargeChange="0.2" Grid.Column="1" Grid.Row="2"/>
                                         <TextBlock Text="{Binding V, StringFormat=.00}" Grid.Row="2" Grid.Column="2" FontSize="14" 
                                                    VerticalAlignment="Center" Width="25" HorizontalAlignment="Left"/>
-
                                     </Grid>
                                 </TabItem>
                                 <TabItem Header="White">
@@ -101,11 +101,8 @@
                     </ContentPresenter.Resources>
                 </ContentPresenter>
             </Border>
-
         </Canvas>
-
         <Border Background="#88AAAAAA" Panel.ZIndex="0">
-
             <Grid x:Name="layoutRoot">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="200"/>
@@ -120,7 +117,13 @@
                 <Button Content="Sequence Thing" Margin="70,5,5,5" Command="{Binding DataContext.SequenceCommand, ElementName=window, Mode=OneWay}"
                         HorizontalAlignment="Left" VerticalAlignment="Bottom"/>
 
-                <views:LibraryView Grid.Column="1"/>
+                <ContentControl x:Name="RightContent" Content="{Binding RightViewModel}" Grid.Column="1">
+                    <ContentControl.Resources>
+                        <DataTemplate DataType="{x:Type vm:LibraryViewModel}">
+                            <views:LibraryView/>
+                        </DataTemplate>
+                    </ContentControl.Resources>
+                </ContentControl>
 
                 <Grid Grid.Column="2" DataContext="{Binding SelectedItem, ElementName=lightList}">
                     <Grid.ColumnDefinitions>
@@ -135,19 +138,14 @@
                         <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
 
-
                     <TextBlock Margin="5" Text="{Binding Name, Mode=OneWay}" Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2"/>
                     <TextBlock Margin="5" Text="Power" Grid.Row="1"/>
                     <CheckBox Margin="5" Grid.Row="1" Grid.Column="1" IsChecked="{Binding Power}"/>
 
                     <TextBlock Margin="5" Text="Color" Grid.Row="2"/>
                     <wpft:ColorPicker x:Name="colorPicker" Margin="5" Grid.Row="2" Grid.Column="1" ColorMode="ColorCanvas" SelectedColor="{Binding Color}"/>
-
                 </Grid>
             </Grid>
         </Border>
-
     </Grid>
-
-
 </Window>

@@ -1,18 +1,11 @@
-﻿using MyLights.ViewModels;
+﻿using MyLights.Util;
+using MyLights.ViewModels;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace MyLights.Views
 {
@@ -30,15 +23,16 @@ namespace MyLights.Views
 
         private async void LightPanel_Loaded(object sender, RoutedEventArgs e)
         {
-            loading.Show();
+            //loading.Show();
             await Task.Delay(1500);
-            await App.Current.Locator.LightBridge.GetLights();
-            loading.Hide();
+            await LightBridge.Singleton.GetLights();
+            //loading.Hide();
         }
 
         private void FlyoutClosedCallBack()
-        {           
-                lightGroup?.Ungroup();
+        {
+            // #lightgroup 
+            lightGroup?.Ungroup();
         }
 
         private void SomeMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
@@ -56,6 +50,7 @@ namespace MyLights.Views
                 if (selected.Count == 0)
                     return;
 
+                // #lightgroup 
                 else if (selected.Count > 1)
                     lightGroup = new LightGroupViewModel(selected);
 
@@ -67,11 +62,12 @@ namespace MyLights.Views
 
                 var handler = FlyoutRequest;
                 handler?.Invoke(this, args);
-            }            
+            }
         }
 
         private bool mouseDragging = false;
         private bool selecting = false;
+        // #lightgroup 
         private LightGroupViewModel lightGroup;
 
         private void LightPanelItem_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)

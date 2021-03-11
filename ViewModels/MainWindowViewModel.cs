@@ -123,6 +123,5 @@ namespace MyLights.ViewModels
 
         public RelayCommand RunTestCommand { get; }
         public RelayCommand SequenceCommand { get; }
-
     }
 }

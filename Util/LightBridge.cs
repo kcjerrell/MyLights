@@ -12,12 +12,11 @@ namespace MyLights.Util
 {
     public class LightBridge
     {
-        public LightBridge(bool isInDesignMode)
+        private LightBridge()
         {
-            this.isInDesignMode = isInDesignMode;
-            GetLightsCommand = new RelayCommand((p) => GetLights());
-
-            //GetLights();
+            this.isInDesignMode = Locator.IsInDesignMode;
+            GetLightsCommand = new RelayCommand(async (p) => await GetLights());
+            GetLights();
         }
 
         private bool isInDesignMode;
@@ -35,6 +34,7 @@ namespace MyLights.Util
                 light = match[0];
                 return true;
             }
+
             else
             {
                 light = null;
@@ -107,5 +107,13 @@ namespace MyLights.Util
             var handler = LightsUpdated;
             handler?.Invoke(this, EventArgs.Empty);
         }
+
+        public static LightBridge Singleton { get; private set; }
+
+        static LightBridge()
+        {
+            Singleton = new LightBridge();
+        }
+
     }
 }

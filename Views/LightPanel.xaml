@@ -14,16 +14,15 @@
              d:DesignHeight="450" d:DesignWidth="250">
 
     <Grid>
-
         <Viewbox Margin="25" VerticalAlignment="Top" Height="100" HorizontalAlignment="Stretch" Visibility="{Binding Visibility, ElementName=loading}">
-            <v:Loading x:Name="loading"/>            
+            <v:Loading x:Name="loading"/>
         </Viewbox>
 
         <Border Background="#0000">
             <StackPanel>
                 <Button Content="Refresh" Margin="5" HorizontalAlignment="Left" Command="{Binding LightBridge.GetLightsCommand, Source={StaticResource Locator}}"/>
                 <ItemsControl x:Name="itemsControl" ItemsSource="{Binding LightVMs, Mode=OneWay, Source={StaticResource Locator}}">
-
+                    
                     <ItemsControl.ItemsPanel>
                         <ItemsPanelTemplate>
                             <StackPanel/>
@@ -38,8 +37,6 @@
                     </ItemsControl.ItemTemplate>
 
                 </ItemsControl>
-
-
             </StackPanel>
         </Border>
     </Grid>

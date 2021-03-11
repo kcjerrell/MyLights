@@ -11,7 +11,7 @@
 
     <UserControl.Resources>
 
-        <util:BoolToObjectsConverter x:Key="BoolToObjectsConverter" TrueValue="#FFAAAABB" FalseValue="#FFDDDDDD"/>
+        <util:BoolToObjectsConverter x:Key="SelectedBackgroundConverter" TrueValue="#FFAAAABB" FalseValue="#FFDDDDDD"/>
         <util:BoolToObjectsConverter x:Key="PowerToOverlayOpacityConverter" TrueValue="0.0" FalseValue="0.5"/>
 
         <SolidColorBrush x:Key="Button.Static.Background" Color="#FFDDDDDD"/>
@@ -72,7 +72,7 @@
         </Style>
 
         <SolidColorBrush x:Key="LightItemBackground" 
-                         Color="{Binding IsSelected, Converter={StaticResource BoolToObjectsConverter}}"/>
+                         Color="{Binding IsSelected, Converter={StaticResource SelectedBackgroundConverter}}"/>
         <SolidColorBrush x:Key="LightItemBorder" Color="#99000000"/>
         
     </UserControl.Resources>
@@ -82,34 +82,42 @@
             <ColumnDefinition Width="{Binding Height, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Grid}}}"/>
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="{Binding Height, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Grid}}}"/>
+            <ColumnDefinition Width="{Binding Height, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Grid}}}"/>
         </Grid.ColumnDefinitions>
 
-        <Border x:Name="lightItemOverlay" Grid.ColumnSpan="3" Panel.ZIndex="100" CornerRadius="{Binding CornerRadius, ElementName=lightItemRight}" 
-                                    Background="Black" IsHitTestVisible="False" Opacity="{Binding Power, Converter={StaticResource PowerToOverlayOpacityConverter}}"/>
+        <Border x:Name="lightItemOverlay" Grid.ColumnSpan="4" Panel.ZIndex="100" CornerRadius="{Binding CornerRadius, ElementName=lightItemRight}" 
+                Background="Black" IsHitTestVisible="False" Opacity="{Binding Power, Converter={StaticResource PowerToOverlayOpacityConverter}}"/>
 
         <Border x:Name="lightItemLeft" Grid.Column="0"  Margin="0" Background="{DynamicResource LightItemBackground}" BorderBrush="{DynamicResource LightItemBorder}" 
                 BorderThickness="1,1,0,1" CornerRadius="0" Padding="4" SnapsToDevicePixels="True">
             <ToggleButton Style="{DynamicResource LightPowerButton}" IsChecked="{Binding Power}" Content="{Binding Index}" SnapsToDevicePixels="True" BorderBrush="#44222222"/>
         </Border>
 
-        <Border x:Name="lightItemMiddle" Grid.Column="1"  Margin="0" Background="{DynamicResource LightItemBackground}" BorderBrush="{DynamicResource LightItemBorder}"
+        <Border x:Name="lightItemMiddle" Grid.Column="1" Grid.ColumnSpan="2" Margin="0" Background="{DynamicResource LightItemBackground}" BorderBrush="{DynamicResource LightItemBorder}"
                 BorderThickness="0,1,0,1" SnapsToDevicePixels="True">
             <TextBlock Text="{Binding Name}" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="8,0,0,0" Foreground="#FF222222"/>
         </Border>
 
-        <Border x:Name="lightItemRight" Grid.Column="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="0"
+        <Button Content="+" Grid.Column="2" Visibility="Collapsed" Margin="5">
+            <i:Interaction.Behaviors>
+                <util:SharedVisibilityBehavior GroupName="sceneEdit"/>
+            </i:Interaction.Behaviors>
+        </Button>
+
+        <Border x:Name="lightItemRight" Grid.Column="3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="0"
                                     Background="{Binding HSV, Converter={StaticResource BrushCache}, ConverterParameter=fullv}" 
-                                    CornerRadius="0,16,16,0" BorderBrush="{DynamicResource LightItemBorder}" BorderThickness="0,1,1,1" 
+                                    CornerRadius="0,16,16,0" BorderBrush="{DynamicResource LightItemBorder}" BorderThickness="0,1,1,1"
                                     Panel.ZIndex="0" SnapsToDevicePixels="True">
             <i:Interaction.Behaviors>
                 <util:CornerRadiusAdjusterBehavior Side="Right"/>
             </i:Interaction.Behaviors>
+        
         </Border>
 
-        <Border x:Name="lightItemRightBright" Grid.Column="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="0"
+        <Border x:Name="lightItemRightBright" Grid.Column="3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="0"
                                     Background="{Binding HSV, Converter={StaticResource BrushCache}}" 
-                                    CornerRadius="0,16,16,0" BorderBrush="#00000000" BorderThickness="0,1,1,1" 
-                                    Panel.ZIndex="20" SnapsToDevicePixels="True">
+                                    CornerRadius="0,16,16,0" BorderBrush="#00000000" BorderThickness="0,1,1,1"
+                                    Panel.ZIndex="20" SnapsToDevicePixels="True">            
             <i:Interaction.Behaviors>
                 <util:CornerRadiusAdjusterBehavior Side="Right"/>
                 <util:ItemClipBehavior ValueMax="0.0" ValueMin="1.0" Value="{Binding V}" FillDirection="Down"/>

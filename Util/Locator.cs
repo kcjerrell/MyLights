@@ -10,22 +10,13 @@ namespace MyLights.Util
     {
         public Locator()
         {
-            IsInDesignMode = DesignerProperties.GetIsInDesignMode(new DependencyObject());
-
-            LightBridge = new LightBridge(IsInDesignMode);
-            //LightBridge.GetLights();
-
+            LightBridge = LightBridge.Singleton;
             Library = new LibraryViewModel();
         }
 
         public LightBridge LightBridge { get; }
-
         public ObservableCollection<LightViewModel> LightVMs { get => LightBridge.LightVMs; }
-
-        public bool IsInDesignMode { get; }
-
         public LibraryViewModel Library { get; private set; }
-
 
         private MainWindowViewModel _mainWindowViewModel;
         public MainWindowViewModel MainWindowViewModel
@@ -38,6 +29,10 @@ namespace MyLights.Util
         }
 
         public LightViewModel DesignLightVM { get => LightVMs[0]; }
-
+        public static bool IsInDesignMode { get; }
+        static Locator()
+        {
+            IsInDesignMode = DesignerProperties.GetIsInDesignMode(new DependencyObject());
+        }
     }
 }

@@ -1,5 +1,4 @@
-﻿using MyLights.ViewModels;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -17,19 +16,18 @@ using System.Windows.Shapes;
 namespace MyLights.Views
 {
     /// <summary>
-    /// Interaction logic for LibraryView.xaml
+    /// Interaction logic for SceneItem.xaml
     /// </summary>
-    public partial class LibraryView : UserControl
+    public partial class SceneItem : UserControl
     {
-        public LibraryView()
+        public SceneItem()
         {
             InitializeComponent();
         }
 
-        private void scenesList_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void TabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (scenesList.SelectedItem != null && scenesList.SelectedItem is SceneViewModel svm)
-                svm.Activate();
+
         }
     }
 }

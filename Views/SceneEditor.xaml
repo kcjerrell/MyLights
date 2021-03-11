@@ -1,0 +1,41 @@
+﻿<UserControl x:Class="MyLights.Views.SceneEditor"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:vm="clr-namespace:MyLights.ViewModels"
+             xmlns:local="clr-namespace:MyLights.Views" xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity" xmlns:util="clr-namespace:MyLights.Util"
+             mc:Ignorable="d"
+             d:DesignHeight="450" d:DesignWidth="355" Background="White">
+    
+    <i:Interaction.Behaviors>
+        <util:SharedVisibilityBehavior GroupName="sceneEdit" IsSource="true"/>
+    </i:Interaction.Behaviors>
+
+    <StackPanel>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+            <TextBox Margin="3" Text="{Binding Name}"/>
+            <Button Content="Save" Grid.Column="1" Margin="3"/>
+        </Grid>
+        
+        <ItemsControl ItemsSource="{Binding SceneItems}">
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <WrapPanel ItemWidth="300"/>
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+            <ItemsControl.ItemTemplate>
+                <DataTemplate DataType="{x:Type vm:SceneSetter}">
+                    <local:SceneItem/>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+
+    </StackPanel>
+
+</UserControl>
