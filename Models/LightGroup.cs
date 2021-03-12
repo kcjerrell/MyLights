@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 
 namespace MyLights.Models
 {
+    //I want to remake this so it's a subclass of Light, so I can
+    //just use the same LightVM class. I don't know why I did all this weird like this
+    //
     public class LightGroup : ICollection<Light>
     {
         List<Light> lights = new List<Light>();

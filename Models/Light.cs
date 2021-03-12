@@ -13,26 +13,39 @@ namespace MyLights.Models
 {
     public class Light
     {
-        public Light(JsonBulb jsonBulb)
+        public Light(JsonBulb jBulb)
         {
-            this.jsonBulb = jsonBulb;
+            this.jsonBulb = jBulb;
+            this.Index = jBulb.index;
+            string index = jBulb.index.ToString();
+            
+            this.Name = jBulb.name;
 
-            this.Color = jsonBulb.color;
-            this.Power = jsonBulb.power;
-            this.Index = jsonBulb.index;
-            this.Name = jsonBulb.name;
-            this.Mode = jsonBulb.mode;
+            color = new DpsColor(index, jBulb.color);
+            mode = new DpsMode(index, jBulb.mode);
+            power = new DpsPower(index, jBulb.power);
+            brightness = new DpsBrightness(index, jBulb.brightness);
+            colorTemp = new DpsColorTemp(index, jBulb.colortemp);
         }
 
         JsonBulb jsonBulb;
-        HSV nextColor;
-        bool updatingColor = false;
 
-        public HSV Color { get; private set; }
-        public bool Power { get; private set; }
+        DpsColor color;
+        DpsMode mode;
+        DpsPower power;
+        DpsBrightness brightness;
+        DpsColorTemp colorTemp;
+
         public int Index { get; private set; }
         public string Name { get; private set; }
-        public string Mode { get; private set; }
+
+        public HSV Color { get => color.Value; }
+        public bool Power { get => power.Value; }
+        public string Mode { get => mode.Value; }
+        public double Brightness { get => brightness.Value; }
+        public double ColorTemp { get => colorTemp.Value; }
+
+        // #lightgroup 
         public LightGroup Group { get; private set; }
 
         private bool isLead;
@@ -49,138 +62,19 @@ namespace MyLights.Models
             this.isLead = false;
         }
 
-        public void SetColor(HSV color)
+        public void SetColor(HSV value)
         {
-            SetColor(color.H, color.S, color.V);
+            color.Set(value);
         }
 
-        public async void SetColor(double h, double s, double v)
+        public void SetPower(bool value)
         {
-            string indexPath;
-
-            if (Group != null)
-            {
-                if (isLead)
-                {
-                    indexPath = Group.Indexes;
-                }
-                else
-                {
-                    Color = new HSV(h, s, v);
-                    return;
-                }
-            }
-            else
-            {
-                indexPath = Index.ToString();
-            }
-
-            nextColor = new HSV(h, s, v);
-            if (!updatingColor)
-            {
-
-                //int looped = 0;
-                updatingColor = true;
-                while (!CloseEnough(this.Color, this.nextColor))
-                {
-                    //if (looped > 100)
-                    //    throw new Exception("whoah too much");
-
-                    string url = @"http://localhost:1337/bulbs"
-                        .AppendPathSegment(indexPath)
-                        .AppendPathSegment("color")
-                        .SetQueryParam("h", nextColor.H)
-                        .SetQueryParam("s", nextColor.S)
-                        .SetQueryParam("v", nextColor.V);
-
-                    var res = await url.GetJsonAsync<JsonDpsRoot>();
-
-                    this.Color = res.Data[0].Dps.Color;
-
-                    //looped += 1;
-                }
-
-                updatingColor = false;
-            }
+            power.Set(value);
         }
 
-        public async void SetPower(bool power)
+        public void SetMode(string value)
         {
-            string indexPath;
-
-            if (Group != null)
-            {
-                if (isLead)
-                {
-                    indexPath = Group.Indexes;
-                }
-                else
-                {
-                    Power = power;
-                    return;
-                }
-            }
-            else
-            {
-                indexPath = Index.ToString();
-            }
-
-            if (this.Power == power)
-                return;
-
-            string url = @"http://localhost:1337/bulbs"
-                            .AppendPathSegment(indexPath)
-                            .AppendPathSegment("power")
-                            .SetQueryParam("v", power);
-
-            var res = await url.GetJsonAsync<JsonDpsRoot>();
-
-            this.Power = res.Data[0].Dps.Power;
-        }
-
-        public async void SetMode(string mode)
-        {
-            string indexPath;
-            if (Group != null)
-            {
-                if (isLead)
-                {
-                    indexPath = Group.Indexes;
-                }
-                else
-                {
-                    Mode = mode;
-                    return;
-                }
-            }
-            else
-            {
-                indexPath = Index.ToString();
-            }
-
-            if (this.Mode == mode)
-                return;
-
-            string url = @"http://localhost:1337/bulbs"
-                .AppendPathSegment(indexPath)
-                .AppendPathSegment("mode")
-                .SetQueryParam("v", mode);
-
-            var res = await url.GetJsonAsync<JsonDpsRoot>();
-
-            this.Mode = res.Data[0].Dps.Mode;
-        }
-
-        private bool CloseEnough(HSV a, HSV b)
-        {
-            if (Math.Abs(a.H - b.H) > 0.01)
-                return false;
-            if (Math.Abs(a.S - b.S) > 0.01)
-                return false;
-            if (Math.Abs(a.V - b.V) > 0.01)
-                return false;
-
-            return true;
+            mode.Set(value);
         }
     }
 }

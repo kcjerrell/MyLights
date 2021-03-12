@@ -9,9 +9,9 @@ using System.Threading.Tasks;
 
 namespace MyLights.Models
 {
-    internal class GatedRESTProperty<T> where T : IEquatable<T>
+    internal class GatedRESTPropertyX<T> where T : IEquatable<T>
     {
-        public GatedRESTProperty(string url, QueryBuilder<T> queryBuilder, ResponseSelector<T> responseSelector)
+        public GatedRESTPropertyX(string url, QueryBuilder<T> queryBuilder, ResponseSelector<T> responseSelector)
         {
             PropURL = url;
             QueryBuilder = queryBuilder;
