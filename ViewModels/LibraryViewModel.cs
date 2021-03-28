@@ -33,6 +33,7 @@ namespace MyLights.ViewModels
         {
             EditorItem = vm;
             ShowEditor = true;
+            vm.StartEditing();
         }
 
         private void LoadDesignLibrary()
@@ -47,11 +48,11 @@ namespace MyLights.ViewModels
             };
 
             var br = new BulbRef() { Name = "UpRight" };
-            sceneA.Add(new SceneSetter(br, true, new HSV(0.5, 0.8, 1)));
+            sceneA.Add(new SceneSetter(br) { Power = true, Color = new HSV(0.5, 0.8, 1), Mode = "color" });
             br = new BulbRef() { Name = "Face" };
-            sceneA.Add(new SceneSetter(br, true, new HSV(1, 0.8, 1)));
+            sceneA.Add(new SceneSetter(br) { Power = true, Color = new HSV(1, 0.8, 1), Mode = "color" });
             br = new BulbRef() { Name = "Up" };
-            sceneA.Add(new SceneSetter(br, true, new HSV(0.7, 1, 1)));
+            sceneA.Add(new SceneSetter(br) { Power = true, Color = new HSV(0.7, 1, 1), Mode = "color" });
 
             var sceneB = new SceneViewModel(EditCommand)
             {

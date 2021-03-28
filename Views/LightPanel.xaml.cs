@@ -24,15 +24,14 @@ namespace MyLights.Views
         private async void LightPanel_Loaded(object sender, RoutedEventArgs e)
         {
             //loading.Show();
-            await Task.Delay(1500);
-            await LightBridge.Singleton.GetLights();
+            //await Task.Delay(1500);
+            //await LightBridge.Singleton.GetLights();
             //loading.Hide();
         }
 
         private void FlyoutClosedCallBack()
         {
-            // #lightgroup 
-            lightGroup?.Ungroup();
+            lightGroup.LightGroup.Clear();
         }
 
         private void SomeMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
@@ -50,11 +49,18 @@ namespace MyLights.Views
                 if (selected.Count == 0)
                     return;
 
-                // #lightgroup 
-                else if (selected.Count > 1)
-                    lightGroup = new LightGroupViewModel(selected);
+                else if (selected.Count == 1)
+                    args.Source = selected[0];
 
-                args.Source = selected[0];
+                else if (selected.Count > 1)
+                {
+                    foreach (var s in selected)
+                    {
+                        lightGroup.LightGroup.Add(s.Light);
+                    }
+                    args.Source = lightGroup;                    
+                }
+
                 args.FlyoutClosedCallBack = FlyoutClosedCallBack;
 
                 var container = (FrameworkElement)itemsControl.ItemContainerGenerator.ContainerFromItem(selected.First());
@@ -68,7 +74,8 @@ namespace MyLights.Views
         private bool mouseDragging = false;
         private bool selecting = false;
         // #lightgroup 
-        private LightGroupViewModel lightGroup;
+        private LightGroupViewModel lightGroup = new LightGroupViewModel(new Models.LightGroup());
+        
 
         private void LightPanelItem_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {

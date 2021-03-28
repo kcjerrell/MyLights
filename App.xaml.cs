@@ -28,7 +28,7 @@ namespace MyLights
             startInfo.ArgumentList.Add("--trace-warnings");
             startInfo.ArgumentList.Add("--unhandled-rejections=warn");
             startInfo.ArgumentList.Add("--trace-uncaught");
-            startInfo.ArgumentList.Add(@"C:\Users\Kelly\source\repos\lightrest\dist\server.js");
+            startInfo.ArgumentList.Add(@"C:\Users\kcjer\source\repos\lightrest\dist\server.js");
             node = Process.Start(startInfo);
         }
 

@@ -1,66 +1,71 @@
-﻿using System;
+﻿using MyLights.Util;
+using PropertyChanged;
+using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-using System.Windows.Media;
-using Flurl;
-using Flurl.Http;
-using MyLights.Util;
+using System.ComponentModel;
 
 namespace MyLights.Models
 {
-    public class Light
+    [DoNotNotify]
+    public class Light : INotifyPropertyChanged
     {
-        public Light(JsonBulb jBulb)
+        protected Light()
         {
-            this.jsonBulb = jBulb;
-            this.Index = jBulb.index;
-            string index = jBulb.index.ToString();
-            
-            this.Name = jBulb.name;
 
-            color = new DpsColor(index, jBulb.color);
-            mode = new DpsMode(index, jBulb.mode);
-            power = new DpsPower(index, jBulb.power);
-            brightness = new DpsBrightness(index, jBulb.brightness);
-            colorTemp = new DpsColorTemp(index, jBulb.colortemp);
         }
 
-        JsonBulb jsonBulb;
+        public static Light FromJson(JsonBulb jBulb)
+        {
+            string index = jBulb.index.ToString();
 
-        DpsColor color;
-        DpsMode mode;
-        DpsPower power;
-        DpsBrightness brightness;
-        DpsColorTemp colorTemp;
+            var light = new Light
+            {
+                Index = jBulb.index,
+                Name = jBulb.name,
+                color = new DpsColor(index, jBulb.color),
+                mode = new DpsMode(index, jBulb.mode),
+                power = new DpsPower(index, jBulb.power),
+                brightness = new DpsBrightness(index, jBulb.brightness),
+                warmth = new DpsWarmth(index, jBulb.colortemp)
+            };
 
+            light.WireEvents();
+            return light;
+        }
+
+        private void WireEvents()
+        {
+            color.Updated += Dps_Updated;
+            mode.Updated += Dps_Updated;
+            power.Updated += Dps_Updated;
+            brightness.Updated += Dps_Updated;
+            warmth.Updated += Dps_Updated;
+        }
+
+        private void Dps_Updated(object sender, PropertyChangedEventArgs e)
+        {
+            string property = e.PropertyName.Capitalize();
+            var handler = PropertyChanged;
+            handler?.Invoke(this, new PropertyChangedEventArgs(property));
+        }
+
+        protected DpsColor      color;
+        protected DpsMode       mode;
+        protected DpsPower      power;
+        protected DpsBrightness brightness;
+        protected DpsWarmth     warmth;
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        [DoNotNotify]
         public int Index { get; private set; }
+        [DoNotNotify]
         public string Name { get; private set; }
-
         public HSV Color { get => color.Value; }
         public bool Power { get => power.Value; }
         public string Mode { get => mode.Value; }
         public double Brightness { get => brightness.Value; }
-        public double ColorTemp { get => colorTemp.Value; }
-
-        // #lightgroup 
-        public LightGroup Group { get; private set; }
-
-        private bool isLead;
-
-        public void Engroup(LightGroup group, bool isLead)
-        {
-            this.Group = group;
-            this.isLead = isLead;
-        }
-
-        internal void Ungroup()
-        {
-            this.Group = null;
-            this.isLead = false;
-        }
+        public double Warmth { get => warmth.Value; }
 
         public void SetColor(HSV value)
         {

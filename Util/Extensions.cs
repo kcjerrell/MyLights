@@ -25,5 +25,27 @@ namespace MyLights.Util
 
             return array;
         }
+
+        public static string Capitalize(this string text)
+        {
+            if (string.IsNullOrEmpty(text))
+                return text;
+
+            else if (text.Length == 1)
+                return text.ToUpper();
+
+            return text.Substring(0, 1).ToUpper() + text.Substring(1);
+        }
+
+        public static double Clamp(this double x, double min, double max)
+        {
+            //what if max is less than min? throw or just clamp backwards?
+            //throw for now
+
+            if (max < min)
+                throw new ArgumentException("get your shit straight");
+
+            return Math.Min(Math.Max(x, min), max);
+        }
     }
 }

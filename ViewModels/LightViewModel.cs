@@ -1,5 +1,6 @@
 ﻿using MyLights.Models;
 using MyLights.Util;
+using PropertyChanged;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -12,68 +13,50 @@ namespace MyLights.ViewModels
 {
     public class LightViewModel : INotifyPropertyChanged
     {
-
         public LightViewModel(Light light)
         {
             this.Light = light;
+            light.PropertyChanged += Light_PropertyChanged;
 
             Name = light.Name;
-            power = light.Power;
             hsv = light.Color;
-            mode = light.Mode;
         }
 
-        private bool power;
+        private void Light_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            var handler = PropertyChanged;
+            handler?.Invoke(this, e);
+        }
+
         private HSV hsv;
-        private string mode;
 
         public Light Light { get; }
         public string Name { get; }
 
         public string Mode
         {
-            get => mode;
+            get => Light.Mode;
             set
             {
-                mode = value;
-                // #lightgroup 
-                if (Group != null)
-                {
-                    if (Group.Mode != value)
-                        Group.SetMode(value);
-                }
-                else
-                    Light.SetMode(value);
+                Light.SetMode(value);
             }
         }
 
         public bool Power
         {
-            get => power;
+            get => Light.Power;
             set
             {
-                power = value;
-                // #lightgroup
-                if (Group != null)
-                {
-                    if (Group.Power != value)
-                        Group.SetPower(value);
-                }
-                else
-                    Light.SetPower(value);
+                Light.SetPower(value);
             }
         }
 
-        public HSV HSV
+        public HSV Color
         {
-            get => hsv;
+            get => Light.Color;
             set
             {
-                if (HSV != value)
-                {
-                    hsv = value;
-                    UpdateColor(value);
-                }
+                UpdateColor(value);
             }
         }
 
@@ -82,8 +65,7 @@ namespace MyLights.ViewModels
             get => this.hsv.H;
             set
             {
-                if (HSV.H != value)
-                    UpdateColor(value, hsv.S, hsv.V);
+                UpdateColor(value, hsv.S, hsv.V);
             }
         }
 
@@ -92,8 +74,7 @@ namespace MyLights.ViewModels
             get => this.hsv.S;
             set
             {
-                if (hsv.S != value)
-                    UpdateColor(hsv.H, value, hsv.V);
+                UpdateColor(hsv.H, value, hsv.V);
             }
         }
 
@@ -102,31 +83,21 @@ namespace MyLights.ViewModels
             get => this.hsv.V;
             set
             {
-                if (hsv.V != value)
-                    UpdateColor(hsv.H, hsv.S, value);
+                UpdateColor(hsv.H, hsv.S, value);
             }
         }
 
         private void UpdateColor(HSV hsv)
         {
-            // #lightgroup 
-            if (Group != null)
-            {
-                if (Group.HSV != hsv)
-                    Group.SetColor(hsv);
-            }
-            else
-                Light.SetColor(hsv);
+            Light.SetColor(hsv);
         }
 
         private void UpdateColor(double h, double s, double v)
         {
-            HSV = new HSV(h, s, v);
+            Color = new HSV(h, s, v);
         }
 
         public bool IsSelected { get; set; }
-        // #lightgroup 
-        public LightGroupViewModel Group { get; set; }
 
         public int Index { get => Light.Index; }
 

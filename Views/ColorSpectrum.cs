@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
@@ -11,51 +12,96 @@ namespace MyLights.Views
 {
     public class ColorSpectrum : FrameworkElement
     {
+        public ColorSpectrum()
+        {
+            CreateBitmap(100, 100);
+        }
 
         WriteableBitmap bitmap;
+
+        public Color GetColor(double x, double y, double v)
+        {
+            double h = x / ActualWidth;
+            double s = y / ActualHeight;
+
+            HsvToRgb(h * 360, s, v, out int r, out int g, out int b);
+
+            return Color.FromArgb(255, (byte)r, (byte)g, (byte)b);
+        }
 
         protected override void OnRender(DrawingContext drawingContext)
         {
             drawingContext.DrawImage(bitmap, new Rect(0, 0, RenderSize.Width, RenderSize.Height));
-            drawingContext.Close();
         }
 
-        protected override void OnRenderSizeChanged(SizeChangedInfo sizeInfo)
+        protected override Size MeasureOverride(Size availableSize)
         {
-            bitmap = new WriteableBitmap((int)sizeInfo.NewSize.Width, (int)sizeInfo.NewSize.Height, 96, 96, PixelFormats.Bgr32, null);
+            double w = availableSize.Width == double.PositiveInfinity ? 200 : availableSize.Width;
+            double h = availableSize.Height == double.PositiveInfinity ? 200 : availableSize.Height;
+
+            return new Size(w, h);
+        }
+
+        protected override Size ArrangeOverride(Size finalSize)
+        {
+            return finalSize;
+        }
+
+        private void CreateBitmap(int width, int height)
+        {
+            bitmap = new WriteableBitmap(width, height, 96, 96, PixelFormats.Bgr32, null);
             GenerateSpectrum(bitmap);
         }
 
-        private void GenerateSpectrum(WriteableBitmap bitmap)
+        private static void GenerateSpectrum(WriteableBitmap bitmap)
         {
-            var data = new byte[bitmap.PixelWidth * bitmap.PixelHeight * 3];
-
-            int r, g, b;
-            double x, y, h, s, v;
-
-            v = 1;
-
-            for (int i = 0; i < data.Length; i += 3)
+            try
             {
-                x = i % bitmap.PixelWidth;
-                y = i / bitmap.PixelWidth;
+                bitmap.Lock();
 
-                h = x / bitmap.PixelWidth;
-                s = y / bitmap.PixelHeight;
+                unsafe
+                {
+                    int x, y;
+                    double hue, saturation;
 
-                HsvToRgb(h, s, v, out r, out g, out b);
+                    int pixels = bitmap.PixelWidth * bitmap.PixelHeight;
 
-                data[i] = (byte)r;
-                data[i + 1] = (byte)g;
-                data[i + 2] = (byte)b;
+                    double value = 1.0;
+
+                    IntPtr bufPtr = bitmap.BackBuffer;
+
+                    for (int i = 0; i < pixels; i++)
+                    {
+                        x = i % bitmap.PixelWidth;
+                        y = i / bitmap.PixelWidth;
+
+                        hue = (double)x / bitmap.PixelWidth * 360.0;
+                        saturation = (double)y / bitmap.PixelHeight;
+
+                        HsvToRgb(hue, saturation, value, out int r, out int g, out int b);
+
+                        if (y > 500)
+                            y += 0;
+
+                        int pixel = 255 << 24; // A
+                        pixel |= r << 16;
+                        pixel |= g << 8;
+                        pixel |= b << 0;
+
+                        *((int*)bufPtr) = pixel;
+
+                        bufPtr += 4; // or is it 4? We'll see.
+                    }
+                }
+
+                bitmap.AddDirtyRect(new Int32Rect(0, 0, bitmap.PixelWidth, bitmap.PixelHeight));
             }
-
-            bitmap.Lock();
-            bitmap.WritePixels(new Int32Rect(0, 0, bitmap.PixelWidth, bitmap.PixelHeight), data, 3 * bitmap.PixelWidth, 0, 0);
-            bitmap.Unlock();
+            finally
+            {
+                bitmap.Unlock();
+            }
         }
-
-        void HsvToRgb(double h, double S, double V, out int r, out int g, out int b)
+        static void HsvToRgb(double h, double S, double V, out int r, out int g, out int b)
         {
             double H = h;
             while (H < 0) { H += 360; };
@@ -149,7 +195,7 @@ namespace MyLights.Views
         /// <summary>
         /// Clamp a value to 0-255
         /// </summary>
-        int Clamp(int i)
+        static int Clamp(int i)
         {
             if (i < 0) return 0;
             if (i > 255) return 255;

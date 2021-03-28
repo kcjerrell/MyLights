@@ -84,7 +84,7 @@ namespace MyLights.ViewModels
                     s = (s1 - s0) * p + s0;
                     v = (v1 - v0) * p + v0;
 
-                    light.HSV = new HSV(h, s, v);
+                    light.Color = new HSV(h, s, v);
                     await Task.Delay(50);
                 }
             }
@@ -96,19 +96,19 @@ namespace MyLights.ViewModels
             foreach (var light in lights)
             {
                 light.Power = false;
-                light.HSV = new HSV(0, 0, 1);
+                light.Color = new HSV(0, 0, 1);
                 await Task.Delay(250);
 
                 light.Power = true;
                 await Task.Delay(250);
 
-                light.HSV = new HSV(1, 1, 1);
+                light.Color = new HSV(1, 1, 1);
                 await Task.Delay(500);
 
-                light.HSV = new HSV(0.5, .7, .8);
+                light.Color = new HSV(0.5, .7, .8);
                 await Task.Delay(500);
 
-                light.HSV = new HSV(0.8, .3, 1);
+                light.Color = new HSV(0.8, .3, 1);
                 await Task.Delay(500);
             }
         }

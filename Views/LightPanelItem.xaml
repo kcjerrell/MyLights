@@ -90,7 +90,7 @@
 
         <Border x:Name="lightItemLeft" Grid.Column="0"  Margin="0" Background="{DynamicResource LightItemBackground}" BorderBrush="{DynamicResource LightItemBorder}" 
                 BorderThickness="1,1,0,1" CornerRadius="0" Padding="4" SnapsToDevicePixels="True">
-            <ToggleButton Style="{DynamicResource LightPowerButton}" IsChecked="{Binding Power}" Content="{Binding Index}" SnapsToDevicePixels="True" BorderBrush="#44222222"/>
+            <ToggleButton Style="{DynamicResource LightPowerButton}" IsChecked="{Binding Power, Mode=TwoWay, Delay=150, UpdateSourceTrigger=Default}" Content="{Binding Index}" SnapsToDevicePixels="True" BorderBrush="#44222222"/>
         </Border>
 
         <Border x:Name="lightItemMiddle" Grid.Column="1" Grid.ColumnSpan="2" Margin="0" Background="{DynamicResource LightItemBackground}" BorderBrush="{DynamicResource LightItemBorder}"

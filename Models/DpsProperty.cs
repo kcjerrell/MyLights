@@ -2,6 +2,7 @@
 using Flurl.Http;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -10,7 +11,7 @@ namespace MyLights.Models
 {
     // I would need DpsProperty<string>, DpsProperty<bool>, and DpsProperty<HSV>
     // I guess they can just be subtypes
-    internal abstract class DpsProperty<T> where T : IEquatable<T>
+    public abstract class DpsProperty<T> where T : IEquatable<T>
     {
         // #review
         // this won't work right, maybe. Well, I guess it could.
@@ -27,28 +28,48 @@ namespace MyLights.Models
 
         // maybe having static/const properties on the derived types might work.
 
-        internal DpsProperty(string propertyPath, string indexPath, T initialValue = default)
+        public DpsProperty(string propertyPath, string indexPath = "", T initialValue = default)
         {
             this.propertyPath = propertyPath;
-            this.indexPath = indexPath;
+            this.IndexPath = indexPath;
             this.Value = initialValue;
+
+            this.eventArgs = new PropertyChangedEventArgs(propertyPath);
         }
 
         const string urlBase = @"http://localhost:1337/bulbs";
 
-        private string indexPath;
         private string propertyPath;
         private bool requestInProgress = false;
         private T nextValue;
 
+        private PropertyChangedEventArgs eventArgs;
+        private T _value;
 
+        public string IndexPath { get; set; }
         /// <summary>
         /// Gets the last value received from server
         /// Use Update() to recheck
         /// </summary>
-        public T Value { get; protected set; }
+        public T Value
+        {
+            get => _value;
+            protected set
+            {
+                _value = value;
+                OnUpdated();
+            }
+        }
 
-        internal virtual async void Set(T newValue)
+        public event PropertyChangedEventHandler Updated;
+
+        private void OnUpdated()
+        {
+            var handler = Updated;
+            handler?.Invoke(this, eventArgs);
+        }
+
+        public virtual async void Set(T newValue)
         {
             // #review 
             // should this be a lock or other sync primitive? I don't know if it matters for async.
@@ -71,12 +92,12 @@ namespace MyLights.Models
 
             nextValue = newValue;
 
-            if (!requestInProgress && !Compare(newValue, Value))
+            if (!requestInProgress && !Compare(newValue, Value) && !string.IsNullOrEmpty(IndexPath))
             {
                 requestInProgress = true;
 
                 string url = urlBase
-                            .AppendPathSegment(indexPath)
+                            .AppendPathSegment(IndexPath)
                             .AppendPathSegment(propertyPath)
                             .SetQueryParams(GetQuery(newValue));
 
@@ -90,9 +111,7 @@ namespace MyLights.Models
             }
         }
 
-
-
-        internal virtual async Task<T> Update()
+        public virtual async Task<T> Update()
         {
             // #fix 
             // this won't work with updating more than one index
@@ -100,8 +119,13 @@ namespace MyLights.Models
             // this should block if a Set is already executing
             //      - (but it doesn't [yet])
 
+            if (string.IsNullOrEmpty(IndexPath))
+                return this.Value;
+
+
+
             string url = urlBase
-                         .AppendPathSegment(indexPath)
+                         .AppendPathSegment(IndexPath)
                          .AppendPathSegment(propertyPath);
 
             var res = await url.GetJsonAsync<JsonDpsRoot>();
@@ -112,8 +136,10 @@ namespace MyLights.Models
             return this.Value;
         }
 
-        internal virtual bool Compare(T first, T second)
+        public virtual bool Compare(T first, T second)
         {
+            if (first == null)
+                return false;
             return first.Equals(second);
         }
 
@@ -121,9 +147,9 @@ namespace MyLights.Models
         protected abstract object GetQuery(T value);
     }
 
-    internal class DpsMode : DpsProperty<string>
+    public class DpsMode : DpsProperty<string>
     {
-        public DpsMode(string indexPath, string initialValue = default) : base("mode", indexPath, initialValue)
+        public DpsMode(string indexPath = "", string initialValue = default) : base("mode", indexPath, initialValue)
         {
         }
 
@@ -141,13 +167,16 @@ namespace MyLights.Models
 
         protected override string GetValue(JsonDps dps)
         {
-            return dps.Mode;
+            if (dps.Mode == "colour")
+                return "color";
+            else
+                return dps.Mode;
         }
     }
 
-    internal class DpsPower : DpsProperty<bool>
+    public class DpsPower : DpsProperty<bool>
     {
-        public DpsPower(string indexPath, bool initialValue = default) : base("power", indexPath, initialValue)
+        public DpsPower(string indexPath = "", bool initialValue = default) : base("power", indexPath, initialValue)
         {
         }
 
@@ -162,9 +191,9 @@ namespace MyLights.Models
         }
     }
 
-    internal class DpsColor : DpsProperty<HSV>
+    public class DpsColor : DpsProperty<HSV>
     {
-        public DpsColor(string indexPath, HSV initialValue = default) : base("color", indexPath, initialValue)
+        public DpsColor(string indexPath = "", HSV initialValue = default) : base("color", indexPath, initialValue)
         {
         }
 
@@ -185,7 +214,7 @@ namespace MyLights.Models
             return dps.Color;
         }
 
-        internal override bool Compare(HSV a, HSV b)
+        public override bool Compare(HSV a, HSV b)
         {
             if (Math.Abs(a.H - b.H) > 0.01)
                 return false;
@@ -198,9 +227,9 @@ namespace MyLights.Models
         }
     }
 
-    internal class DpsBrightness : DpsProperty<double>
+    public class DpsBrightness : DpsProperty<double>
     {
-        public DpsBrightness(string indexPath, double initialValue = 0) : base("brightness", indexPath, initialValue)
+        public DpsBrightness(string indexPath = "", double initialValue = 0) : base("brightness", indexPath, initialValue)
         {
         }
 
@@ -214,20 +243,20 @@ namespace MyLights.Models
             throw new NotImplementedException();
         }
 
-        internal override void Set(double newValue)
+        public override void Set(double newValue)
         {
             Value = newValue;
         }
 
-        internal override Task<double> Update()
+        public override Task<double> Update()
         {
             return Task.FromResult<double>(Value);
         }
     }
 
-    internal class DpsColorTemp : DpsProperty<double>
+    public class DpsWarmth : DpsProperty<double>
     {
-        public DpsColorTemp(string indexPath, double initialValue = 0) : base("colorTemp", indexPath, initialValue)
+        public DpsWarmth(string indexPath = "", double initialValue = 0) : base("warmth", indexPath, initialValue)
         {
         }
 
@@ -241,12 +270,12 @@ namespace MyLights.Models
             throw new NotImplementedException();
         }
 
-        internal override void Set(double newValue)
+        public override void Set(double newValue)
         {
             Value = newValue;
         }
 
-        internal override Task<double> Update()
+        public override Task<double> Update()
         {
             return Task.FromResult<double>(Value);
         }

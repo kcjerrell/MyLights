@@ -8,24 +8,32 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using OLightVMs = System.Collections.ObjectModel.ObservableCollection<MyLights.ViewModels.LightViewModel>;
+using ROOLightVMs = System.Collections.ObjectModel.ReadOnlyObservableCollection<MyLights.ViewModels.LightViewModel>;
+
 namespace MyLights.Util
 {
     public class LightBridge
     {
-        private LightBridge()
+        public LightBridge()
         {
-            this.isInDesignMode = Locator.IsInDesignMode;
             GetLightsCommand = new RelayCommand(async (p) => await GetLights());
-            GetLights();
         }
 
-        private bool isInDesignMode;
+        public RelayCommand GetLightsCommand { get; set; }
+        public IReadOnlyList<Light> Lights { get; } = lights;
+        public ROOLightVMs LightVMs { get; } = new ROOLightVMs(lightVMs);
 
-        private List<Light> lights = new List<Light>();
+        public LightViewModel GetLightViewModel(Light light)
+        {
+            return (from lvm in LightVMs
+                    where lvm.Light == light
+                    select lvm).Single();
+        }
 
         internal bool TryFindBulb(BulbRef key, out Light light)
         {
-            var match = (from l in lights
+            var match = (from l in Lights
                          where l.Name == key.Name
                          select l).ToArray();
 
@@ -42,19 +50,25 @@ namespace MyLights.Util
             }
         }
 
-        public event EventHandler LightsUpdated;
 
-        public ObservableCollection<LightViewModel> LightVMs { get; private set; } = new ObservableCollection<LightViewModel>();
-        public RelayCommand GetLightsCommand { get; set; }
 
-        public LightViewModel GetLightViewModel(Light light)
+
+        public static LightBridge Singleton { get; private set; }
+
+        static LightBridge()
         {
-            return (from lvm in LightVMs
-                    where lvm.Light == light
-                    select lvm).Single();
+            Singleton = new LightBridge();
+            isInDesignMode = Locator.IsInDesignMode;
+
+            GetLights();
         }
 
-        public async Task GetLights()
+        private static bool isInDesignMode;
+        private static List<Light> lights = new List<Light>();
+        private static OLightVMs lightVMs = new OLightVMs();
+
+        
+        public static async Task GetLights()
         {
             List<JsonBulb> jbulbs = new List<JsonBulb>();
 
@@ -93,27 +107,16 @@ namespace MyLights.Util
                 }
             }
 
-            LightVMs.Clear();
+            lightVMs.Clear();
             lights.Clear();
 
             foreach (var jBulb in jbulbs)
             {
-                var light = new Light(jBulb);
+                var light = Light.FromJson(jBulb);
 
-                LightVMs.Add(new LightViewModel(light));
+                lightVMs.Add(new LightViewModel(light));
                 lights.Add(light);
             }
-
-            var handler = LightsUpdated;
-            handler?.Invoke(this, EventArgs.Empty);
         }
-
-        public static LightBridge Singleton { get; private set; }
-
-        static LightBridge()
-        {
-            Singleton = new LightBridge();
-        }
-
     }
 }

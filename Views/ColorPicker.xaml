@@ -3,11 +3,53 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:MyLights.Views"
+             xmlns:local="clr-namespace:MyLights.Views" xmlns:viewmodels="clr-namespace:MyLights.ViewModels"
              mc:Ignorable="d" 
-             d:DesignHeight="800" d:DesignWidth="200">
+             d:DesignHeight="224" d:DesignWidth="260">
+
+    <UserControl.DataContext>
+        <viewmodels:ColorPickerViewModel/>
+    </UserControl.DataContext>
+    
     <Grid>
-        <Border Margin="5" Width="150" Height="150"/>
-   
+        <Border BorderThickness="2" BorderBrush="Black" Background="#FFCCCCCC">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="1*"/>
+                    <RowDefinition Height="1*"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <Grid Grid.Row="0" Grid.RowSpan="2">
+                    <Border x:Name="spectrumBorder" Margin="8,8,0,8" BorderBrush="Black" BorderThickness="1">
+                        <local:ColorSpectrum x:Name="spectrum"/>
+                    </Border>
+                    <Thumb x:Name="colorThumb" DragDelta="Thumb_DragDelta" HorizontalAlignment="Left" VerticalAlignment="Top">
+                        <Thumb.Template>
+                            <ControlTemplate>
+                                <Ellipse Width="16" Height="16" Stroke="Black" StrokeThickness="1" Fill="{Binding SelectedShade}" />
+                            </ControlTemplate>
+                        </Thumb.Template>
+                    </Thumb>
+                </Grid>
+<!--
+                <Border x:Name="prevColor" Grid.Column="1" Grid.Row="0" Margin="8" BorderBrush="Black" BorderThickness="1" Width="25" Visibility="Collapsed"/>
+                <Border x:Name="newColor" Grid.Column="1" Grid.Row="0" Margin="8" BorderBrush="Black" BorderThickness="1" Width="25" Visibility="Collapsed"/>
+     -->
+                <Border x:Name="onlyColor" Grid.Column="1" Grid.Row="0" Grid.RowSpan="2" Margin="8" BorderBrush="Black" 
+                        BorderThickness="1" Width="25" Visibility="Visible" Background="{Binding SelectedColor}"/>
+
+                <Border x:Name="valueBorder" Grid.Row="2" Grid.ColumnSpan="2" 
+                        Margin="8,0,8,8" BorderThickness="1" BorderBrush="Black">
+                    <Slider x:Name="valueSlider" Orientation="Horizontal" Value="{Binding ValueValue}" Minimum="0" Maximum="1"/>
+                </Border>
+            </Grid>
+        </Border>
     </Grid>
 </UserControl>

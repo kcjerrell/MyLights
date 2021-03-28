@@ -21,5 +21,7 @@ namespace MyLights.ViewModels
         {
 
         }
+
+        internal abstract void StartEditing();
     }
 }

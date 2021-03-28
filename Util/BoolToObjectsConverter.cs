@@ -10,6 +10,10 @@ namespace MyLights.Util
         {
             if (value is bool b)
             {
+                if (parameter is string p)
+                    if (p == "invert")
+                        b = !b;
+
                 if (b)
                     return TrueValue;
                 else

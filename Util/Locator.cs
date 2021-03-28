@@ -15,7 +15,7 @@ namespace MyLights.Util
         }
 
         public LightBridge LightBridge { get; }
-        public ObservableCollection<LightViewModel> LightVMs { get => LightBridge.LightVMs; }
+        public ReadOnlyObservableCollection<LightViewModel> LightVMs { get => LightBridge.LightVMs; }
         public LibraryViewModel Library { get; private set; }
 
         private MainWindowViewModel _mainWindowViewModel;
@@ -25,6 +25,21 @@ namespace MyLights.Util
             {
                 if (_mainWindowViewModel == null) { _mainWindowViewModel = new MainWindowViewModel(); }
                 return _mainWindowViewModel;
+            }
+        }
+
+        SceneSetter _designSceneSetter;
+        public SceneSetter DesignSceneSetter
+        {
+            get
+            {
+                if (_designSceneSetter == null)
+                {
+                    _designSceneSetter = new SceneSetter(new BulbRef() { Name = "Up" });
+                    _designSceneSetter.Mode = "color";
+                    _designSceneSetter.Color = new Models.HSV(1, 1, 1);
+                }
+                return _designSceneSetter;
             }
         }
 

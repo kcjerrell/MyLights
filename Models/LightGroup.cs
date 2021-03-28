@@ -10,82 +10,55 @@ namespace MyLights.Models
     //I want to remake this so it's a subclass of Light, so I can
     //just use the same LightVM class. I don't know why I did all this weird like this
     //
-    public class LightGroup : ICollection<Light>
+    internal class LightGroup : Light, ICollection<Light>
     {
+        public LightGroup()
+        {
+            base.color = new DpsColor();
+            base.brightness = new DpsBrightness();
+            base.warmth = new DpsWarmth();
+            base.mode = new DpsMode();
+            base.power = new DpsPower();
+        }
+
         List<Light> lights = new List<Light>();
 
-        public LightGroup(IEnumerable<Light> lights)
-        {
-            foreach (var light in lights)
-            {
-                Add(light);
-            }
-        }
+        string indexPath = "";
 
-        internal void SetColor(HSV hsv)
+        private void UpdateIndexPath()
         {
-            foreach (var light in lights)
-            {
-                light.SetColor(hsv);
-            }
-        }
+            var indices = from l in lights
+                          select l.Index;
 
-        internal void SetPower(bool value)
-        {
-            foreach (var light in lights)
-            {
-                light.SetPower(value);
-            }
+            indexPath = string.Join(',', indices.ToString());
+
+            base.color.IndexPath = indexPath;
+            base.brightness.IndexPath = indexPath;
+            base.warmth.IndexPath = indexPath;
+            base.mode.IndexPath = indexPath;
+            base.power.IndexPath = indexPath;
         }
 
         public int Count => lights.Count;
 
         public bool IsReadOnly => false;
 
-        public string Indexes
-        {
-            get
-            {
-                var indexes = from light in lights
-                              select light.Index.ToString();
-                return string.Join('+', indexes);
-            }
-        }
-
-        internal void Ungroup()
-        {
-            foreach (var light in lights)
-            {
-                light.Ungroup();
-            }
-
-            lights.Clear();
-        }
-
-        internal void SetMode(string value)
-        {
-            foreach (var light in lights)
-            {
-                light.SetMode(value);
-            }
-        }
-
         public void Add(Light item)
         {
-            item.Engroup(this, lights.Count == 0);
             lights.Add(item);
+            UpdateIndexPath();
         }
 
         public void Clear()
         {
             lights.Clear();
+            UpdateIndexPath();
         }
 
         public bool Contains(Light item)
         {
-           return lights.Contains(item);
+            return lights.Contains(item);
         }
-
 
         public void CopyTo(Light[] array, int arrayIndex)
         {
@@ -99,7 +72,9 @@ namespace MyLights.Models
 
         public bool Remove(Light item)
         {
-            throw new Exception();
+            var removed = lights.Remove(item);
+            UpdateIndexPath();
+            return removed;
         }
 
         IEnumerator IEnumerable.GetEnumerator()

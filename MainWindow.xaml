@@ -70,18 +70,18 @@
 
                                         <TextBlock Text="H" VerticalAlignment="Center" FontSize="14" Margin="3,3,3,3"/>
                                         <Slider Maximum="1" SmallChange="0.05" TickFrequency="0.1" TickPlacement="BottomRight" 
-                                                Value="{Binding H}" Margin="3,3,3,3" Foreground="#FF636363" LargeChange="0.2" Grid.Column="1"/>
+                                                Value="{Binding H, Delay=0, Mode=OneWayToSource}" Margin="3,3,3,3" Foreground="#FF636363" LargeChange="0.2" Grid.Column="1"/>
                                         <TextBlock Text="{Binding H, StringFormat=.00}" Grid.Column="2" FontSize="14" VerticalAlignment="Center"
                                                    Width="25" HorizontalAlignment="Left"/>
 
                                         <TextBlock Text="S" Grid.Row="1" VerticalAlignment="Center" FontSize="14" Margin="3,3,3,3"/>
                                         <Slider Maximum="1" SmallChange="0.05" TickFrequency="0.1" TickPlacement="BottomRight" Value="{Binding S}" Margin="3,3,3,3" Foreground="#FF636363" LargeChange="0.2" Grid.Column="1" Grid.Row="1"/>
-                                        <TextBlock Text="{Binding S, StringFormat=.00}" Grid.Row="1"  Grid.Column="2" FontSize="14" 
+                                        <TextBlock Text="{Binding S, Delay=150, Mode=OneWayToSource, StringFormat=.00}" Grid.Row="1"  Grid.Column="2" FontSize="14" 
                                                    VerticalAlignment="Center" Width="25" HorizontalAlignment="Left"/>
 
                                         <TextBlock Text="V" Grid.Row="2" VerticalAlignment="Center" FontSize="14" Margin="3,3,3,3"/>
                                         <Slider Maximum="1" SmallChange="0.05" TickFrequency="0.1" TickPlacement="BottomRight" Value="{Binding V}" Margin="3,3,3,3" Foreground="#FF636363" LargeChange="0.2" Grid.Column="1" Grid.Row="2"/>
-                                        <TextBlock Text="{Binding V, StringFormat=.00}" Grid.Row="2" Grid.Column="2" FontSize="14" 
+                                        <TextBlock Text="{Binding V, Delay=150, Mode=OneWayToSource, StringFormat=.00}" Grid.Row="2" Grid.Column="2" FontSize="14" 
                                                    VerticalAlignment="Center" Width="25" HorizontalAlignment="Left"/>
                                     </Grid>
                                 </TabItem>
