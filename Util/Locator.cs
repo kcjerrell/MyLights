@@ -15,7 +15,7 @@ namespace MyLights.Util
         }
 
         public LightBridge LightBridge { get; }
-        public ReadOnlyObservableCollection<LightViewModel> LightVMs { get => LightBridge.LightVMs; }
+        public ObservableCollection<LightViewModel> LightVMs { get => LightBridge.LightVMs; }
         public LibraryViewModel Library { get; private set; }
 
         private MainWindowViewModel _mainWindowViewModel;

@@ -1,4 +1,6 @@
-﻿using System;
+﻿using MyLights.Models;
+using MyLights.Util;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -24,7 +26,7 @@ namespace MyLights.Views
             double h = x / ActualWidth;
             double s = y / ActualHeight;
 
-            HsvToRgb(h * 360, s, v, out int r, out int g, out int b);
+            Helpers.HsvToRgb(h * 360, s, v, out byte r, out byte g, out byte b);
 
             return Color.FromArgb(255, (byte)r, (byte)g, (byte)b);
         }
@@ -36,10 +38,10 @@ namespace MyLights.Views
 
         protected override Size MeasureOverride(Size availableSize)
         {
-            double w = availableSize.Width == double.PositiveInfinity ? 200 : availableSize.Width;
-            double h = availableSize.Height == double.PositiveInfinity ? 200 : availableSize.Height;
+            //double w = availableSize.Width == double.PositiveInfinity ? 50 : availableSize.Width;
+            //double h = availableSize.Height == double.PositiveInfinity ? 50 : availableSize.Height;
 
-            return new Size(w, h);
+            return new Size(0, 0);
         }
 
         protected override Size ArrangeOverride(Size finalSize)
@@ -50,10 +52,58 @@ namespace MyLights.Views
         private void CreateBitmap(int width, int height)
         {
             bitmap = new WriteableBitmap(width, height, 96, 96, PixelFormats.Bgr32, null);
-            GenerateSpectrum(bitmap);
+            GenerateSpectrum(bitmap, Mode, ThirdValue);
         }
 
-        private static void GenerateSpectrum(WriteableBitmap bitmap)
+        public SpectrumModes Mode
+        {
+            get { return (SpectrumModes)GetValue(ModeProperty); }
+            set { SetValue(ModeProperty, value); }
+        }
+
+        public static readonly DependencyProperty ModeProperty =
+            DependencyProperty.Register("Mode", typeof(SpectrumModes), typeof(ColorSpectrum),
+                new PropertyMetadata(SpectrumModes.HS, (s, e) => ((ColorSpectrum)s).OnModeChanged(e)));
+
+        private void OnModeChanged(DependencyPropertyChangedEventArgs e)
+        {
+            if (bitmap != null)
+            {
+                GenerateSpectrum(bitmap, Mode, ThirdValue);
+            }
+        }
+
+        public double ThirdValue
+        {
+            get { return (double)GetValue(ThirdValueProperty); }
+            set { SetValue(ThirdValueProperty, value); }
+        }
+
+        public static readonly DependencyProperty ThirdValueProperty =
+            DependencyProperty.Register("ThirdValue", typeof(double), typeof(ColorSpectrum),
+                new PropertyMetadata(1.0, (s, e) => ((ColorSpectrum)s).OnThirdValueChanged(e)));
+
+        private void OnThirdValueChanged(DependencyPropertyChangedEventArgs e)
+        {
+            if (bitmap != null)
+            {
+                GenerateSpectrum(bitmap, Mode, ThirdValue);
+            }
+        }
+
+
+        private static HSV ModeConversion(SpectrumModes mode, double a, double b, double c)
+        {
+            return mode switch
+            {
+                SpectrumModes.HS => new HSV(a, b, c),
+                SpectrumModes.HV => new HSV(a, c, b),
+                SpectrumModes.SV => new HSV(c, a, b),
+                _ => new HSV()
+            };
+        }
+
+        private static void GenerateSpectrum(WriteableBitmap bitmap, SpectrumModes mode, double thirdValue)
         {
             try
             {
@@ -62,11 +112,11 @@ namespace MyLights.Views
                 unsafe
                 {
                     int x, y;
-                    double hue, saturation;
+                    double a, b, c;
 
                     int pixels = bitmap.PixelWidth * bitmap.PixelHeight;
 
-                    double value = 1.0;
+                    c = thirdValue;
 
                     IntPtr bufPtr = bitmap.BackBuffer;
 
@@ -75,18 +125,16 @@ namespace MyLights.Views
                         x = i % bitmap.PixelWidth;
                         y = i / bitmap.PixelWidth;
 
-                        hue = (double)x / bitmap.PixelWidth * 360.0;
-                        saturation = (double)y / bitmap.PixelHeight;
+                        a = (double)x / bitmap.PixelWidth;
+                        b = 1.0 - (double)y / bitmap.PixelHeight;
 
-                        HsvToRgb(hue, saturation, value, out int r, out int g, out int b);
-
-                        if (y > 500)
-                            y += 0;
+                        HSV hsv = ModeConversion(mode, a, b, c);
+                        Helpers.HsvToRgb(hsv.H, hsv.S, hsv.V, out byte red, out byte green, out byte blue);
 
                         int pixel = 255 << 24; // A
-                        pixel |= r << 16;
-                        pixel |= g << 8;
-                        pixel |= b << 0;
+                        pixel |= red << 16;
+                        pixel |= green << 8;
+                        pixel |= blue << 0;
 
                         *((int*)bufPtr) = pixel;
 
@@ -101,105 +149,12 @@ namespace MyLights.Views
                 bitmap.Unlock();
             }
         }
-        static void HsvToRgb(double h, double S, double V, out int r, out int g, out int b)
-        {
-            double H = h;
-            while (H < 0) { H += 360; };
-            while (H >= 360) { H -= 360; };
-            double R, G, B;
-            if (V <= 0)
-            { R = G = B = 0; }
-            else if (S <= 0)
-            {
-                R = G = B = V;
-            }
-            else
-            {
-                double hf = H / 60.0;
-                int i = (int)Math.Floor(hf);
-                double f = hf - i;
-                double pv = V * (1 - S);
-                double qv = V * (1 - S * f);
-                double tv = V * (1 - S * (1 - f));
-                switch (i)
-                {
+    }
 
-                    // Red is the dominant color
-
-                    case 0:
-                        R = V;
-                        G = tv;
-                        B = pv;
-                        break;
-
-                    // Green is the dominant color
-
-                    case 1:
-                        R = qv;
-                        G = V;
-                        B = pv;
-                        break;
-                    case 2:
-                        R = pv;
-                        G = V;
-                        B = tv;
-                        break;
-
-                    // Blue is the dominant color
-
-                    case 3:
-                        R = pv;
-                        G = qv;
-                        B = V;
-                        break;
-                    case 4:
-                        R = tv;
-                        G = pv;
-                        B = V;
-                        break;
-
-                    // Red is the dominant color
-
-                    case 5:
-                        R = V;
-                        G = pv;
-                        B = qv;
-                        break;
-
-                    // Just in case we overshoot on our math by a little, we put these here. Since its a switch it won't slow us down at all to put these here.
-
-                    case 6:
-                        R = V;
-                        G = tv;
-                        B = pv;
-                        break;
-                    case -1:
-                        R = V;
-                        G = pv;
-                        B = qv;
-                        break;
-
-                    // The color is not defined, we should throw an error.
-
-                    default:
-                        //LFATAL("i Value error in Pixel conversion, Value is %d", i);
-                        R = G = B = V; // Just pretend its black/white
-                        break;
-                }
-            }
-            r = Clamp((int)(R * 255.0));
-            g = Clamp((int)(G * 255.0));
-            b = Clamp((int)(B * 255.0));
-        }
-
-        /// <summary>
-        /// Clamp a value to 0-255
-        /// </summary>
-        static int Clamp(int i)
-        {
-            if (i < 0) return 0;
-            if (i > 255) return 255;
-            return i;
-        }
+    public enum SpectrumModes
+    {
+        HS,
+        HV,
+        SV,
     }
 }

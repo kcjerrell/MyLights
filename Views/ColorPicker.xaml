@@ -3,22 +3,18 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:MyLights.Views" xmlns:viewmodels="clr-namespace:MyLights.ViewModels"
+             xmlns:local="clr-namespace:MyLights.Views" 
+             xmlns:viewmodels="clr-namespace:MyLights.ViewModels" 
+             xmlns:ctrl="clr-namespace:MyLights.Controls"
              mc:Ignorable="d" 
              d:DesignHeight="224" d:DesignWidth="260">
-
-    <UserControl.DataContext>
-        <viewmodels:ColorPickerViewModel/>
-    </UserControl.DataContext>
     
     <Grid>
-        <Border BorderThickness="2" BorderBrush="Black" Background="#FFCCCCCC">
+        <Border>
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="1*"/>
-                    <RowDefinition Height="1*"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="2*"/>
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
@@ -27,27 +23,37 @@
                 </Grid.ColumnDefinitions>
 
                 <Grid Grid.Row="0" Grid.RowSpan="2">
-                    <Border x:Name="spectrumBorder" Margin="8,8,0,8" BorderBrush="Black" BorderThickness="1">
-                        <local:ColorSpectrum x:Name="spectrum"/>
-                    </Border>
-                    <Thumb x:Name="colorThumb" DragDelta="Thumb_DragDelta" HorizontalAlignment="Left" VerticalAlignment="Top">
-                        <Thumb.Template>
-                            <ControlTemplate>
-                                <Ellipse Width="16" Height="16" Stroke="Black" StrokeThickness="1" Fill="{Binding SelectedShade}" />
-                            </ControlTemplate>
-                        </Thumb.Template>
-                    </Thumb>
+
+                    <ctrl:XYSelector x:Name="xySelector" 
+                                     ThumbFill="{Binding SelectedShade, Converter={StaticResource BrushCache}, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:ColorPicker}}}" 
+                                     ThumbStroke="Black" ThumbStrokeSize="1" BorderThickness="2" BorderBrush="Black" Background="#00000000"
+                                     ThumbSize="16" TextVisibility="Visible" ValueRange="0,0,1,1" Panel.ZIndex="50"/>
+
+                    <local:ColorSpectrum x:Name="spectrum" Panel.ZIndex="0"/>
                 </Grid>
-<!--
-                <Border x:Name="prevColor" Grid.Column="1" Grid.Row="0" Margin="8" BorderBrush="Black" BorderThickness="1" Width="25" Visibility="Collapsed"/>
-                <Border x:Name="newColor" Grid.Column="1" Grid.Row="0" Margin="8" BorderBrush="Black" BorderThickness="1" Width="25" Visibility="Collapsed"/>
-     -->
-                <Border x:Name="onlyColor" Grid.Column="1" Grid.Row="0" Grid.RowSpan="2" Margin="8" BorderBrush="Black" 
-                        BorderThickness="1" Width="25" Visibility="Visible" Background="{Binding SelectedColor}"/>
+
+                <Border x:Name="selectedColorBorder" Grid.Column="1" Grid.Row="0" Grid.RowSpan="2" Margin="0,8,8,8" BorderBrush="Black" 
+                        BorderThickness="1" Width="25" Visibility="Visible"/>
 
                 <Border x:Name="valueBorder" Grid.Row="2" Grid.ColumnSpan="2" 
-                        Margin="8,0,8,8" BorderThickness="1" BorderBrush="Black">
-                    <Slider x:Name="valueSlider" Orientation="Horizontal" Value="{Binding ValueValue}" Minimum="0" Maximum="1"/>
+                        Margin="8,0,8,8" BorderThickness="1" BorderBrush="Black" Background="{Binding SelectedShade, Converter={StaticResource BrushCache}, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:ColorPicker}}}">
+                    <Border Padding="4">
+                        <Border.Background>
+                            <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                <LinearGradientBrush.RelativeTransform>
+                                    <TransformGroup>
+                                        <ScaleTransform CenterY="0.5" CenterX="0.5"/>
+                                        <SkewTransform CenterY="0.5" CenterX="0.5"/>
+                                        <RotateTransform Angle="270" CenterY="0.5" CenterX="0.5"/>
+                                        <TranslateTransform/>
+                                    </TransformGroup>
+                                </LinearGradientBrush.RelativeTransform>
+                                <GradientStop Color="Black"/>
+                                <GradientStop Color="#00000000" Offset="1"/>
+                            </LinearGradientBrush>
+                        </Border.Background>
+                        <Slider x:Name="valueSlider" Orientation="Horizontal" Minimum="0" Maximum="1" ValueChanged="valueSlider_ValueChanged"/>
+                    </Border>
                 </Border>
             </Grid>
         </Border>

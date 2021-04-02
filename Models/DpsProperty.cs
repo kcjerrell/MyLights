@@ -151,6 +151,8 @@ namespace MyLights.Models
     {
         public DpsMode(string indexPath = "", string initialValue = default) : base("mode", indexPath, initialValue)
         {
+            if (initialValue == "colour")
+                Value = "color";
         }
 
         protected override object GetQuery(string value)

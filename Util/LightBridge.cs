@@ -21,8 +21,8 @@ namespace MyLights.Util
         }
 
         public RelayCommand GetLightsCommand { get; set; }
-        public IReadOnlyList<Light> Lights { get; } = lights;
-        public ROOLightVMs LightVMs { get; } = new ROOLightVMs(lightVMs);
+        public ObservableCollection<Light> Lights { get; } = lights;
+        public OLightVMs LightVMs { get; } = lightVMs;
 
         public LightViewModel GetLightViewModel(Light light)
         {
@@ -64,7 +64,7 @@ namespace MyLights.Util
         }
 
         private static bool isInDesignMode;
-        private static List<Light> lights = new List<Light>();
+        private static ObservableCollection<Light> lights = new ObservableCollection<Light>();
         private static OLightVMs lightVMs = new OLightVMs();
 
         

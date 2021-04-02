@@ -17,6 +17,11 @@
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        
         <ItemsControl ItemsSource="{Binding Lights}">
             <ItemsControl.ItemTemplate>
                 <DataTemplate DataType="{x:Type viewmodels:LightViewModel}">
@@ -27,7 +32,19 @@
                                 <GradientStop Color="White" Offset="1"/>
                             </LinearGradientBrush>
                         </Border.Background>
-                        <Ellipse Stroke="#AA111111" StrokeThickness="2"/>
+                        <Grid>
+                            <Ellipse Stroke="#AA111111" StrokeThickness="2" Fill="{Binding Color, Mode=OneWay, Converter={StaticResource BrushCache}}"/>
+                            <Thumb DragStarted="Thumb_DragStarted" DragDelta="Thumb_DragDelta" HorizontalAlignment="Center" VerticalAlignment="Center"
+                                   DragOver="Thumb_DragOver">
+                                <Thumb.Template>
+                                    <ControlTemplate>
+                                        <Ellipse Width="20" Height="20" Fill="White" StrokeThickness="1" Stroke="Black"
+                                                 />
+                                    </ControlTemplate>
+                                </Thumb.Template>
+                            </Thumb>
+
+                        </Grid>
                     </Border>
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
@@ -37,6 +54,15 @@
                 </ItemsPanelTemplate>
             </ItemsControl.ItemsPanel>
         </ItemsControl>
+
+        <StackPanel Grid.Row="1" Orientation="Horizontal" VerticalAlignment="Bottom">
+            <CheckBox x:Name="syncCheckBox"/>
+            <TextBlock>Sync</TextBlock>
+        </StackPanel>
+
+        <views:ColorSpectrum Grid.Column="1" Grid.RowSpan="2" x:Name="spectrum"/>
+
+        <Canvas x:Name="overlayCanvas" Grid.ColumnSpan="2" Grid.RowSpan="2"  Panel.ZIndex="100"/>
 
         <!--
         <Border Grid.Column="1" Margin="20" RenderTransformOrigin="0.5,0.5">  
@@ -67,7 +93,7 @@
         </Border>
         -->
 
-        <Button Content="Click this" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" Click="Button_Click"/>
+
 
     </Grid>
 </Window>

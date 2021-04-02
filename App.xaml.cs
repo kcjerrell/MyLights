@@ -19,28 +19,20 @@ namespace MyLights
         {
             Current = this;
             this.Startup += App_Startup;
-            this.Exit += App_Exit;
         }
 
         private void App_Startup(object sender, StartupEventArgs e)
         {
-            var startInfo = new ProcessStartInfo("node");
-            startInfo.ArgumentList.Add("--trace-warnings");
-            startInfo.ArgumentList.Add("--unhandled-rejections=warn");
-            startInfo.ArgumentList.Add("--trace-uncaught");
-            startInfo.ArgumentList.Add(@"C:\Users\kcjer\source\repos\lightrest\dist\server.js");
-            node = Process.Start(startInfo);
+            lightREST = new LightREST();
         }
 
-        private void App_Exit(object sender, ExitEventArgs e)
+        protected override void OnExit(ExitEventArgs e)
         {
-            if (node != null)
-            {
-                node.Kill();
-            }
+            lightREST.Dispose();
+            base.OnExit(e);
         }
 
-        private Process node;
+        LightREST lightREST;
 
         public Locator Locator { get => (Locator)this.Resources["Locator"]; }
 

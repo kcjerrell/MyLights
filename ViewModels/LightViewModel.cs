@@ -56,7 +56,7 @@ namespace MyLights.ViewModels
             get => Light.Color;
             set
             {
-                UpdateColor(value);
+                UpdateColor(value.H, value.S,  value.V);
             }
         }
 
@@ -65,7 +65,7 @@ namespace MyLights.ViewModels
             get => this.hsv.H;
             set
             {
-                UpdateColor(value, hsv.S, hsv.V);
+                UpdateColor(h: value);
             }
         }
 
@@ -74,7 +74,7 @@ namespace MyLights.ViewModels
             get => this.hsv.S;
             set
             {
-                UpdateColor(hsv.H, value, hsv.V);
+                UpdateColor(s: value);
             }
         }
 
@@ -83,24 +83,65 @@ namespace MyLights.ViewModels
             get => this.hsv.V;
             set
             {
-                UpdateColor(hsv.H, hsv.S, value);
+                UpdateColor(v: value);
             }
         }
 
-        private void UpdateColor(HSV hsv)
+        private void UpdateColor(double h = -1.0, double s = -1.0, double v = -1.0)
         {
-            Light.SetColor(hsv);
-        }
+            if (h == -1)
+                h = hsv.H;
+            if (s == -1)
+                s = hsv.S;
+            if (v == -1)
+                v = hsv.V;
 
-        private void UpdateColor(double h, double s, double v)
-        {
-            Color = new HSV(h, s, v);
+            hsv = new HSV(h, s, v);
+
+            Light.SetColor(hsv);
         }
 
         public bool IsSelected { get; set; }
 
         public int Index { get => Light.Index; }
 
+        public LightModes LightMode
+        {
+            get
+            {
+                if (Light.Power && Light.Mode.ToLower() == "color")
+                    return LightModes.Color;
+                else if (Light.Power && Light.Mode.ToLower() == "white")
+                    return LightModes.White;
+                else
+                    return LightModes.Off;
+            }
+            set
+            {
+                if (value == LightModes.Off)
+                {
+                    Power = false;
+                }
+                else if (value == LightModes.Color)
+                {
+                    Power = true;
+                    Mode = "color";
+                }
+                else if (value == LightModes.White)
+                {
+                    Power = true;
+                    Mode = "white";
+                }
+            }
+        }
+
         public event PropertyChangedEventHandler PropertyChanged;
+    }
+
+    public enum LightModes
+    {
+        Off,
+        Color,
+        White
     }
 }

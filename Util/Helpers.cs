@@ -17,11 +17,22 @@ namespace MyLights.Util
 
         internal static Color HsvToColor(double h, double s, double v)
         {
-            Helpers.HsvToRgb(h, s, v, out int r, out int g, out int b);
+            Helpers.HsvToRgb(h, s, v, out byte r, out byte g, out byte b);
             return Color.FromRgb((byte)r, (byte)g, (byte)b);
         }
 
-        internal static void HsvToRgb(double h, double S, double V, out int r, out int g, out int b)
+        /// <summary>
+        /// Takes HSV values and provides equivalent RGB values
+        /// 
+        /// HSV are expected to be between 0.0 and 1.0. RGB values are 0-255.
+        /// </summary>
+        /// <param name="h"></param>
+        /// <param name="S"></param>
+        /// <param name="V"></param>
+        /// <param name="r"></param>
+        /// <param name="g"></param>
+        /// <param name="b"></param>
+        internal static void HsvToRgb(double h, double S, double V, out byte r, out byte g, out byte b)
         {
             double H = h * 360.0;
             while (H < 0) { H += 360; };
@@ -107,19 +118,19 @@ namespace MyLights.Util
                         break;
                 }
             }
-            r = Clamp((int)(R * 255.0));
-            g = Clamp((int)(G * 255.0));
-            b = Clamp((int)(B * 255.0));
+            r = ByteClamp((int)(R * 255.0));
+            g = ByteClamp((int)(G * 255.0));
+            b = ByteClamp((int)(B * 255.0));
         }
 
         /// <summary>
         /// Clamp a value to 0-255
         /// </summary>
-        static int Clamp(int i)
+        static byte ByteClamp(int i)
         {
-            if (i < 0) return 0;
-            if (i > 255) return 255;
-            return i;
+            if (i < 0) i = 0;
+            if (i > 255) i = 255;
+            return (byte)i;
         }
 
         //https://stackoverflow.com/a/1626175/839853
@@ -130,7 +141,7 @@ namespace MyLights.Util
             int max = Math.Max(color.R, Math.Max(color.G, color.B));
             int min = Math.Min(color.R, Math.Min(color.G, color.B));
 
-            hue = col.GetHue();
+            hue = col.GetHue() / 360.0;
             saturation = (max == 0) ? 0 : 1d - (1d * min / max);
             value = max / 255d;
         }

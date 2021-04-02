@@ -155,7 +155,7 @@ namespace MyLights.Etc
             double h = rand.NextDouble() * 360;
             double s = rand.NextDouble() / 2.0 + .5;
 
-            int r, g, b;
+            byte r, g, b;
 
             Helpers.HsvToRgb(h, s, 1.0, out r, out g, out b);
 

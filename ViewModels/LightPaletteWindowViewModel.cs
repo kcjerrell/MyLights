@@ -17,7 +17,7 @@ namespace MyLights.ViewModels
             this.Lights = lb.LightVMs;
         }
 
-        public ReadOnlyObservableCollection<LightViewModel> Lights { get; set; }
+        public ObservableCollection<LightViewModel> Lights { get; set; }
 
         public event PropertyChangedEventHandler PropertyChanged;
     }

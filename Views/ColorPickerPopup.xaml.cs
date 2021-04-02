@@ -62,6 +62,7 @@ namespace MyLights.Views
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             selectedColor = colorPicker.SelectedColor;
+            popup.IsOpen = false;
             handle.Set();
         }
     }

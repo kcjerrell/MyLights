@@ -4,7 +4,7 @@
              xmlns:local="clr-namespace:MyLights"
              xmlns:util="clr-namespace:MyLights.Util">
 
-    <Application.StartupUri>LightPaletteWindow.xaml</Application.StartupUri>
+    <Application.StartupUri>Windows\AnotherLightPanelWindow.xaml</Application.StartupUri>
 
     <Application.Resources>
         <util:Locator x:Key="Locator"/>

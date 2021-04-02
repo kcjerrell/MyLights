@@ -47,5 +47,11 @@ namespace MyLights.Util
 
             return Math.Min(Math.Max(x, min), max);
         }
+
+        public static HSV ToHSV(this Color color)
+        {
+            Helpers.ColorToHSV(color, out double h, out double s, out double v);
+            return new HSV(h, s, v);
+        }
     }
 }

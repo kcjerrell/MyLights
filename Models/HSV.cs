@@ -6,6 +6,7 @@ using System;
 
 namespace MyLights.Models
 {
+    //this class does no value checking at all
     public struct HSV : IEquatable<HSV>
     {
         [JsonProperty("h")]
@@ -22,7 +23,7 @@ namespace MyLights.Models
 
         public Color ToColor()
         {
-            Helpers.HsvToRgb(H, S, V, out int r, out int g, out int b);
+            Helpers.HsvToRgb(H, S, V, out byte r, out byte g, out byte b);
             return Color.FromRgb((byte)r, (byte)g, (byte)b);
         }
 
@@ -63,6 +64,11 @@ namespace MyLights.Models
         public override int GetHashCode()
         {
             return (int)(H * 994000000 + S * 993989 + V * 13);
+        }
+
+        public override string ToString()
+        {
+            return $"(HSV: {H.ToString("F3")}, {S.ToString("F3")}, {V.ToString("F3")})";
         }
     }
 }
