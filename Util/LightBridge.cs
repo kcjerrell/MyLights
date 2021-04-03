@@ -60,7 +60,7 @@ namespace MyLights.Util
             Singleton = new LightBridge();
             isInDesignMode = Locator.IsInDesignMode;
 
-            GetLights();
+            GetLights(true);
         }
 
         private static bool isInDesignMode;
@@ -68,8 +68,14 @@ namespace MyLights.Util
         private static OLightVMs lightVMs = new OLightVMs();
 
         
-        public static async Task GetLights()
+        public static async Task GetLights(bool delay = false)
         {
+            if (delay)
+                await Task.Delay(2000);
+
+            if (!await LightREST.CheckServer())
+                return;
+
             List<JsonBulb> jbulbs = new List<JsonBulb>();
 
             if (isInDesignMode)

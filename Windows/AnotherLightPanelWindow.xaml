@@ -59,6 +59,30 @@
             </util:LightModeTemplateSelector.Color>
         </util:LightModeTemplateSelector>
 
+        <util:LightModeTemplateSelector x:Key="LightModeContentTemplateSelector">
+            <util:LightModeTemplateSelector.Off>
+                <DataTemplate>
+                    <Border>
+                        <TextBlock>Off!</TextBlock>
+                    </Border>
+                </DataTemplate>
+            </util:LightModeTemplateSelector.Off>
+            <util:LightModeTemplateSelector.Color>
+                <DataTemplate>
+                    <Border>
+                        <TextBlock>Color!</TextBlock>
+                    </Border>
+                </DataTemplate>
+            </util:LightModeTemplateSelector.Color>
+            <util:LightModeTemplateSelector.White>
+                <DataTemplate>
+                    <Border>
+                        <TextBlock>White!</TextBlock>
+                    </Border>
+                </DataTemplate>
+            </util:LightModeTemplateSelector.White>
+        </util:LightModeTemplateSelector>
+
         <ObjectDataProvider MethodName="GetValues"
                 ObjectType="{x:Type vm:LightModes}"
                 x:Key="MyEnumValues">
@@ -87,12 +111,12 @@
                                                 Storyboard.TargetProperty="(Panel.Background).(SolidColorBrush.Color)">
                                                 <EasingColorKeyFrame KeyTime="0" Value="#FFdddddd" />
                                             </ColorAnimationUsingKeyFrames>
-                                                                                        <ColorAnimationUsingKeyFrames Storyboard.TargetName="Border"
+                                            <ColorAnimationUsingKeyFrames Storyboard.TargetName="Border"
                                                 Storyboard.TargetProperty="(Border.BorderBrush).(SolidColorBrush.Color)">
                                                 <EasingColorKeyFrame KeyTime="0" Value="#FFdddddd" />
                                             </ColorAnimationUsingKeyFrames>
                                         </Storyboard>
-                                    </VisualState>                                    
+                                    </VisualState>
                                 </VisualStateGroup>
                                 <VisualStateGroup x:Name="CommonStates">
                                     <VisualState x:Name="Normal"/>
@@ -126,7 +150,7 @@
             <ColumnDefinition Width="500"/>
             <ColumnDefinition Width="Auto"/>
         </Grid.ColumnDefinitions>
-        <ItemsControl ItemsSource="{Binding LightVMs}">
+        <ItemsControl x:Name="itemsControl" ItemsSource="{Binding LightVMs}">
             <ItemsControl.ItemTemplate>
                 <DataTemplate DataType="{x:Type vm:LightViewModel}">
                     <Border Margin="4" BorderBrush="Black" BorderThickness="2" Background="#ffbbbbbb">
@@ -140,7 +164,7 @@
                                 <RowDefinition Height="Auto"/>
                             </Grid.RowDefinitions>
 
-                            <ListBox Grid.Column="0" ItemsSource="{Binding Source={StaticResource MyEnumValues}}"
+                            <ListBox x:Name="lightModeListBox" Grid.Column="0" ItemsSource="{Binding Source={StaticResource MyEnumValues}}"
                                      SelectedItem="{Binding LightMode, Mode=TwoWay}" VerticalAlignment="Center" ItemTemplateSelector="{StaticResource lightModeTemplateSelector}"
                                      ItemContainerStyle="{StaticResource LightModeListBoxItemStyle}" Background="#44000000" BorderBrush="Black"
                                      BorderThickness="1" Padding="0">
@@ -151,17 +175,42 @@
                                 </ListBox.ItemsPanel>
                             </ListBox>
 
+                            <Control Grid.Column="1">
+                                <Control.Style>
+                                    <Style TargetType="Control">
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding SelectedItem, ElementName=lightModeListBox, Mode=OneWay}" Value="Off">
+                                                <Setter Property="Template">
+                                                    <Setter.Value>
+                                                        <ControlTemplate>
+                                                            <Border>
+                                                                <TextBlock>Off!</TextBlock>
+                                                            </Border>
+                                                        </ControlTemplate>
+                                                    </Setter.Value>
+                                                </Setter>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Control.Style>
+                            </Control>
+
+                            <!--
                             <Grid Grid.Column="1" Margin="3">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
                                 <controls:XYSelector Width="100" Panel.ZIndex="50" ValueRange="0,0,1,1"
                                                      ValueX="{Binding H, Mode=TwoWay}"
                                                       ValueY="{Binding S, Mode=TwoWay}" ThumbStrokeSize="1"
                                                      ThumbFill="#00000000" ThumbStroke="Black" TextVisibility="Visible" BorderBrush="Black"
                                                      BorderThickness="2"/>
-                                
-                                <views:ColorSpectrum Panel.ZIndex="0" Mode="SV" ThirdValue="{Binding V}"/>
-                            </Grid>
 
-                            <Slider Grid.Row="1" Grid.Column="1" Maximum="1" LargeChange="0.1" SmallChange="0.05" Value="{Binding V}"/>
+                                <views:ColorSpectrum Panel.ZIndex="0" Mode="HS" ThirdValue="{Binding V}"/>
+                                <Slider Grid.Row="1" Grid.Column="1" Maximum="1" LargeChange="0.1" SmallChange="0.05" Value="{Binding V, Mode=TwoWay}"/>
+                            </Grid>
+-->
 
                         </Grid>
                     </Border>

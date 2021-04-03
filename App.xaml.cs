@@ -18,21 +18,7 @@ namespace MyLights
         public App()
         {
             Current = this;
-            this.Startup += App_Startup;
         }
-
-        private void App_Startup(object sender, StartupEventArgs e)
-        {
-            lightREST = new LightREST();
-        }
-
-        protected override void OnExit(ExitEventArgs e)
-        {
-            lightREST.Dispose();
-            base.OnExit(e);
-        }
-
-        LightREST lightREST;
 
         public Locator Locator { get => (Locator)this.Resources["Locator"]; }
 

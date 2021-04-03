@@ -1,4 +1,5 @@
 ﻿using MyLights.Util;
+using MyLights.ViewModels;
 using PropertyChanged;
 using System;
 using System.Collections.Generic;
@@ -66,6 +67,9 @@ namespace MyLights.Models
         public string Mode { get => mode.Value; }
         public double Brightness { get => brightness.Value; }
         public double Warmth { get => warmth.Value; }
+
+        public LightModes LightMode { }
+
 
         public void SetColor(HSV value)
         {

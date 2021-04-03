@@ -105,34 +105,40 @@ namespace MyLights.ViewModels
 
         public int Index { get => Light.Index; }
 
+        [DependsOn("Mode", "Power")]
+        //public LightModes LightMode
+        //{
+        //    get
+        //    {
+        //        if (Light.Power && Light.Mode.ToLower() == "color")
+        //            return LightModes.Color;
+        //        else if (Light.Power && Light.Mode.ToLower() == "white")
+        //            return LightModes.White;
+        //        else
+        //            return LightModes.Off;
+        //    }
+        //    set
+        //    {
+        //        if (value == LightModes.Off)
+        //        {
+        //            Power = false;
+        //        }
+        //        else if (value == LightModes.Color)
+        //        {
+        //            Power = true;
+        //            Mode = "color";
+        //        }
+        //        else if (value == LightModes.White)
+        //        {
+        //            Power = true;
+        //            Mode = "white";
+        //        }
+        //    }
+        //}
+
         public LightModes LightMode
         {
-            get
-            {
-                if (Light.Power && Light.Mode.ToLower() == "color")
-                    return LightModes.Color;
-                else if (Light.Power && Light.Mode.ToLower() == "white")
-                    return LightModes.White;
-                else
-                    return LightModes.Off;
-            }
-            set
-            {
-                if (value == LightModes.Off)
-                {
-                    Power = false;
-                }
-                else if (value == LightModes.Color)
-                {
-                    Power = true;
-                    Mode = "color";
-                }
-                else if (value == LightModes.White)
-                {
-                    Power = true;
-                    Mode = "white";
-                }
-            }
+
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
