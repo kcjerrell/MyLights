@@ -26,39 +26,24 @@ namespace MyLights.Controls
         }
 
 
-        Thumb thumb;
+        FrameworkElement thumb;
         TranslateTransform transform;
+        bool isDragging = false;
 
         private void XYSelector_Loaded(object sender, RoutedEventArgs e)
         {
-            thumb = (Thumb)GetTemplateChild("thumb");
+            thumb = (FrameworkElement)GetTemplateChild("thumb");
             if (thumb != null)
             {
-                thumb.DragDelta += Thumb_DragDelta;
-                thumb.DragStarted += Thumb_DragStarted;
-                thumb.DragOver += Thumb_DragOver;
+                //thumb.DragDelta += Thumb_DragDelta;
+                //thumb.DragStarted += Thumb_DragStarted;
+                //thumb.DragOver += Thumb_DragOver;
 
                 transform = new TranslateTransform();
                 thumb.RenderTransform = transform;
 
                 UpdateValues();
             }
-        }
-
-        private void Thumb_DragOver(object sender, DragEventArgs e)
-        {
-        }
-
-        private void Thumb_DragStarted(object sender, DragStartedEventArgs e)
-        {
-        }
-
-        private void Thumb_DragDelta(object sender, DragDeltaEventArgs e)
-        {
-            Point current = ThumbOffset;
-            Point updated = new Point(current.X + e.HorizontalChange, current.Y + e.VerticalChange);
-
-            ThumbOffset = updated;
         }
 
         public Point ThumbOffset
@@ -156,9 +141,17 @@ namespace MyLights.Controls
 
         private void UpdateValues()
         {
-            CoerceValue(ValueXProperty);
-            CoerceValue(ValueYProperty);
-            CoerceValue(ValueProperty);
+            //CoerceValue(ValueXProperty);
+            //CoerceValue(ValueYProperty);
+            //CoerceValue(ValueProperty);
+
+            double xr = ThumbOffset.X / TrackWidth + 0.5;
+            double xrange = ValueRange.Right - ValueRange.Left;
+            ValueX = xr * xrange + ValueRange.Left;
+
+            double yr = ThumbOffset.Y / TrackHeight + 0.5;
+            double yrange = ValueRange.Bottom - ValueRange.Top;
+            ValueY = yr * yrange + ValueRange.Top;
         }
 
         private void UpdateThumb(double x = double.NaN, double y = double.NaN)
@@ -168,48 +161,105 @@ namespace MyLights.Controls
 
             if (!double.IsNaN(x))
             {
+                double width = ValueRange.Right - ValueRange.Left;
+                double xr = (x - ValueRange.Left) / width;
                 tx = (x - 0.5) * TrackWidth;
             }
             if (!double.IsNaN(y))
             {
+                double height = ValueRange.Bottom - ValueRange.Top;
+                double yr = (y - ValueRange.Top) / height;
                 ty = (y - 0.5) * TrackHeight;
             }
 
             ThumbOffset = new Point(tx, ty);
         }
 
+        private void MoveThumb(Point position)
+        {
+            ThumbOffset = new Point(position.X - TrackWidth / 2.0, position.Y - TrackHeight / 2.0);
+        }
 
         #region Overrides
+        protected override void OnMouseLeftButtonDown(MouseButtonEventArgs e)
+        {
+            if (CaptureMouse())
+            {
+                isDragging = true;
+                MoveThumb(e.GetPosition(this));
+            }
+        }
+        protected override void OnMouseMove(MouseEventArgs e)
+        {
+            if (isDragging)
+            {
+                MoveThumb(e.GetPosition(this));
+            }
+        }
+
+        protected override void OnLostMouseCapture(MouseEventArgs e)
+        {
+            isDragging = false;
+        }
+
+        protected override void OnMouseLeftButtonUp(MouseButtonEventArgs e)
+        {
+            if (IsMouseCaptured)
+            {
+                ReleaseMouseCapture();
+                MoveThumb(e.GetPosition(this));
+                isDragging = false;
+            }
+        }
+
+
         #endregion
 
         #region PropertyChangedCallbacks
         private void OnValueChanged(DependencyPropertyChangedEventArgs e)
         {
-            double width = ValueRange.Right - ValueRange.Left;
-            double xr = (ValueX - ValueRange.Left) / width;
+            //double width = ValueRange.Right - ValueRange.Left;
+            //double xr = (ValueX - ValueRange.Left) / width;
 
-            double height = ValueRange.Bottom - ValueRange.Top;
-            double yr = (ValueY - ValueRange.Top) / height;
+            //double height = ValueRange.Bottom - ValueRange.Top;
+            //double yr = (ValueY - ValueRange.Top) / height;
 
-            UpdateThumb(x: xr, y: yr);
+            //UpdateThumb(x: xr, y: yr);
+
+            if (ValueX != Value.X)
+                ValueX = Value.X;
+
+            if (ValueY != Value.Y)
+                ValueY = Value.Y;
+
+            if (!isDragging)
+                UpdateThumb(Value.X, Value.Y);
 
             CoerceValue(DisplayValueProperty);
         }
 
         private void OnValueXChanged(DependencyPropertyChangedEventArgs e)
         {
-            double width = ValueRange.Right - ValueRange.Left;
-            double xr = (ValueX - ValueRange.Left) / width;
+            //double width = ValueRange.Right - ValueRange.Left;
+            //double xr = (ValueX - ValueRange.Left) / width;
 
-            UpdateThumb(x: xr);
+            if (Value.X != ValueX)
+                Value = new Point(ValueX, Value.Y);
+
+            if (!isDragging)
+                UpdateThumb(x: ValueX);
         }
 
         private void OnValueYChanged(DependencyPropertyChangedEventArgs e)
         {
-            double height = ValueRange.Bottom - ValueRange.Top;
-            double yr = (ValueY - ValueRange.Top) / height;
+            //double height = ValueRange.Bottom - ValueRange.Top;
+            //double yr = (ValueY - ValueRange.Top) / height;
 
-            UpdateThumb(y: yr);
+            if (Value.Y != ValueY)
+                Value = new Point(Value.X, ValueY);
+
+            if (!isDragging)
+                UpdateThumb(y: ValueY);
         }
 
 
@@ -223,23 +273,27 @@ namespace MyLights.Controls
         #region CoerceValueCallbacks
         private object CoerceValue(Point value)
         {
-            return new Point(ValueX, ValueY);
+            return new Point((double)CoerceValueX(value.X), (double)CoerceValueY(value.Y));
         }
 
         private object CoerceValueX(double value)
         {
-            double xr = ThumbOffset.X / TrackWidth + 0.5;
-            double range = ValueRange.Right - ValueRange.Left;
+            //double xr = ThumbOffset.X / TrackWidth + 0.5;
+            //double range = ValueRange.Right - ValueRange.Left;
 
-            return xr * range + ValueRange.Left;
+            //return xr * range + ValueRange.Left;
+
+            return value.Clamp(ValueRange.Left, ValueRange.Right);
         }
 
         private object CoerceValueY(double value)
         {
-            double yr = ThumbOffset.Y / TrackHeight + 0.5;
-            double range = ValueRange.Bottom - ValueRange.Top;
+            //double yr = ThumbOffset.Y / TrackHeight + 0.5;
+            //double range = ValueRange.Bottom - ValueRange.Top;
 
-            return yr * range + ValueRange.Top;
+            //return yr * range + ValueRange.Top;
+
+            return value.Clamp(ValueRange.Top, ValueRange.Bottom);
         }
 
         private object CoerceDisplayText(object value)
@@ -296,7 +350,7 @@ namespace MyLights.Controls
 
         public static readonly DependencyPropertyKey DisplayValuePropertyKey =
             DependencyProperty.RegisterReadOnly("DisplayValue", typeof(string), typeof(XYSelector),
-                new PropertyMetadata("", null, (s,value)=>((XYSelector)s).CoerceDisplayText(value)));
+                new PropertyMetadata("", null, (s, value) => ((XYSelector)s).CoerceDisplayText(value)));
 
         public static readonly DependencyProperty DisplayValueProperty = DisplayValuePropertyKey.DependencyProperty;
         #endregion

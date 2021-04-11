@@ -138,7 +138,8 @@ namespace MyLights.ViewModels
 
         public LightModes LightMode
         {
-
+            get => Light.LightMode;
+            set => Light.SetLightMode(value);
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

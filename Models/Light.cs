@@ -30,8 +30,54 @@ namespace MyLights.Models
                 warmth = new DpsWarmth(index, jBulb.colortemp)
             };
 
+            light.CoerceLightMode();
             light.WireEvents();
             return light;
+        }
+
+        private void CoerceLightMode()
+        {
+            LightModes oldValue = _lightMode;
+
+            if (!Power)
+                _lightMode = LightModes.Off;
+
+            else if (Mode == "color")
+                _lightMode = LightModes.Color;
+
+            else if (Mode == "white")
+                _lightMode = LightModes.White;
+
+            if (_lightMode != oldValue)
+                Dps_Updated(this, new PropertyChangedEventArgs("LightMode"));
+        }
+
+        public void SetLightMode(LightModes lightMode)
+        {
+            _lightMode = lightMode;
+
+            if (lightMode == LightModes.Off)
+            {
+                power.Set(false);
+            }
+
+            else if (lightMode == LightModes.Color)
+            {
+                mode.Set("color");
+
+                if (!Power)
+                    power.Set(true);
+            }
+
+            else if (lightMode == LightModes.White)
+            {
+                mode.Set("white");
+
+                if (!Power)
+                    power.Set(true);
+            }
+
+            Dps_Updated(this, new PropertyChangedEventArgs("LightMode"));
         }
 
         private void WireEvents()
@@ -48,13 +94,16 @@ namespace MyLights.Models
             string property = e.PropertyName.Capitalize();
             var handler = PropertyChanged;
             handler?.Invoke(this, new PropertyChangedEventArgs(property));
+
+            CoerceLightMode();
         }
 
-        protected DpsColor      color;
-        protected DpsMode       mode;
-        protected DpsPower      power;
+        protected DpsColor color;
+        protected DpsMode mode;
+        protected DpsPower power;
         protected DpsBrightness brightness;
-        protected DpsWarmth     warmth;
+        protected DpsWarmth warmth;
+        private LightModes _lightMode;
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -67,8 +116,17 @@ namespace MyLights.Models
         public string Mode { get => mode.Value; }
         public double Brightness { get => brightness.Value; }
         public double Warmth { get => warmth.Value; }
-
-        public LightModes LightMode { }
+        public LightModes LightMode
+        {
+            get => _lightMode;
+            private set
+            {
+                if (_lightMode != value)
+                {
+                    SetLightMode(value);
+                }
+            }
+        }
 
 
         public void SetColor(HSV value)

@@ -126,7 +126,7 @@ namespace MyLights.Views
                         y = i / bitmap.PixelWidth;
 
                         a = (double)x / bitmap.PixelWidth;
-                        b = 1.0 - (double)y / bitmap.PixelHeight;
+                        b = (double)y / bitmap.PixelHeight;
 
                         HSV hsv = ModeConversion(mode, a, b, c);
                         Helpers.HsvToRgb(hsv.H, hsv.S, hsv.V, out byte red, out byte green, out byte blue);

@@ -25,8 +25,9 @@ namespace MyLights.Controls
             Loaded += ColorSlider_Loaded;
         }
 
-        Thumb thumb;
+        FrameworkElement thumb;
         TranslateTransform transform;
+        bool isDragging = false;
 
         #region Properties
         public double ThumbOffset
@@ -50,7 +51,7 @@ namespace MyLights.Controls
                     else
                         transform.Y = value.Clamp(ActualHeight / -2.0, ActualHeight / 2.0);
 
-                   UpdateValues();
+                    UpdateValues();
                 }
             }
         }
@@ -93,23 +94,40 @@ namespace MyLights.Controls
         public HSV HSV
         {
             get { return (HSV)GetValue(HSVProperty); }
-            set { SetValue(HSVProperty, value); }
+            private set { SetValue(HSVPropertyKey, value); }
         }
         public Color Color
         {
             get { return (Color)GetValue(ColorProperty); }
-            set { SetValue(ColorProperty, value); }
+            private set { SetValue(ColorPropertyKey, value); }
         }
         #endregion
 
         #region Methods
         private void UpdateValues()
-        {         
-            CoerceValue(HueProperty);
-            CoerceValue(SaturationProperty);
-            CoerceValue(ValueProperty);
-            CoerceValue(HSVProperty);
-            CoerceValue(ColorProperty);
+        {
+            //CoerceValue(HueProperty);
+            //CoerceValue(SaturationProperty);
+            //CoerceValue(ValueProperty);
+            //CoerceValue(HSVProperty);
+            //CoerceValue(ColorProperty);
+
+            double xr = ThumbOffset / TrackLength + 0.5;
+
+            switch (Mode)
+            {
+                case HSVComponent.Hue:
+                    Hue = xr;
+                    break;
+                case HSVComponent.Saturation:
+                    Saturation = xr;
+                    break;
+                case HSVComponent.Value:
+                    Value = xr;
+                    break;
+                default:
+                    break;
+            }
         }
 
         private void MoveThumb(Point point)
@@ -122,7 +140,12 @@ namespace MyLights.Controls
 
         private void UpdateThumb(double x)
         {
-            ThumbOffset = (x - 0.5) * TrackLength;
+            double offset = (x - 0.5) * TrackLength;
+
+            if (ThumbOffset != offset)
+            {
+                ThumbOffset = offset;
+            }
         }
         #endregion
 
@@ -130,13 +153,13 @@ namespace MyLights.Controls
         #region EventHandlers
         private void ColorSlider_Loaded(object sender, RoutedEventArgs e)
         {
-            thumb = (Thumb)GetTemplateChild("HorizontalThumb");
+            thumb = (FrameworkElement)GetTemplateChild("HorizontalThumb");
 
             if (thumb != null)
             {
-                thumb.DragStarted += Thumb_DragStarted;
-                thumb.DragOver += Thumb_DragOver;
-                thumb.DragDelta += Thumb_DragDelta;
+                //.DragStarted += Thumb_DragStarted;
+                //thumb.DragOver += Thumb_DragOver;
+                //thumb.DragDelta += Thumb_DragDelta;
 
                 transform = new TranslateTransform();
                 thumb.RenderTransform = transform;
@@ -145,35 +168,62 @@ namespace MyLights.Controls
             }
         }
 
-        private void Thumb_DragDelta(object sender, DragDeltaEventArgs e)
-        {
-            if (IsHorizontal)
-            {
-                ThumbOffset += e.HorizontalChange;
-            }
-
-            else
-            {
-                ThumbOffset += e.VerticalChange;
-            }
-        }
-
-        private void Thumb_DragStarted(object sender, DragStartedEventArgs e)
-        {
-
-        }
-
-        private void Thumb_DragOver(object sender, DragEventArgs e)
-        {
-        }
+        //private void Thumb_DragDelta(object sender, DragDeltaEventArgs e)
+        //{
+        //    if (IsHorizontal)
+        //    {
+        //        ThumbOffset += e.HorizontalChange;
+        //    }
+        //
+        //    else
+        //    {
+        //        ThumbOffset += e.VerticalChange;
+        //    }
+        //}
+        //
+        //private void Thumb_DragStarted(object sender, DragStartedEventArgs e)
+        //{
+        //
+        //}
+        //
+        //private void Thumb_DragOver(object sender, DragEventArgs e)
+        //{
+        //}
         #endregion
 
 
         #region Overrides
         protected override void OnMouseLeftButtonDown(MouseButtonEventArgs e)
         {
-            var point = e.GetPosition(this);
-            MoveThumb(point);
+
+            if (CaptureMouse())
+            {
+                isDragging = true;
+                MoveThumb(e.GetPosition(this));
+            }
+        }
+
+        protected override void OnMouseMove(MouseEventArgs e)
+        {
+            if (isDragging)
+            {
+                MoveThumb(e.GetPosition(this));
+            }
+        }
+
+        protected override void OnLostMouseCapture(MouseEventArgs e)
+        {
+            isDragging = false;
+        }
+
+        protected override void OnMouseLeftButtonUp(MouseButtonEventArgs e)
+        {
+            if (IsMouseCaptured)
+            {
+                ReleaseMouseCapture();
+                MoveThumb(e.GetPosition(this));
+                isDragging = false;
+            }
         }
         #endregion
 
@@ -187,8 +237,10 @@ namespace MyLights.Controls
             if (Mode == HSVComponent.Hue)
                 UpdateThumb(Hue);
 
-            CoerceValue(HSVProperty);
-            CoerceValue(ColorProperty);
+            //CoerceValue(HSVProperty);
+            //CoerceValue(ColorProperty);
+
+            HSV = new HSV(Hue, HSV.S, HSV.V);
         }
 
         private void OnSaturationChanged(DependencyPropertyChangedEventArgs e)
@@ -199,8 +251,10 @@ namespace MyLights.Controls
             if (Mode == HSVComponent.Saturation)
                 UpdateThumb(Saturation);
 
-            CoerceValue(HSVProperty);
-            CoerceValue(ColorProperty);
+            //CoerceValue(HSVProperty);
+            //CoerceValue(ColorProperty);
+
+            HSV = new HSV(HSV.H, Saturation, HSV.V);
         }
 
         private void OnValueChanged(DependencyPropertyChangedEventArgs e)
@@ -211,8 +265,10 @@ namespace MyLights.Controls
             if (Mode == HSVComponent.Value)
                 UpdateThumb(Value);
 
-            CoerceValue(HSVProperty);
-            CoerceValue(ColorProperty);
+            //CoerceValue(HSVProperty);
+            //CoerceValue(ColorProperty);
+
+            HSV = new HSV(HSV.H, HSV.S, Value);
         }
 
         private void OnModeChanged(DependencyPropertyChangedEventArgs e)
@@ -225,22 +281,11 @@ namespace MyLights.Controls
 
         private void OnHSVChanged(DependencyPropertyChangedEventArgs e)
         {
-            if (e.NewValue != e.OldValue)
-            {
-                Hue = HSV.H;
-                Saturation = HSV.S;
-                Value = HSV.V;
+            if (e.NewValue == e.OldValue)
+                return;
 
-                CoerceValue(ColorProperty);
-            }
-        }
+            Color = HSV.ToColor();
 
-        private void OnColorChanged(DependencyPropertyChangedEventArgs e)
-        {
-            if (e.NewValue != e.OldValue)
-            {
-                HSV = Color.ToHSV();
-            }
         }
         #endregion
 
@@ -248,32 +293,26 @@ namespace MyLights.Controls
         #region CoerceValueCallbacks
         private object CoerceHue(double e)
         {
-            if (Mode == HSVComponent.Hue)
-                e = ThumbOffset / TrackLength + 0.5;
+            //if (Mode == HSVComponent.Hue)
+            //    e = ThumbOffset / TrackLength + 0.5;
 
             return e.Clamp(0.0, 1.0);
+
+
         }
         private object CoerceSaturation(double e)
         {
-            if (Mode == HSVComponent.Saturation)
-                e = ThumbOffset / TrackLength + 0.5;
+            //if (Mode == HSVComponent.Saturation)
+            //    e = ThumbOffset / TrackLength + 0.5;
 
             return e.Clamp(0.0, 1.0);
         }
         private object CoerceValue(double e)
         {
-            if (Mode == HSVComponent.Value)
-                e = ThumbOffset / TrackLength + 0.5;
+            //if (Mode == HSVComponent.Value)
+            //    e = ThumbOffset / TrackLength + 0.5;
 
             return e.Clamp(0.0, 1.0);
-        }
-        private object CoerceHSV(HSV e)
-        {
-            return new HSV(Hue, Saturation, Value);
-        }
-        private object CoerceColor(Color e)
-        {
-            return Helpers.HsvToColor(Hue, Saturation, Value);
         }
         #endregion
 
@@ -307,15 +346,16 @@ namespace MyLights.Controls
             DependencyProperty.Register("Orientation", typeof(Orientation), typeof(ColorSlider),
                 new PropertyMetadata(Orientation.Horizontal, (s, e) => ((ColorSlider)s).OnOrientationChanged(e)));
 
-        private static readonly DependencyProperty HSVProperty =
-            DependencyProperty.Register("HSV", typeof(HSV), typeof(ColorSlider),
-                new PropertyMetadata(default(HSV), (s, e) => ((ColorSlider)s).OnHSVChanged(e),
-                                                       (s, e) => ((ColorSlider)s).CoerceHSV((HSV)e)));
+        private static readonly DependencyPropertyKey HSVPropertyKey =
+            DependencyProperty.RegisterReadOnly("HSV", typeof(HSV), typeof(ColorSlider),
+                new PropertyMetadata(default(HSV), (s, e) => ((ColorSlider)s).OnHSVChanged(e)));
+        public static readonly DependencyProperty HSVProperty = HSVPropertyKey.DependencyProperty;
 
-        public static readonly DependencyProperty ColorProperty =
-            DependencyProperty.Register("Color", typeof(Color), typeof(ColorSlider),
-                new PropertyMetadata(default(Color), (s, e) => ((ColorSlider)s).OnColorChanged(e),
-                                                        (s, e) => ((ColorSlider)s).CoerceColor((Color)e)));
+        private static readonly DependencyPropertyKey ColorPropertyKey =
+            DependencyProperty.RegisterReadOnly("Color", typeof(Color), typeof(ColorSlider),
+                new PropertyMetadata(default(Color)));
+        public static readonly DependencyProperty ColorProperty = ColorPropertyKey.DependencyProperty;
+
         #endregion
     }
 }

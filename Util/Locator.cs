@@ -6,12 +6,21 @@ using System.Windows;
 
 namespace MyLights.Util
 {
-    public class Locator : DependencyObject
+    public class Locator : DependencyObject, INotifyPropertyChanged
     {
         public Locator()
         {
             LightBridge = LightBridge.Singleton;
             Library = new LibraryViewModel();
+
+            if (IsInDesignMode)
+            {
+                LightVMs.CollectionChanged += (s, e) =>
+                {
+                    if (LightVMs.Count >= 1)
+                        DesignLightVM = LightVMs[0];
+                };
+            }
         }
 
         public LightBridge LightBridge { get; }
@@ -29,6 +38,9 @@ namespace MyLights.Util
         }
 
         SceneSetter _designSceneSetter;
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
         public SceneSetter DesignSceneSetter
         {
             get
@@ -43,7 +55,7 @@ namespace MyLights.Util
             }
         }
 
-        public LightViewModel DesignLightVM { get => LightVMs[0]; }
+        public LightViewModel DesignLightVM { get; private set; }
         public static bool IsInDesignMode { get; }
         static Locator()
         {

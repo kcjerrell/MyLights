@@ -5,250 +5,65 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MyLights.Windows" 
         xmlns:wvm="clr-namespace:MyLights.Windows.ViewModels"
-        xmlns:vm="clr-namespace:MyLights.ViewModels" xmlns:views="clr-namespace:MyLights.Views" xmlns:util="clr-namespace:MyLights.Util" xmlns:controls="clr-namespace:MyLights.Controls"
+        xmlns:vm="clr-namespace:MyLights.ViewModels" 
+        xmlns:views="clr-namespace:MyLights.Views" 
+        xmlns:util="clr-namespace:MyLights.Util" 
+        xmlns:ctrl="clr-namespace:MyLights.Controls"
         mc:Ignorable="d"
         Title="AnotherLightPanelWindow" Height="450" Width="800" Background="{Binding Color, ElementName=hueSlider, Converter={StaticResource BrushCache}}">
 
-    <Window.DataContext>
-        <wvm:AnotherLightPanelViewModel/>
-    </Window.DataContext>
+  <Window.DataContext>
+    <wvm:AnotherLightPanelViewModel/>
+  </Window.DataContext>
 
-    <Window.Resources>
-        <util:LightModeTemplateSelector x:Key="lightModeTemplateSelector">
-            <util:LightModeTemplateSelector.Off>
-                <DataTemplate>
-                    <Border Width="20" Height="20" Background="#FF222222" BorderBrush="#FF444444" BorderThickness="1"/>
-                </DataTemplate>
-            </util:LightModeTemplateSelector.Off>
-            <util:LightModeTemplateSelector.White>
-                <DataTemplate>
-                    <Border Width="20" Height="20" BorderBrush="#FF444444" BorderThickness="1">
-                        <Border.Background>
-                            <RadialGradientBrush>
-                                <GradientStop Color="#FFFFF5C9" Offset="0.17"/>
-                                <GradientStop Color="#FFDEDEFF" Offset="1"/>
-                            </RadialGradientBrush>
-                        </Border.Background>
+  <Window.Resources>
 
-                    </Border>
-                </DataTemplate>
-            </util:LightModeTemplateSelector.White>
-            <util:LightModeTemplateSelector.Color>
-                <DataTemplate>
-                    <Border Width="20" Height="20" BorderBrush="#FF444444" BorderThickness="1">
-                        <Border.Background>
-                            <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-                                <LinearGradientBrush.RelativeTransform>
-                                    <TransformGroup>
-                                        <ScaleTransform CenterY="0.5" CenterX="0.5"/>
-                                        <SkewTransform CenterY="0.5" CenterX="0.5"/>
-                                        <RotateTransform Angle="270" CenterY="0.5" CenterX="0.5"/>
-                                        <TranslateTransform/>
-                                    </TransformGroup>
-                                </LinearGradientBrush.RelativeTransform>
-                                <GradientStop Color="#FFFF6161"/>
-                                <GradientStop Color="#FFD2FF5B" Offset="0.19"/>
-                                <GradientStop Color="#FF55FFF0" Offset="0.403"/>
-                                <GradientStop Color="#FFFF4343" Offset="1"/>
-                                <GradientStop Color="#FF6745FF" Offset="0.605"/>
-                                <GradientStop Color="#FFFF43E6" Offset="0.807"/>
-                            </LinearGradientBrush>
-                        </Border.Background>
-                    </Border>
-                </DataTemplate>
-            </util:LightModeTemplateSelector.Color>
-        </util:LightModeTemplateSelector>
+  </Window.Resources>
 
-        <util:LightModeTemplateSelector x:Key="LightModeContentTemplateSelector">
-            <util:LightModeTemplateSelector.Off>
-                <DataTemplate>
-                    <Border>
-                        <TextBlock>Off!</TextBlock>
-                    </Border>
-                </DataTemplate>
-            </util:LightModeTemplateSelector.Off>
-            <util:LightModeTemplateSelector.Color>
-                <DataTemplate>
-                    <Border>
-                        <TextBlock>Color!</TextBlock>
-                    </Border>
-                </DataTemplate>
-            </util:LightModeTemplateSelector.Color>
-            <util:LightModeTemplateSelector.White>
-                <DataTemplate>
-                    <Border>
-                        <TextBlock>White!</TextBlock>
-                    </Border>
-                </DataTemplate>
-            </util:LightModeTemplateSelector.White>
-        </util:LightModeTemplateSelector>
+  <Grid>
+    <Grid.ColumnDefinitions>
+      <ColumnDefinition Width="500"/>
+      <ColumnDefinition Width="Auto"/>
+    </Grid.ColumnDefinitions>
+    <ItemsControl x:Name="itemsControl" ItemsSource="{Binding LightVMs}">
+      <ItemsControl.ItemTemplate>
+        <DataTemplate DataType="{x:Type vm:LightViewModel}">
+          <ctrl:LightControl/>
+        </DataTemplate>
+      </ItemsControl.ItemTemplate>
 
-        <ObjectDataProvider MethodName="GetValues"
-                ObjectType="{x:Type vm:LightModes}"
-                x:Key="MyEnumValues">
-            <ObjectDataProvider.MethodParameters>
-                <x:Type TypeName="vm:LightModes" />
-            </ObjectDataProvider.MethodParameters>
-        </ObjectDataProvider>
+      <ItemsControl.ItemsPanel>
+        <ItemsPanelTemplate>
+          <WrapPanel/>
+        </ItemsPanelTemplate>
+      </ItemsControl.ItemsPanel>
 
-        <Style TargetType="ListBoxItem" x:Key="LightModeListBoxItemStyle">
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="ListBoxItem">
-                        <Border x:Name="Border" SnapsToDevicePixels="true" BorderThickness="1" Margin="0" Padding="0">
-                            <Border.Background>
-                                <SolidColorBrush Color="Transparent" />
-                            </Border.Background>
-                            <Border.BorderBrush>
-                                <SolidColorBrush Color="Transparent"/>
-                            </Border.BorderBrush>
-                            <VisualStateManager.VisualStateGroups>
-                                <VisualStateGroup x:Name="SelectionStates">
-                                    <VisualState x:Name="Unselected" />
-                                    <VisualState x:Name="Selected">
-                                        <Storyboard>
-                                            <ColorAnimationUsingKeyFrames Storyboard.TargetName="Border"
-                                                Storyboard.TargetProperty="(Panel.Background).(SolidColorBrush.Color)">
-                                                <EasingColorKeyFrame KeyTime="0" Value="#FFdddddd" />
-                                            </ColorAnimationUsingKeyFrames>
-                                            <ColorAnimationUsingKeyFrames Storyboard.TargetName="Border"
-                                                Storyboard.TargetProperty="(Border.BorderBrush).(SolidColorBrush.Color)">
-                                                <EasingColorKeyFrame KeyTime="0" Value="#FFdddddd" />
-                                            </ColorAnimationUsingKeyFrames>
-                                        </Storyboard>
-                                    </VisualState>
-                                </VisualStateGroup>
-                                <VisualStateGroup x:Name="CommonStates">
-                                    <VisualState x:Name="Normal"/>
-                                    <VisualState x:Name="MouseOver">
-                                        <Storyboard>
-                                            <ColorAnimationUsingKeyFrames Storyboard.TargetName="InnerBorder"
-                                                                          Storyboard.TargetProperty="(Border.Background).(SolidColorBrush.Color)">
-                                                <EasingColorKeyFrame KeyTime="0" Value="#FFCCCCCC"/>
+    </ItemsControl>
 
-                                            </ColorAnimationUsingKeyFrames>
-                                        </Storyboard>
-                                    </VisualState>
-                                </VisualStateGroup>
-                            </VisualStateManager.VisualStateGroups>
-                            <Border x:Name="InnerBorder" BorderBrush="Transparent" Padding="3">
-                                <Border.Background>
-                                    <SolidColorBrush Color="Transparent"/>
-                                </Border.Background>
-                                <ContentPresenter/>
-                            </Border>
-                        </Border>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
+    <Grid Grid.Column="1" VerticalAlignment="Top">
+      <Grid.RowDefinitions>
+        <RowDefinition/>
+        <RowDefinition/>
+        <RowDefinition/>
+      </Grid.RowDefinitions>
+      <Grid.ColumnDefinitions>
+        <ColumnDefinition/>
+        <ColumnDefinition/>
+      </Grid.ColumnDefinitions>
 
-    </Window.Resources>
-
-    <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="500"/>
-            <ColumnDefinition Width="Auto"/>
-        </Grid.ColumnDefinitions>
-        <ItemsControl x:Name="itemsControl" ItemsSource="{Binding LightVMs}">
-            <ItemsControl.ItemTemplate>
-                <DataTemplate DataType="{x:Type vm:LightViewModel}">
-                    <Border Margin="4" BorderBrush="Black" BorderThickness="2" Background="#ffbbbbbb">
-                        <Grid Margin="4">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto"/>
-                                <ColumnDefinition Width="Auto"/>
-                            </Grid.ColumnDefinitions>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="Auto"/>
-                            </Grid.RowDefinitions>
-
-                            <ListBox x:Name="lightModeListBox" Grid.Column="0" ItemsSource="{Binding Source={StaticResource MyEnumValues}}"
-                                     SelectedItem="{Binding LightMode, Mode=TwoWay}" VerticalAlignment="Center" ItemTemplateSelector="{StaticResource lightModeTemplateSelector}"
-                                     ItemContainerStyle="{StaticResource LightModeListBoxItemStyle}" Background="#44000000" BorderBrush="Black"
-                                     BorderThickness="1" Padding="0">
-                                <ListBox.ItemsPanel>
-                                    <ItemsPanelTemplate>
-                                        <StackPanel/>
-                                    </ItemsPanelTemplate>
-                                </ListBox.ItemsPanel>
-                            </ListBox>
-
-                            <Control Grid.Column="1">
-                                <Control.Style>
-                                    <Style TargetType="Control">
-                                        <Style.Triggers>
-                                            <DataTrigger Binding="{Binding SelectedItem, ElementName=lightModeListBox, Mode=OneWay}" Value="Off">
-                                                <Setter Property="Template">
-                                                    <Setter.Value>
-                                                        <ControlTemplate>
-                                                            <Border>
-                                                                <TextBlock>Off!</TextBlock>
-                                                            </Border>
-                                                        </ControlTemplate>
-                                                    </Setter.Value>
-                                                </Setter>
-                                            </DataTrigger>
-                                        </Style.Triggers>
-                                    </Style>
-                                </Control.Style>
-                            </Control>
-
-                            <!--
-                            <Grid Grid.Column="1" Margin="3">
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="*"/>
-                                    <RowDefinition Height="Auto"/>
-                                </Grid.RowDefinitions>
-                                <controls:XYSelector Width="100" Panel.ZIndex="50" ValueRange="0,0,1,1"
-                                                     ValueX="{Binding H, Mode=TwoWay}"
-                                                      ValueY="{Binding S, Mode=TwoWay}" ThumbStrokeSize="1"
-                                                     ThumbFill="#00000000" ThumbStroke="Black" TextVisibility="Visible" BorderBrush="Black"
-                                                     BorderThickness="2"/>
-
-                                <views:ColorSpectrum Panel.ZIndex="0" Mode="HS" ThirdValue="{Binding V}"/>
-                                <Slider Grid.Row="1" Grid.Column="1" Maximum="1" LargeChange="0.1" SmallChange="0.05" Value="{Binding V, Mode=TwoWay}"/>
-                            </Grid>
--->
-
-                        </Grid>
-                    </Border>
-                </DataTemplate>
-            </ItemsControl.ItemTemplate>
-
-            <ItemsControl.ItemsPanel>
-                <ItemsPanelTemplate>
-                    <WrapPanel/>
-                </ItemsPanelTemplate>
-            </ItemsControl.ItemsPanel>
-
-        </ItemsControl>
-
-        <Grid Grid.Column="1" VerticalAlignment="Top">
-            <Grid.RowDefinitions>
-                <RowDefinition/>
-                <RowDefinition/>
-                <RowDefinition/>
-            </Grid.RowDefinitions>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition/>
-                <ColumnDefinition/>
-            </Grid.ColumnDefinitions>
-
-            <controls:ColorSlider x:Name="hueSlider" Width="100" VerticalAlignment="Top" Height="20" Margin="4"
+      <ctrl:ColorSlider x:Name="hueSlider" Width="100" VerticalAlignment="Top" Height="20" Margin="4"
                                   Saturation="{Binding Saturation, ElementName=satSlider, Mode=TwoWay}" Value="{Binding Value, ElementName=valSlider, Mode=TwoWay}"/>
-            <TextBlock Grid.Column="1" Text="{Binding HSV, ElementName=hueSlider}"/>
+      <TextBlock Grid.Column="1" Text="{Binding HSV, ElementName=hueSlider}"/>
 
-            <controls:ColorSlider x:Name="satSlider" Width="100" Height="20" Grid.Row="1" Margin="4" Mode="Saturation"
+      <ctrl:ColorSlider x:Name="satSlider" Width="100" Height="20" Grid.Row="1" Margin="4" Mode="Saturation"
                                   Hue="{Binding Hue, ElementName=hueSlider, Mode=TwoWay}" Value="{Binding Value, ElementName=valSlider, Mode=TwoWay}"/>
-            <TextBlock Grid.Column="1" Grid.Row="1"  Text="{Binding HSV, ElementName=satSlider}"/>
+      <TextBlock Grid.Column="1" Grid.Row="1"  Text="{Binding HSV, ElementName=satSlider}"/>
 
-            <controls:ColorSlider x:Name="valSlider" Width="100" Height="20" Grid.Row="2" Margin="4" Mode="Value"
+      <ctrl:ColorSlider x:Name="valSlider" Width="100" Height="20" Grid.Row="2" Margin="4" Mode="Value"
                                   Saturation="{Binding Saturation, ElementName=satSlider, Mode=TwoWay}" Hue="{Binding Hue, ElementName=hueSlider, Mode=TwoWay}"/>
-            <TextBlock Grid.Column="1" Grid.Row="2"  Text="{Binding HSV, ElementName=valSlider}"/>
-
-        </Grid>
+      <TextBlock Grid.Column="1" Grid.Row="2"  Text="{Binding HSV, ElementName=valSlider}"/>
 
     </Grid>
+
+  </Grid>
 </Window>
