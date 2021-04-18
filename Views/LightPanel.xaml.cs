@@ -31,7 +31,7 @@ namespace MyLights.Views
 
         private void FlyoutClosedCallBack()
         {
-            lightGroup.LightGroup.Clear();
+           // lightGroup.LightGroup.Clear();
         }
 
         private void SomeMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
@@ -56,7 +56,7 @@ namespace MyLights.Views
                 {
                     foreach (var s in selected)
                     {
-                        lightGroup.LightGroup.Add(s.Light);
+                        //lightGroup.LightGroup.Add(s.Light);
                     }
                     args.Source = lightGroup;                    
                 }

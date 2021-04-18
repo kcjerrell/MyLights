@@ -5,47 +5,118 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MyLights.Windows"
         xmlns:ctrl="clr-namespace:MyLights.Controls"
+        xmlns:wvm="clr-namespace:MyLights.Windows.ViewModels"
+        xmlns:vm="clr-namespace:MyLights.ViewModels"
         mc:Ignorable="d"
         Title="ScratchWindow" Height="511" Width="522">
 
   <Window.DataContext>
     <local:ScratchWindowViewModel H=".8" S="1" V="1"/>
   </Window.DataContext>
-  
+
+  <Window.Resources>
+    <ObjectDataProvider MethodName="GetValues"
+                ObjectType="{x:Type wvm:TargetProperties}"
+                x:Key="TargetPropertyValues">
+      <ObjectDataProvider.MethodParameters>
+        <x:Type TypeName="wvm:TargetProperties"/>
+      </ObjectDataProvider.MethodParameters>
+    </ObjectDataProvider>
+  </Window.Resources>
+
+
   <Grid VerticalAlignment="Top">
     <Grid.ColumnDefinitions>
-      <ColumnDefinition Width="300"/>
       <ColumnDefinition Width="*"/>
+      <ColumnDefinition Width="Auto"/>
     </Grid.ColumnDefinitions>
     <Grid.RowDefinitions>
       <RowDefinition Height="Auto"/>
-      <RowDefinition Height="Auto"/>
+      <RowDefinition Height="*"/>
       <RowDefinition Height="Auto"/>
       <RowDefinition Height="Auto"/>
     </Grid.RowDefinitions>
 
-    <ctrl:ColorSlider x:Name="hueSlider" Margin="5"                   
+    <ItemsControl Grid.RowSpan="4" ItemsSource="{Binding Modulators}">
+      <ItemsControl.ItemTemplate>
+        <DataTemplate DataType="{x:Type wvm:Modulator}">
+          <Border Margin="4" Background="#ccc" BorderBrush="#222" BorderThickness="2" HorizontalAlignment="Left" VerticalAlignment="Top">
+            <Grid>
+              <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="60"/>
+                <ColumnDefinition Width="60"/>
+                <ColumnDefinition Width="200"/>
+              </Grid.ColumnDefinitions>
+              <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+              </Grid.RowDefinitions>
+
+
+              <CheckBox IsChecked="{Binding IsActive}" RenderTransformOrigin="0.5,0.5" HorizontalAlignment="Center" VerticalAlignment="Center">
+                <CheckBox.LayoutTransform>
+                  <ScaleTransform ScaleX="2" ScaleY="2"/>
+                </CheckBox.LayoutTransform>
+              </CheckBox>
+              <TextBox Grid.Row="1" Text="{Binding ValueMin, Mode=TwoWay}" FontSize="24" Width="50" Margin="2"/>
+              <TextBox Grid.Row="2" Grid.Column="0" Text="{Binding ValueMax, Mode=TwoWay}" FontSize="24" Width="50" Margin="2"/>
+              <TextBox Grid.Column="1" Text="{Binding PeriodSeconds, Mode=TwoWay}" FontSize="24" Width="50" Margin="2"/>
+              <TextBox Grid.Column="1" Grid.Row="1" Text="{Binding PhaseOffsetSeconds, Mode=TwoWay}" FontSize="24" Width="50" Margin="2"/>
+
+              <TextBlock Grid.Row="2" Grid.Column="1" FontSize="36" Text="{Binding Value, StringFormat=.00}"/>
+
+              <ComboBox Grid.Column="2" ItemsSource="{Binding Lights}" Margin="2" SelectedItem="{Binding TargetLight}">
+                <ComboBox.ItemTemplate>
+                  <DataTemplate DataType="{x:Type vm:LightViewModel}">
+                    <TextBlock Text="{Binding Name}"/>
+                  </DataTemplate>
+                </ComboBox.ItemTemplate>
+              </ComboBox>
+              <ComboBox Grid.Column="2" Grid.Row="1" ItemsSource="{Binding Mode=OneWay, Source={StaticResource TargetPropertyValues}}" 
+                        SelectedValue="{Binding TargetProperty}"/>
+
+            </Grid>
+          </Border>
+        </DataTemplate>
+      </ItemsControl.ItemTemplate>
+
+      <ItemsControl.ItemsPanel>
+        <ItemsPanelTemplate>
+          <StackPanel CanVerticallyScroll="True" ScrollViewer.VerticalScrollBarVisibility="Visible"/>
+        </ItemsPanelTemplate>
+      </ItemsControl.ItemsPanel>
+
+    </ItemsControl>
+
+    <Button Grid.Column="1" Content="Add..." Command="{Binding AddCommand}"/>
+
+    <Grid Visibility="Collapsed">
+
+      <ctrl:ColorSlider x:Name="hueSlider" Margin="5"                   
                       Saturation= "{Binding Saturation, ElementName=satSlider, Mode=OneWay}"
                       Value=      "{Binding Value, ElementName=valSlider, Mode=OneWay}"
                       Mode="Hue"/>
 
-    <ctrl:ColorSlider x:Name="satSlider" Grid.Row="1" Margin="5" 
+      <ctrl:ColorSlider x:Name="satSlider" Grid.Row="1" Margin="5" 
                       Mode="Saturation" Hue="{Binding Hue, ElementName=hueSlider, Mode=OneWay}"
-                      Saturation="{Binding Saturation, ElementName=satSlider, Mode=OneWay}"/>
-    <ctrl:ColorSlider x:Name="valSlider" Grid.Row="2" Margin="5"
+                      Value="{Binding Value, ElementName=valSlider, Mode=OneWay}"/>
+
+      <ctrl:ColorSlider x:Name="valSlider" Grid.Row="2" Margin="5"
                       Hue="{Binding Hue, ElementName=hueSlider, Mode=OneWay}"
                       Saturation="{Binding Saturation, ElementName=satSlider, Mode=OneWay}"
                       Mode="Value"/>
 
-    <StackPanel Grid.Column="1" Grid.Row="0">
-      <TextBlock Text="{Binding H}"/>
-      <TextBlock Text="{Binding S}"/>
-      <TextBlock Text="{Binding V}"/>
-      <TextBlock Text="{Binding HSV}"/>
-      <TextBlock Text="{Binding Color}"/>
-    </StackPanel>
+      <StackPanel Grid.Column="1" Grid.Row="0">
+        <TextBlock Text="{Binding H}"/>
+        <TextBlock Text="{Binding S}"/>
+        <TextBlock Text="{Binding V}"/>
+        <TextBlock Text="{Binding HSV}"/>
+        <TextBlock Text="{Binding Color}"/>
+      </StackPanel>
 
-    <ctrl:XYSelector Grid.Row="3" Height="200" BorderBrush="Black" BorderThickness="2" Margin="4"/>
+      <ctrl:XYSelector Grid.Row="3" Height="200" BorderBrush="Black" BorderThickness="2" Margin="4"/>
+    </Grid>
 
   </Grid>
 </Window>

@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 
 namespace MyLights.ViewModels
 {
-    internal class LightGroupViewModel : LightViewModel
+    internal class LightGroupViewModel // : LightViewModel
     {
-        public LightGroupViewModel(LightGroup lightGroup) : base(lightGroup)
+        public LightGroupViewModel(LightGroup lightGroup) // : base(lightGroup)
         {
         }
 

@@ -11,23 +11,8 @@ namespace MyLights.Models
 {
     // I would need DpsProperty<string>, DpsProperty<bool>, and DpsProperty<HSV>
     // I guess they can just be subtypes
-    public abstract class DpsProperty<T> where T : IEquatable<T>
-    {
-        // #review
-        // this won't work right, maybe. Well, I guess it could.
-        // I was thinking about making the DpsProperties static
-        //either
-        // A:
-        //   - Have DpsProperty instances on each Light instance
-        //   - Generate new instances for any LightGroups that are created
-        // B:
-        //   - Use a static instance for each dpsproperty
-        //   - pass in the index string to make the calls
-        // B has syncronization issues, possibly, A just makes a lot of objects. Depending on
-        // what might come later, that could be an issue. Maybe. Maybe not. let's go A for now.
-
-        // maybe having static/const properties on the derived types might work.
-
+    public abstract class DpsProperty<T> : IDeviceProperty<T> where T : IEquatable<T>
+    {   
         public DpsProperty(string propertyPath, string indexPath = "", T initialValue = default)
         {
             this.propertyPath = propertyPath;
@@ -69,7 +54,7 @@ namespace MyLights.Models
             handler?.Invoke(this, eventArgs);
         }
 
-        public virtual async void Set(T newValue)
+        public virtual async Task Set(T newValue)
         {
             // #review 
             // should this be a lock or other sync primitive? I don't know if it matters for async.
@@ -104,14 +89,15 @@ namespace MyLights.Models
                 var res = await url.GetJsonAsync<JsonDpsRoot>();
 
                 var dps = res.Data[0].Dps;
-                this.Value = GetValue(dps);
+                if (dps != null)
+                    this.Value = GetValue(dps);
 
                 requestInProgress = false;
                 Set(nextValue);
             }
         }
 
-        public virtual async Task<T> Update()
+        public virtual async Task Update()
         {
             // #fix 
             // this won't work with updating more than one index
@@ -120,7 +106,7 @@ namespace MyLights.Models
             //      - (but it doesn't [yet])
 
             if (string.IsNullOrEmpty(IndexPath))
-                return this.Value;
+                return;
 
 
 
@@ -133,7 +119,7 @@ namespace MyLights.Models
             var dps = res.Data[0].Dps;
             this.Value = GetValue(dps);
 
-            return this.Value;
+            return;
         }
 
         public virtual bool Compare(T first, T second)
@@ -245,20 +231,20 @@ namespace MyLights.Models
             throw new NotImplementedException();
         }
 
-        public override void Set(double newValue)
+        public async override Task Set(double newValue)
         {
             Value = newValue;
         }
 
-        public override Task<double> Update()
+        public async override Task Update()
         {
-            return Task.FromResult<double>(Value);
+            return;// Task.FromResult<double>(Value);
         }
     }
 
-    public class DpsWarmth : DpsProperty<double>
+    public class DpsColorTemp : DpsProperty<double>
     {
-        public DpsWarmth(string indexPath = "", double initialValue = 0) : base("warmth", indexPath, initialValue)
+        public DpsColorTemp(string indexPath = "", double initialValue = 0) : base("warmth", indexPath, initialValue)
         {
         }
 
@@ -272,14 +258,14 @@ namespace MyLights.Models
             throw new NotImplementedException();
         }
 
-        public override void Set(double newValue)
+        public async override Task Set(double newValue)
         {
             Value = newValue;
         }
 
-        public override Task<double> Update()
+        public async override Task Update()
         {
-            return Task.FromResult<double>(Value);
+            return;// Task.FromResult<double>(Value);
         }
     }
 }

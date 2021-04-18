@@ -1,4 +1,5 @@
-﻿using MyLights.Util;
+﻿using MyLights.Models;
+using MyLights.Util;
 using MyLights.ViewModels;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -10,7 +11,8 @@ namespace MyLights.Util
     {
         public Locator()
         {
-            LightBridge = LightBridge.Singleton;
+            //LightBridge = new RestLightBridge();
+            LightBridge = new LightUdp.UdpLightBridge();
             Library = new LibraryViewModel();
 
             if (IsInDesignMode)
@@ -23,7 +25,7 @@ namespace MyLights.Util
             }
         }
 
-        public LightBridge LightBridge { get; }
+        public ILightBridge LightBridge { get; }
         public ObservableCollection<LightViewModel> LightVMs { get => LightBridge.LightVMs; }
         public LibraryViewModel Library { get; private set; }
 

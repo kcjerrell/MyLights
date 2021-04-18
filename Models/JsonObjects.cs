@@ -9,16 +9,40 @@ namespace MyLights.Models
 {
     // Root myDeserializedClass = JsonConvert.DeserializeObject<Root>(myJsonResponse); 
 
-    public class JsonBulb
+    public class JsonBulb : ILightPropertiesProvider
     {
-        public int index { get; set; }
-        public string name { get; set; }
-        public string whatever { get; set; }
-        public bool power { get; set; }
-        public HSV color { get; set; }
-        public string mode { get; set; }
-        public int colortemp { get; set; }
-        public int brightness { get; set; }
+        [JsonProperty("index")]
+        public int Index { get; set; }
+
+        [JsonProperty("name")]
+        public string Name { get; set; }
+
+        [JsonProperty("power")]
+        public bool Power { get; set; }
+
+        [JsonProperty("color")]
+        public HSV Color { get; set; }
+
+        [JsonProperty("mode")]
+        public string Mode { get; set; }
+
+        [JsonProperty("colortemp")]
+        public int ColorTemp { get; set; }
+
+        [JsonProperty("brightness")]
+        public int Brightness { get; set; }
+
+        public IDeviceProperty<bool> PowerProperty => new DpsPower(Index.ToString(), Power);
+
+        public IDeviceProperty<HSV> ColorProperty => new DpsColor(Index.ToString(), Color);
+
+        public IDeviceProperty<string> ModeProperty => new DpsMode(Index.ToString(), Mode);
+
+        public IDeviceProperty<double> BrightnessProperty => new DpsBrightness(Index.ToString(), Brightness);
+
+        public IDeviceProperty<double> ColorTempProperty => new DpsColorTemp(Index.ToString(), ColorTemp);
+
+        //public string whatever { get; set; }
     }
 
     public class JsonBulbRoot

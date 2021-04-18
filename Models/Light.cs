@@ -10,32 +10,34 @@ namespace MyLights.Models
     [DoNotNotify]
     public class Light : INotifyPropertyChanged
     {
-        protected Light()
+        public Light(ILightPropertiesProvider propertiesProvider)
         {
+            Index = propertiesProvider.Index;
+            Name = propertiesProvider.Name;
+
+            //I'm trying to decide if I should keep Power and Mode as seperate properties 
+            //Like they are on the bulb itself, or if I should combine them in the more 
+            //convenient LightModes form (LightMode = Off, Color, or White);
+            //And the reason for that is because it bugs the fuck out of me when I say 
+            //"turn lights on" and then I have to say "turn lights white"; Typically when I turn
+            //them on, I have "white" or "color" in mind anyway, right? Although perhaps it should
+            //be toggleable without having to track color/white. Hmm....
+            //I'll just keep what I'm doing: have the binding property as it is on the device
+            //(power [true/false] and mode [white/color]), have both of those accesible here, and
+            //a third property that access the other two. so all this commentary and no change. :)
+
+            power = propertiesProvider.PowerProperty;
+            color = propertiesProvider.ColorProperty;
+            mode = propertiesProvider.ModeProperty;
+            brightness = propertiesProvider.BrightnessProperty;
+            colorTemp = propertiesProvider.ColorTempProperty;
+
+            DetermineLightMode();
+            WireEvents();
 
         }
 
-        public static Light FromJson(JsonBulb jBulb)
-        {
-            string index = jBulb.index.ToString();
-
-            var light = new Light
-            {
-                Index = jBulb.index,
-                Name = jBulb.name,
-                color = new DpsColor(index, jBulb.color),
-                mode = new DpsMode(index, jBulb.mode),
-                power = new DpsPower(index, jBulb.power),
-                brightness = new DpsBrightness(index, jBulb.brightness),
-                warmth = new DpsWarmth(index, jBulb.colortemp)
-            };
-
-            light.CoerceLightMode();
-            light.WireEvents();
-            return light;
-        }
-
-        private void CoerceLightMode()
+        private void DetermineLightMode()
         {
             LightModes oldValue = _lightMode;
 
@@ -86,7 +88,7 @@ namespace MyLights.Models
             mode.Updated += Dps_Updated;
             power.Updated += Dps_Updated;
             brightness.Updated += Dps_Updated;
-            warmth.Updated += Dps_Updated;
+            colorTemp.Updated += Dps_Updated;
         }
 
         private void Dps_Updated(object sender, PropertyChangedEventArgs e)
@@ -95,14 +97,14 @@ namespace MyLights.Models
             var handler = PropertyChanged;
             handler?.Invoke(this, new PropertyChangedEventArgs(property));
 
-            CoerceLightMode();
+            DetermineLightMode();
         }
 
-        protected DpsColor color;
-        protected DpsMode mode;
-        protected DpsPower power;
-        protected DpsBrightness brightness;
-        protected DpsWarmth warmth;
+        protected IDeviceProperty<HSV> color;
+        protected IDeviceProperty<string> mode;
+        protected IDeviceProperty<bool> power;
+        protected IDeviceProperty<double> brightness;
+        protected IDeviceProperty<double> colorTemp;
         private LightModes _lightMode;
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -115,7 +117,7 @@ namespace MyLights.Models
         public bool Power { get => power.Value; }
         public string Mode { get => mode.Value; }
         public double Brightness { get => brightness.Value; }
-        public double Warmth { get => warmth.Value; }
+        public double Warmth { get => colorTemp.Value; }
         public LightModes LightMode
         {
             get => _lightMode;

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MyLights.Windows.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -24,6 +25,10 @@ namespace MyLights.Windows
             InitializeComponent();
         }
 
-
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            var vm = (AnotherLightPanelViewModel)DataContext;
+            vm.LightVMs.Add(App.Current.Locator.DesignLightVM);
+        }
     }
 }

@@ -13,9 +13,9 @@ using ROOLightVMs = System.Collections.ObjectModel.ReadOnlyObservableCollection<
 
 namespace MyLights.Util
 {
-    public class LightBridge
+    public class RestLightBridge : ILightBridge
     {
-        public LightBridge()
+        public RestLightBridge()
         {
             GetLightsCommand = new RelayCommand(async (p) => await GetLights());
         }
@@ -31,7 +31,7 @@ namespace MyLights.Util
                     select lvm).Single();
         }
 
-        internal bool TryFindBulb(BulbRef key, out Light light)
+        public bool TryFindBulb(BulbRef key, out Light light)
         {
             var match = (from l in Lights
                          where l.Name == key.Name
@@ -50,14 +50,11 @@ namespace MyLights.Util
             }
         }
 
+        public static RestLightBridge Singleton { get; private set; }
 
-
-
-        public static LightBridge Singleton { get; private set; }
-
-        static LightBridge()
+        static RestLightBridge()
         {
-            Singleton = new LightBridge();
+            Singleton = new RestLightBridge();
             isInDesignMode = Locator.IsInDesignMode;
 
             GetLights(true);
@@ -82,19 +79,19 @@ namespace MyLights.Util
             {
                 jbulbs.Add(new JsonBulb()
                 {
-                    index = 0,
-                    name = "DesignBulb1",
-                    color = new HSV() { H = 0.2, S = 0.8, V = 1 },
-                    power = true,
-                    mode = "white"
+                    Index = 0,
+                    Name = "DesignBulb1",
+                    Color = new HSV() { H = 0.2, S = 0.8, V = 1 },
+                    Power = true,
+                    Mode = "white"
                 });
                 jbulbs.Add(new JsonBulb()
                 {
-                    index = 1,
-                    name = "DesignBulb2",
-                    color = new HSV() { H = 0.5, S = 0.6, V = 1 },
-                    power = true,
-                    mode = "color"
+                    Index = 1,
+                    Name = "DesignBulb2",
+                    Color = new HSV() { H = 0.5, S = 0.6, V = 1 },
+                    Power = true,
+                    Mode = "color"
                 });
             }
 
@@ -118,7 +115,7 @@ namespace MyLights.Util
 
             foreach (var jBulb in jbulbs)
             {
-                var light = Light.FromJson(jBulb);
+                var light = new Light(jBulb);
 
                 lightVMs.Add(new LightViewModel(light));
                 lights.Add(light);

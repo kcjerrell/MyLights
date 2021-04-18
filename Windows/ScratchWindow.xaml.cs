@@ -1,6 +1,10 @@
 ﻿using MyLights.Models;
+using MyLights.Util;
+using MyLights.ViewModels;
+using MyLights.Windows.ViewModels;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Text;
@@ -29,8 +33,19 @@ namespace MyLights.Windows
 
     public class ScratchWindowViewModel : INotifyPropertyChanged
     {
+        public ScratchWindowViewModel()
+        {
+            AddCommand = new RelayCommand((p) =>
+            {
+                Modulators.Add(new Modulator());
+            });
 
-
+            AddCommand.Execute(null);
+        }
+        public RelayCommand AddCommand { get; private set; }
+        public ObservableCollection<Modulator> Modulators { get; } = new ObservableCollection<Modulator>();
+        //public ObservableCollection<LightViewModel> Lights = (new RestLightBridge()).LightVMs;
+        public ObservableCollection<LightViewModel> Lights = App.Current.Locator.LightBridge.LightVMs;
         public double H { get; set; }
         public double S { get; set; }
         public double V { get; set; }

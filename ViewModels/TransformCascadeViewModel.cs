@@ -15,7 +15,8 @@ namespace MyLights.ViewModels
     {
         public TransformCascadeViewModel()
         {
-            var lb = new LightBridge();
+            //var lb = new RestLightBridge();
+            var lb = App.Current.Locator.LightBridge;
             lvms = lb.LightVMs;
             lvms.CollectionChanged += (s, e) => CreateTransforms();
         }

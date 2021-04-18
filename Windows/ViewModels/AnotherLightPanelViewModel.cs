@@ -15,7 +15,8 @@ namespace MyLights.Windows.ViewModels
     {
         public AnotherLightPanelViewModel()
         {
-            var lb = new LightBridge();
+            var lb = new LightUdp.UdpLightBridge();
+           // var lb = App.Current.Locator.LightBridge;
             LightVMs = lb.LightVMs;
         }
 

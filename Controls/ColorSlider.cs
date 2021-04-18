@@ -27,6 +27,10 @@ namespace MyLights.Controls
 
         FrameworkElement thumb;
         TranslateTransform transform;
+
+        ColorSpectrum1D spectrum;
+        ColorSpectrum1D spectrumBorder;
+
         bool isDragging = false;
 
         #region Properties
@@ -147,6 +151,30 @@ namespace MyLights.Controls
                 ThumbOffset = offset;
             }
         }
+
+        private void UpdateSpectrumBorder()
+        {
+            if (spectrumBorder != null)
+            {
+                // spectrumBorder mode is set in binding
+                switch (Mode)
+                {
+                    case HSVComponent.Hue:
+                        spectrumBorder.Value = 1.0;
+                        spectrumBorder.Saturation = 1.0;
+                        break;
+                    case HSVComponent.Saturation:
+                        spectrumBorder.Hue = 0.0;
+                        spectrumBorder.Value = 1.0;
+                        break;
+                    case HSVComponent.Value:
+                        spectrumBorder.Saturation = 0.0;
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
         #endregion
 
 
@@ -154,6 +182,8 @@ namespace MyLights.Controls
         private void ColorSlider_Loaded(object sender, RoutedEventArgs e)
         {
             thumb = (FrameworkElement)GetTemplateChild("HorizontalThumb");
+            spectrum = (ColorSpectrum1D)GetTemplateChild("HorizontalSpectrum");
+            spectrumBorder = (ColorSpectrum1D)GetTemplateChild("HorizontalSpectrumBorder");
 
             if (thumb != null)
             {
@@ -166,6 +196,8 @@ namespace MyLights.Controls
 
                 UpdateValues();
             }
+
+            UpdateSpectrumBorder();
         }
 
         //private void Thumb_DragDelta(object sender, DragDeltaEventArgs e)
@@ -273,6 +305,7 @@ namespace MyLights.Controls
 
         private void OnModeChanged(DependencyPropertyChangedEventArgs e)
         {
+            UpdateSpectrumBorder();
         }
 
         private void OnOrientationChanged(DependencyPropertyChangedEventArgs e)

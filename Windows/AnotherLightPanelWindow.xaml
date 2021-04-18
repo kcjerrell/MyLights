@@ -45,6 +45,7 @@
         <RowDefinition/>
         <RowDefinition/>
         <RowDefinition/>
+        <RowDefinition/>
       </Grid.RowDefinitions>
       <Grid.ColumnDefinitions>
         <ColumnDefinition/>
@@ -62,7 +63,7 @@
       <ctrl:ColorSlider x:Name="valSlider" Width="100" Height="20" Grid.Row="2" Margin="4" Mode="Value"
                                   Saturation="{Binding Saturation, ElementName=satSlider, Mode=TwoWay}" Hue="{Binding Hue, ElementName=hueSlider, Mode=TwoWay}"/>
       <TextBlock Grid.Column="1" Grid.Row="2"  Text="{Binding HSV, ElementName=valSlider}"/>
-
+      <Button Content="Heyyy" Grid.Row="3" Click="Button_Click"/>
     </Grid>
 
   </Grid>
