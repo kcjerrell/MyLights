@@ -1,4 +1,5 @@
 ﻿using MyLights.Models;
+using MyLights.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -32,7 +33,14 @@ namespace MyLights.LightUdp
             colorTemp = new UdpColorTemp(client, resId);
 
             this.initCallback = initCallback;
+
+            client.SendMessage(new LightDgram(DgramVerbs.Enloop, ResourceId));
+
+            log = new Logger($"{resId} props");
+            //log.Log("props started");
         }
+
+        private Logger log;
 
         private Client client;
 
@@ -89,6 +97,7 @@ namespace MyLights.LightUdp
 
                 if (propertiesInitialized.Values.All(p => p))
                 {
+                    //Logger.Log("all props have value, calling initCallback");
                     initialized = true;
                     initCallback(this);
                 }

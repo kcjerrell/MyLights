@@ -16,8 +16,6 @@ namespace MyLights.LightUdp
         {
             this.client = client;
             this.ResourceId = resId;
-
-            Update();
         }
 
         private const int throttleDelay = 50;
@@ -46,7 +44,7 @@ namespace MyLights.LightUdp
             handler?.Invoke(this, UpdateEventArgs);
         }
 
-        public void UpdateValue(T value)
+        public virtual void UpdateValue(T value)
         {
             Value = value;
         }
@@ -66,7 +64,7 @@ namespace MyLights.LightUdp
 
                 isThrottled = false;
 
-                if (Compare(nextValue, newValue))
+                if (!Compare(nextValue, newValue))
                     Set(nextValue);
             }
         }
@@ -85,7 +83,6 @@ namespace MyLights.LightUdp
 
         protected abstract LightDgram GetWishMessage(T value);
         protected abstract LightDgram GetWonderMessage();
-
     }
 
     public class UdpPower : UdpProperty<bool>
@@ -164,6 +161,14 @@ namespace MyLights.LightUdp
         {
         }
         private static PropertyChangedEventArgs updateEventArgs = new PropertyChangedEventArgs("Mode");
+
+        public override void UpdateValue(string value)
+        {
+            if (value == "colour")
+                base.UpdateValue("color");
+            else
+                base.UpdateValue(value);
+        }
 
         protected override PropertyChangedEventArgs UpdateEventArgs => updateEventArgs;
 

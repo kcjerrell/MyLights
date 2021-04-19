@@ -56,7 +56,7 @@ namespace MyLights.ViewModels
             get => Light.Color;
             set
             {
-                UpdateColor(value.H, value.S,  value.V);
+                UpdateColor(value.H, value.S, value.V);
             }
         }
 
@@ -136,10 +136,35 @@ namespace MyLights.ViewModels
         //    }
         //}
 
+        private LightModes _lightMode;
         public LightModes LightMode
         {
-            get => Light.LightMode;
-            set => Light.SetLightMode(value);
+            get
+            {
+                if (!Power)
+                    return LightModes.Off;
+                else if (Mode == "color")
+                    return LightModes.Color;
+                else
+                    return LightModes.White;
+            }
+            set
+            {
+                if (value == LightModes.Off)
+                {
+                    Power = false;
+                }
+                else
+                {
+                    if (value == LightModes.Color)
+                        Mode = "color";
+                    else if (value == LightModes.White)
+                        Mode = "white";
+
+
+                    Power = true;
+                }
+            }
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

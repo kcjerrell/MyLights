@@ -40,27 +40,27 @@ namespace MyLights.LightUdp
 
         public async Task Connect()
         {
-            log.Log("connecting...");
+            //log.Log("connecting...");
             udp = new UdpClient(ListeningPort);
             udp.Connect(Address, Port);
 
-            log.Log("connection established");
+            //log.Log("connection established");
             IsConnected = true;
 
-            log.Log("saying hello");
+            //log.Log("saying hello");
             var buffer = Encoding.UTF8.GetBytes("hello");
             await udp.SendAsync(buffer, buffer.Length);
 
-            log.Log("awaiting response...");
+            //log.Log("awaiting response...");
             var res = await udp.ReceiveAsync();
 
-            log.Log("response received");
+            //log.Log("response received");
             listenTask = Task.Run(() => Listen());
         }
 
         private async Task Listen()
         {
-            log.Log("starting listener...");
+            //log.Log("starting listener...");
 
             IsListening = true;
             //RequestUpdateAll();
@@ -74,14 +74,14 @@ namespace MyLights.LightUdp
 
         public async Task<int> SendMessage(LightDgram dgram)
         {
-            log.Log($"sending message: {dgram}");
+            //log.Log($"sending message: {dgram}");
             dgram.GetBuffer(out byte[] bytes, out int length);
             return await udp.SendAsync(bytes, length);
         }
 
         public async Task<int> SendMessage(string msg)
         {
-            log.Log($"sending message: {msg}");
+            //log.Log($"sending message: {msg}");
             var buffer = Encoding.UTF8.GetBytes(msg);
             return await udp.SendAsync(buffer, buffer.Length);
         }
@@ -89,15 +89,13 @@ namespace MyLights.LightUdp
         private void ProcessMessage(UdpReceiveResult rawMessage)
         {
             var dgram = LightDgram.FromBytes(rawMessage.Buffer);
-            log.Log($"message received: {dgram}");
+            //log.Log($"message received: {dgram}");
 
             RaiseMessageReceived(dgram);
         }
 
         private void RaiseMessageReceived(LightDgram dgram)
         {
-            log.Log(dgram.ToString());
-
             var handler = LightMessageReceived;
             handler?.Invoke(this, new LightMessageEventArgs(dgram));
         }
