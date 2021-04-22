@@ -87,7 +87,7 @@ namespace MyLights.LightUdp
 
         static async Task StartClient()
         {
-            //log.Log("Starting client...", 4);
+            log.Log("Starting client...", 4);
             udpClient = new Client("127.0.0.1", 8090, 11000);
             await udpClient.Connect();
 
@@ -107,14 +107,14 @@ namespace MyLights.LightUdp
             {
                 if (msg.Property == LightProperties.Name)
                 {
-                    //log.Log("creating props", 4);
+                    log.Log("creating props", 4);
                     var props = new UdpPropertiesProvider(msg.Target, msg.Data, udpClient, OnPropertiesInitialized);
                     resourceIds.Add(msg.Target, props);
                 }
 
                 else
                 {
-                    //log.Log("unknown target referenced, requesting more info");
+                    log.Log("unknown target referenced, requesting more info");
                     var req = new LightDgram(DgramVerbs.Wonder, msg.Target, LightProperties.Name);
                     udpClient.SendMessage(req);
                 }
@@ -123,11 +123,11 @@ namespace MyLights.LightUdp
 
         private static void OnPropertiesInitialized(UdpPropertiesProvider props)
         {
-            //log.Log("props are initialized...", 4);
+            log.Log("props are initialized...", 4);
 
             App.Current.Dispatcher.Invoke(() =>
             {
-                //log.Log("...creating light and vm", 4);
+                log.Log("...creating light and vm", 4);
                 var light = new Light(props);
                 var lvm = new LightViewModel(light);
 
@@ -141,7 +141,7 @@ namespace MyLights.LightUdp
             if (delay)
                 await Task.Delay(2000);
 
-            //log.Log("requesting lights");
+            log.Log("requesting lights");
             var msg = new LightDgram(DgramVerbs.Wonder, "*bulb-.*", LightProperties.Name);
             await udpClient.SendMessage(msg);
         }

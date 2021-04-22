@@ -42,7 +42,8 @@ namespace MyLights.Controls
                 transform = new TranslateTransform();
                 thumb.RenderTransform = transform;
 
-                UpdateValues();
+                UpdateThumb(x: ValueX, y: ValueY);
+                // UpdateValues();
             }
         }
 

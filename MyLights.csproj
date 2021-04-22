@@ -56,10 +56,4 @@
     </None>
   </ItemGroup>
 
-  <ItemGroup>
-    <Reference Include="Python.Runtime">
-      <HintPath>..\..\GitHubRepos\pythonnet\pythonnet\runtime\Python.Runtime.dll</HintPath>
-    </Reference>
-  </ItemGroup>
-
 </Project>

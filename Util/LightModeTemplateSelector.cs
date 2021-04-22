@@ -17,11 +17,19 @@ namespace MyLights.Util
             {
                 return mode switch
                 {
-                    LightModes.Off => Off,
+                    //LightModes.Off => Off,
                     LightModes.Color => Color,
                     LightModes.White => White,
                     _ => null
                 };
+            }
+
+            if (item is string text)
+            {
+                if (text == "color")
+                    return Color;
+                else if (text == "white")
+                    return White;
             }
             return null;
         }

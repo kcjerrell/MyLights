@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Diagnostics;
 using MyLights.Util;
+using MyLights.Windows;
+using MyLights.Models;
+using MyLights.LightUdp;
 
 namespace MyLights
 {
@@ -17,12 +20,37 @@ namespace MyLights
     {
         public App()
         {
-            Current = this;
+            Startup += App_Startup;
         }
+
+        private void App_Startup(object sender, StartupEventArgs e)
+        {
+            //Current = this;
+
+            lightBridge = new UdpLightBridge();
+
+            devConsole = new DevConsole();
+            devConsole.Show();
+        }
+
+        private DevConsole devConsole;
 
         public Locator Locator { get => (Locator)this.Resources["Locator"]; }
 
-        public static new App Current { get; private set; }
+        ILightBridge lightBridge;
+
+        // ILightBridge lightBridge = = new TestLightBridge();
+
+
+        public ILightBridge LightBridge => lightBridge;
+
+        public static new App Current
+        {
+            get
+            {
+                return (App)Application.Current;
+            }
+        }
     }
 
 }

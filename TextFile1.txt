@@ -1,3 +1,68 @@
+212204	I really need to iron out all the async calls in this, and as part of that, make sure that 
+		anything that touches the UI is safely dispatched. I think that's been the reason for a lot
+		of issues I've had the whole time and I didn't even realize it until recently.
+
+		For instance I never knew until today that exceptions in async code aren't caught until they 
+		are awaited. I've been doing a lot of this in a "fire-and-forget" style.
+
+		One tool I can use here is local functions. Also, I'm sure there's a more idiomatic way of 
+		dispatching to the ui thread. Although I kind of like my pseudo-recursive pattern.
+
+		public void UpdateSomething(double value)  {
+			if (Thread.Current != UiDispatcher.Thread) {
+				UiDispatcher.Invoke(() => UpdateSomething(value));
+			}
+			else {
+				...ui touching code...
+			}
+		}
+
+		I feel like there might be some issues there though too.
+
+		Also, I need to figure out why the "Brightness" and "ColorTemp" sliders are sticky. I'm not sure
+		why that would be. The Value slider isn't. It has to be something with how brightness and colortemp
+		are direct, but value is just a component of color.
+
+		That'll be a part of the async review. As well as making sure messages are properly gated. Sliders
+		can end up making a shit ton of calls. I don't like the Binding delay property, because it doesn't 
+		trigger until you stop.
+
+		Also, I'm pretty sure that combining Hue and Saturation into one control is resulting in two messages
+		being sent, as each one is updated. I need to combine that somehow, and actually, it's part of the
+		gating thing I just mentioned. No, they aren't being sent as two. Well they are, but the way it works
+		right now must be like...
+		
+		- you move the 'cursor' to a new place on the spectrum
+		- one of the axis values updates first, let's say the X axis
+		- the binding updates the Hue property on the VM
+		- The VM calls down to the Light, which calls Color.Set.
+		- Assuming Color.Set isn't already running, it immediately send a message to update the color,
+		  but only with the new Hue.
+		- the other axis value updates on the control, the Y axis
+		- the binding updates the Saturation property on the VM
+		- the vm calls down to the Light, which calls Color.Set
+		- Color.set is already sending a message, or it's "cooling down"
+		- The new color value (with the updated Saturation)* is stored
+		- Color.set finish it's delay and sends a msg with the stored color
+
+		I just noticed a new problem with this process. Let's say our color is 1-1-1 (full on red)
+		We click the spectrum and jump it to a new position, .3-.5-1 (I think that's like a weak yellow green)
+		Because they are updated as two discrete values from the control to the vm, the first color update would
+		.3-1-1 (changing the hue on the currently stored color value from the Light object);
+
+		But then the second one goes though, and it might change it to 1-.5-1 instead of .3-.5-1 because the current
+		color value hasn't updated yet.
+
+		Actually it's not happening that way because currently the VM does not actually use the color value from the model.
+		It reports it, but it doesn't use it at all for updating single components of the color. That's a problem.
+
+		If they lightbulbs only had R G B as seperately accessible values this would all be easy. but nope, color is 3 combined
+		values (almost always) expressed as one. 
+
+		really I should just suck it up and figure/implement the protocol in c#. Or try and update/fix TuyaKit/TuyaCore. That might
+		actually be a good idea for hirability. I think both of those are pretty much abandoned.
+
+
 Authorization Key
 Access ID/Client ID: vc8ksfa5achz2qp2arkx
 Access Secret/Client Secret: 9a8248a546844b6e80b7bc2a952e05fe

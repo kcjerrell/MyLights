@@ -45,7 +45,7 @@ namespace MyLights.Windows
         public RelayCommand AddCommand { get; private set; }
         public ObservableCollection<Modulator> Modulators { get; } = new ObservableCollection<Modulator>();
         //public ObservableCollection<LightViewModel> Lights = (new RestLightBridge()).LightVMs;
-        public ObservableCollection<LightViewModel> Lights = App.Current.Locator.LightBridge.LightVMs;
+        public ObservableCollection<LightViewModel> Lights = App.Current.Locator.LightVMs;
         public double H { get; set; }
         public double S { get; set; }
         public double V { get; set; }

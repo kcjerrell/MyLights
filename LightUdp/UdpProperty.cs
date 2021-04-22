@@ -115,7 +115,7 @@ namespace MyLights.LightUdp
         private static Regex pattern = new Regex("h([0-9.]+)s([0-9.]+)v([0-9.]+)");
 
         private static PropertyChangedEventArgs updateEventArgs = new("Color");
-        protected override PropertyChangedEventArgs UpdateEventArgs => throw new NotImplementedException();
+        protected override PropertyChangedEventArgs UpdateEventArgs => updateEventArgs;
 
         internal static HSV DecodeColor(string data)
         {

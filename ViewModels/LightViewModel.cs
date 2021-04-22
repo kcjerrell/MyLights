@@ -51,6 +51,24 @@ namespace MyLights.ViewModels
             }
         }
 
+        public double Brightness
+        {
+            get => Light.Brightness;
+            set
+            {
+                Light.SetBrightness(value);
+            }
+        }
+
+        public double ColorTemp
+        {
+            get => Light.ColorTemp;
+            set
+            {
+                Light.SetColorTemp(value);
+            }
+        }
+
         public HSV Color
         {
             get => Light.Color;
@@ -103,9 +121,14 @@ namespace MyLights.ViewModels
 
         public bool IsSelected { get; set; }
 
-        public int Index { get => Light.Index; }
+        public int Index { get => 0; }
 
-        [DependsOn("Mode", "Power")]
+        public override string ToString()
+        {
+            return $"(LVM: {Name}-{(Power ? "on" : "off")}-{Mode}-{Color}";
+        }
+
+        //[DependsOn("Mode", "Power")]
         //public LightModes LightMode
         //{
         //    get
@@ -136,44 +159,54 @@ namespace MyLights.ViewModels
         //    }
         //}
 
-        private LightModes _lightMode;
-        public LightModes LightMode
-        {
-            get
-            {
-                if (!Power)
-                    return LightModes.Off;
-                else if (Mode == "color")
-                    return LightModes.Color;
-                else
-                    return LightModes.White;
-            }
-            set
-            {
-                if (value == LightModes.Off)
-                {
-                    Power = false;
-                }
-                else
-                {
-                    if (value == LightModes.Color)
-                        Mode = "color";
-                    else if (value == LightModes.White)
-                        Mode = "white";
-
-
-                    Power = true;
-                }
-            }
-        }
+        //private LightModes _lightMode;
+        //public LightModes LightMode
+        //{
+        //    get
+        //    {
+        //        if (!Power)
+        //            return LightModes.Off;
+        //        else if (Mode == "color")
+        //            return LightModes.Color;
+        //        else
+        //            return LightModes.White;
+        //    }
+        //    set
+        //    {
+        //        if (value == LightModes.Off)
+        //        {
+        //            Power = false;
+        //        }
+        //        else
+        //        {
+        //            if (value == LightModes.Color)
+        //                Mode = "color";
+        //            else if (value == LightModes.White)
+        //                Mode = "white";
+        //
+        //
+        //            Power = true;
+        //        }
+        //    }
+        //}
 
         public event PropertyChangedEventHandler PropertyChanged;
     }
 
     public enum LightModes
-    {
-        Off,
+    {       
         Color,
         White
+    }
+
+    public class ModeOptions
+    {
+        public static List<string> ListOptions()
+        {
+            var options = new List<string>();
+            options.Add("color");
+            options.Add("white");
+            return options;
+        }
     }
 }

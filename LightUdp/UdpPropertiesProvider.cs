@@ -3,6 +3,7 @@ using MyLights.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 
 namespace MyLights.LightUdp
 {
@@ -72,34 +73,41 @@ namespace MyLights.LightUdp
 
         internal void ReceiveMessage(LightDgram msg)
         {
-            switch (msg.Property)
+            if (Thread.CurrentThread.ManagedThreadId != App.Current.Dispatcher.Thread.ManagedThreadId)
             {
-                case LightProperties.Power:
-                    power.UpdateValue(bool.Parse(msg.Data));
-                    break;
-                case LightProperties.Mode:
-                    mode.UpdateValue(msg.Data);
-                    break;
-                case LightProperties.Brightness:
-                    brightness.UpdateValue(double.Parse(msg.Data));
-                    break;
-                case LightProperties.ColorTemp:
-                    colorTemp.UpdateValue(double.Parse(msg.Data));
-                    break;
-                case LightProperties.Color:
-                    color.UpdateValue(UdpColor.DecodeColor(msg.Data));
-                    break;
+                App.Current.Dispatcher.Invoke(() => this.ReceiveMessage(msg));
             }
-
-            if (!initialized)
+            else
             {
-                propertiesInitialized[msg.Property] = true;
-
-                if (propertiesInitialized.Values.All(p => p))
+                switch (msg.Property)
                 {
-                    //Logger.Log("all props have value, calling initCallback");
-                    initialized = true;
-                    initCallback(this);
+                    case LightProperties.Power:
+                        power.UpdateValue(bool.Parse(msg.Data));
+                        break;
+                    case LightProperties.Mode:
+                        mode.UpdateValue(msg.Data);
+                        break;
+                    case LightProperties.Brightness:
+                        brightness.UpdateValue(double.Parse(msg.Data));
+                        break;
+                    case LightProperties.ColorTemp:
+                        colorTemp.UpdateValue(double.Parse(msg.Data));
+                        break;
+                    case LightProperties.Color:
+                        color.UpdateValue(UdpColor.DecodeColor(msg.Data));
+                        break;
+                }
+
+                if (!initialized)
+                {
+                    propertiesInitialized[msg.Property] = true;
+
+                    if (propertiesInitialized.Values.All(p => p))
+                    {
+                        //Logger.Log("all props have value, calling initCallback");
+                        initialized = true;
+                        initCallback(this);
+                    }
                 }
             }
         }

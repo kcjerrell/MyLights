@@ -12,7 +12,8 @@ namespace MyLights.Util
         public Locator()
         {
             //LightBridge = new RestLightBridge();
-            LightBridge = new LightUdp.UdpLightBridge();
+            //LightBridge = new LightUdp.UdpLightBridge();
+            LightBridge = App.Current.LightBridge;
             Library = new LibraryViewModel();
 
             if (IsInDesignMode)

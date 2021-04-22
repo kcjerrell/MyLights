@@ -94,7 +94,7 @@ namespace MyLights.ViewModels
 
         internal void FindBulb()
         {
-            var lightBridge = App.Current.Locator.LightBridge;
+            var lightBridge = App.Current.LightBridge;
             if (lightBridge.TryFindBulb(BulbRef, out Light light))
             {
                 Light = light;

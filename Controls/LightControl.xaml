@@ -11,28 +11,33 @@
              d:DesignHeight="450" d:DesignWidth="800" d:DataContext="{Binding DesignLightVM, Source={StaticResource Locator}}">
 
   <UserControl.Resources>
+
+    <util:StringEqualToVisibilityConverter x:Key="StringEqualToVisibilityConverter"/>
+
+    <!-- Templates for the Mode selector buttons -->
+
     <util:LightModeTemplateSelector x:Key="lightModeTemplateSelector">
-      <util:LightModeTemplateSelector.Off>
-        <DataTemplate>
-          <Border Width="20" Height="20" Background="#FF222222" BorderBrush="#FF444444" BorderThickness="1"/>
-        </DataTemplate>
-      </util:LightModeTemplateSelector.Off>
+
+      <!-- White mode -->
+
       <util:LightModeTemplateSelector.White>
         <DataTemplate>
-          <Border Width="20" Height="20" BorderBrush="#FF444444" BorderThickness="1">
+          <Border Width="20" Height="20" BorderBrush="#FF444444" BorderThickness="1" CornerRadius="10" Margin="2,4">
             <Border.Background>
               <RadialGradientBrush>
                 <GradientStop Color="#FFFFF5C9" Offset="0.17"/>
                 <GradientStop Color="#FFDEDEFF" Offset="1"/>
               </RadialGradientBrush>
             </Border.Background>
-
           </Border>
         </DataTemplate>
       </util:LightModeTemplateSelector.White>
+
+      <!-- Color mode -->
+
       <util:LightModeTemplateSelector.Color>
         <DataTemplate>
-          <Border Width="20" Height="20" BorderBrush="#FF444444" BorderThickness="1">
+          <Border Width="20" Height="20" BorderBrush="#FF444444" BorderThickness="1" CornerRadius="10" Margin="2,4">
             <Border.Background>
               <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
                 <LinearGradientBrush.RelativeTransform>
@@ -60,58 +65,54 @@
       <util:LightModeTemplateSelector.Off>
         <DataTemplate>
           <Border>
-            <TextBlock>Off!</TextBlock>
+            <TextBlock><Run Text="Off!"/></TextBlock>
           </Border>
         </DataTemplate>
       </util:LightModeTemplateSelector.Off>
       <util:LightModeTemplateSelector.Color>
         <DataTemplate>
           <Border>
-            <TextBlock>Color!</TextBlock>
+            <TextBlock><Run Text="Color!"/></TextBlock>
           </Border>
         </DataTemplate>
       </util:LightModeTemplateSelector.Color>
       <util:LightModeTemplateSelector.White>
         <DataTemplate>
           <Border>
-            <TextBlock>White!</TextBlock>
+            <TextBlock><Run Text="White!"/></TextBlock>
           </Border>
         </DataTemplate>
       </util:LightModeTemplateSelector.White>
     </util:LightModeTemplateSelector>
 
-    <ObjectDataProvider MethodName="GetValues"
-                ObjectType="{x:Type vm:LightModes}"
-                x:Key="MyEnumValues">
-      <ObjectDataProvider.MethodParameters>
-        <x:Type TypeName="vm:LightModes" />
-      </ObjectDataProvider.MethodParameters>
-    </ObjectDataProvider>
+    <!-- Binding source options for mode -->
 
-    <Style TargetType="ListBoxItem" x:Key="LightModeListBoxItemStyle">
+    <ObjectDataProvider MethodName="ListOptions"
+                ObjectType="{x:Type vm:ModeOptions}"
+                x:Key="MyEnumValues"/>
+
+    <!-- Style for the mode listbox -->
+
+    <Style TargetType="{x:Type ListBoxItem}" x:Key="LightModeListBoxItemStyle">
       <Setter Property="Template">
         <Setter.Value>
-          <ControlTemplate TargetType="ListBoxItem">
-            <Border x:Name="Border" SnapsToDevicePixels="true" BorderThickness="1" Margin="0" Padding="0">
-              <Border.Background>
-                <SolidColorBrush Color="Transparent" />
-              </Border.Background>
-              <Border.BorderBrush>
-                <SolidColorBrush Color="Transparent"/>
-              </Border.BorderBrush>
+          <ControlTemplate TargetType="{x:Type ListBoxItem}">
+            <Border x:Name="Border" SnapsToDevicePixels="true" BorderThickness="0" Margin="0" Padding="0" Opacity="0.7" Background="Transparent" BorderBrush="Transparent">
+
               <VisualStateManager.VisualStateGroups>
                 <VisualStateGroup x:Name="SelectionStates">
                   <VisualState x:Name="Unselected" />
                   <VisualState x:Name="Selected">
                     <Storyboard>
-                      <ColorAnimationUsingKeyFrames Storyboard.TargetName="Border"
-                                                Storyboard.TargetProperty="(Panel.Background).(SolidColorBrush.Color)">
+                      <ColorAnimationUsingKeyFrames Storyboard.TargetName="Border" Storyboard.TargetProperty="(Panel.Background).(SolidColorBrush.Color)">
                         <EasingColorKeyFrame KeyTime="0" Value="#FFdddddd" />
                       </ColorAnimationUsingKeyFrames>
-                      <ColorAnimationUsingKeyFrames Storyboard.TargetName="Border"
-                                                Storyboard.TargetProperty="(Border.BorderBrush).(SolidColorBrush.Color)">
+                      <ColorAnimationUsingKeyFrames Storyboard.TargetName="Border" Storyboard.TargetProperty="(Border.BorderBrush).(SolidColorBrush.Color)">
                         <EasingColorKeyFrame KeyTime="0" Value="#FFdddddd" />
                       </ColorAnimationUsingKeyFrames>
+                      <DoubleAnimationUsingKeyFrames Storyboard.TargetName="Border" Storyboard.TargetProperty="(UIElement.Opacity)">
+                        <EasingDoubleKeyFrame KeyTime="0" Value="1"/>
+                      </DoubleAnimationUsingKeyFrames>
                     </Storyboard>
                   </VisualState>
                 </VisualStateGroup>
@@ -119,19 +120,14 @@
                   <VisualState x:Name="Normal"/>
                   <VisualState x:Name="MouseOver">
                     <Storyboard>
-                      <ColorAnimationUsingKeyFrames Storyboard.TargetName="InnerBorder"
-                                                                          Storyboard.TargetProperty="(Border.Background).(SolidColorBrush.Color)">
+                      <ColorAnimationUsingKeyFrames Storyboard.TargetName="InnerBorder" Storyboard.TargetProperty="(Border.Background).(SolidColorBrush.Color)">
                         <EasingColorKeyFrame KeyTime="0" Value="#FFCCCCCC"/>
-
                       </ColorAnimationUsingKeyFrames>
                     </Storyboard>
                   </VisualState>
                 </VisualStateGroup>
               </VisualStateManager.VisualStateGroups>
-              <Border x:Name="InnerBorder" BorderBrush="Transparent" Padding="3">
-                <Border.Background>
-                  <SolidColorBrush Color="Transparent"/>
-                </Border.Background>
+              <Border x:Name="InnerBorder" BorderBrush="Transparent" Padding="0" Background="Transparent">
                 <ContentPresenter/>
               </Border>
             </Border>
@@ -139,97 +135,128 @@
         </Setter.Value>
       </Setter>
     </Style>
+
   </UserControl.Resources>
 
-  <Border Margin="4" BorderBrush="Black" BorderThickness="2" Background="#ffbbbbbb" FocusManager.IsFocusScope="True">
-    <Grid Margin="4">
+  <!-- Border and Grid element for LightControl -->
+  
+  <Border Margin="3" Padding="0,2" BorderBrush="Black" BorderThickness="1" Background="#ffbbbbbb" FocusManager.IsFocusScope="True" 
+          Width="190" Height="100">
+    <Grid>
       <Grid.ColumnDefinitions>
         <ColumnDefinition Width="Auto"/>
         <ColumnDefinition Width="Auto"/>
-        <ColumnDefinition Width="Auto"/>
+        <ColumnDefinition Width="*"/>
       </Grid.ColumnDefinitions>
       <Grid.RowDefinitions>
-        <RowDefinition Height="Auto"/>
         <RowDefinition Height="*"/>
       </Grid.RowDefinitions>
 
-      <TextBlock Text="{Binding Name}" RenderTransformOrigin="0.5,0.5" VerticalAlignment="Bottom" Margin="0,0,2,0" FontSize="14"
+      <!-- Label for the LightControl -->
+
+      <TextBlock Text="{Binding Name}" RenderTransformOrigin="0.5,0.5" VerticalAlignment="Bottom" Margin="2,0" FontSize="14"
                  TextOptions.TextFormattingMode="Display">
         <TextBlock.LayoutTransform>
           <RotateTransform Angle="270"/>
         </TextBlock.LayoutTransform>
       </TextBlock>
 
-      <ListBox x:Name="lightModeListBox" Grid.Column="1"
+      <!-- Container for power toggle and mode selector -->
+
+      <Border Grid.Column="1" Background="#44000000" 
+                       BorderBrush="Black"                                     
+                       BorderThickness="0" 
+                       Padding="0" Margin="2,0">
+
+        <StackPanel Orientation="Vertical" >
+
+          <!-- Power toggle -->
+
+          <ToggleButton Margin="2,4" IsChecked="{Binding Power, Mode=TwoWay}">
+            <ToggleButton.Template>
+              <ControlTemplate>
+                <Border x:Name="powerButton" Width="20" Height="20" Background="#FF222222" BorderBrush="#FF444444" BorderThickness="1">
+                  <VisualStateManager.VisualStateGroups>
+                    <VisualStateGroup x:Name="CheckStates">
+                      <VisualState x:Name="Unchecked"/>
+                      <VisualState x:Name="Checked">
+                        <Storyboard>
+                          <ColorAnimationUsingKeyFrames Storyboard.TargetName="powerButton"
+                                                      Storyboard.TargetProperty="(Border.Background).(SolidColorBrush.Color)">
+                            <EasingColorKeyFrame KeyTime="0" Value="#FFE6E689"/>
+
+                          </ColorAnimationUsingKeyFrames>
+                          <ColorAnimationUsingKeyFrames Storyboard.TargetName="indicator" Storyboard.TargetProperty="(Ellipse.Stroke).(SolidColorBrush.Color)">
+                            <EasingColorKeyFrame KeyTime="0" Value="#0000FF00"/>
+                          </ColorAnimationUsingKeyFrames>
+                        </Storyboard>
+                      </VisualState>
+                    </VisualStateGroup>
+                  </VisualStateManager.VisualStateGroups>
+
+                  <Ellipse x:Name="indicator" Width="10" Height="10" Stroke="#88FF0000" StrokeThickness="2"/>
+
+                </Border>
+              </ControlTemplate>
+            </ToggleButton.Template>
+
+          </ToggleButton>
+
+          <!-- Modes listbox -->
+
+          <ListBox x:Name="lightModeListBox"
                        ItemsSource="{Binding Source={StaticResource MyEnumValues}}"
-                       SelectedItem="{Binding LightMode, Mode=TwoWay}" 
+                       SelectedItem="{Binding Mode, Mode=TwoWay}" 
                        VerticalAlignment="Center" 
                        ItemTemplateSelector="{StaticResource lightModeTemplateSelector}"
                        ItemContainerStyle="{StaticResource LightModeListBoxItemStyle}" 
-                       Background="#44000000" 
-                       BorderBrush="Black"                                     
-                       BorderThickness="1" 
-                       Padding="0">
+                       Background="Transparent" BorderThickness="0" Padding="0" Margin="0">
 
-        <ListBox.ItemsPanel>
-          <ItemsPanelTemplate>
-            <StackPanel/>
-          </ItemsPanelTemplate>
-        </ListBox.ItemsPanel>
-      </ListBox>
+            <ListBox.ItemsPanel>
+              <ItemsPanelTemplate>
+                <StackPanel/>
+              </ItemsPanelTemplate>
+            </ListBox.ItemsPanel>
+          </ListBox>
+        </StackPanel>
+      </Border>
 
-      <Control x:Name="control" Grid.Column="2">
-        <Control.Style>
-          <Style TargetType="Control">
-            <Style.Triggers>
-              <DataTrigger Binding="{Binding SelectedItem, ElementName=lightModeListBox, Mode=OneWay}" Value="Off">
-                <Setter Property="Template">
-                  <Setter.Value>
-                    <ControlTemplate>
-                      <Border>
-                        <TextBlock>Off!</TextBlock>
-                      </Border>
-                    </ControlTemplate>
-                  </Setter.Value>
-                </Setter>
-              </DataTrigger>
-              <DataTrigger Binding="{Binding SelectedItem, ElementName=lightModeListBox, Mode=OneWay}" Value="Color">
-                <Setter Property="Template">
-                  <Setter.Value>
-                    <ControlTemplate>
-                      <Grid Grid.Column="1" Margin="3">
-                        <Grid.RowDefinitions>
-                          <RowDefinition Height="*"/>
-                          <RowDefinition Height="Auto"/>
-                        </Grid.RowDefinitions>
-                        <local:XYSelector x:Name="xySelector" Width="100" Panel.ZIndex="50" ValueRange="0,0,1,1"
-                                                     ValueX="{Binding H, Mode=TwoWay}"
-                                                      ValueY="{Binding S, Mode=TwoWay}" ThumbStrokeSize="1"
-                                                     ThumbFill="#00000000" ThumbStroke="Black" TextVisibility="Visible" BorderBrush="Black"
-                                                     BorderThickness="2"/>
+      <!-- Container for Color selector / Brightness+ColorTemp sliders -->
+      
+      <Grid Grid.Column="2" Margin="2,0">
+        
+        <!-- Color controls -->
+        
+      <Grid Margin="0" Visibility="{Binding Mode, Converter={StaticResource StringEqualToVisibilityConverter}, ConverterParameter=color}" >
+        <Grid.RowDefinitions>
+          <RowDefinition Height="*"/>
+          <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
 
-                        <views:ColorSpectrum Panel.ZIndex="0" Mode="HS" ThirdValue="{Binding V}"/>
-                        <Slider Grid.Row="1" Grid.Column="1" Maximum="1" LargeChange="0.1" SmallChange="0.05" Value="{Binding V, Mode=TwoWay}"/>
-                      </Grid>
-                    </ControlTemplate>
-                  </Setter.Value>
-                </Setter>
-              </DataTrigger>
-              <DataTrigger Binding="{Binding SelectedItem, ElementName=lightModeListBox, Mode=OneWay}" Value="White">
-                <Setter Property="Template">
-                  <Setter.Value>
-                    <ControlTemplate>
-                      <Border>
-                        <TextBlock>Off!</TextBlock>
-                      </Border>
-                    </ControlTemplate>
-                  </Setter.Value>
-                </Setter>
-              </DataTrigger>
-            </Style.Triggers>
-          </Style>
-        </Control.Style>
-      </Control>
+        <local:XYSelector x:Name="xySelector" Panel.ZIndex="50" ValueRange="0,0,1,1"
+                                          ValueX="{Binding H, Mode=TwoWay}" ValueY="{Binding S, Mode=TwoWay}" ThumbStrokeSize="1"
+                                          ThumbFill="#00000000" ThumbStroke="Black" TextVisibility="Visible" BorderBrush="Black"
+                                          BorderThickness="1"/>
+
+        <views:ColorSpectrum Panel.ZIndex="0" Mode="HS" ThirdValue="{Binding V, Mode=OneWay}"/>
+
+        <Slider Grid.Row="1" Grid.Column="1" Maximum="1" LargeChange="0.1" SmallChange="0.05" Value="{Binding V, Mode=TwoWay}"/>
+
+      </Grid>
+
+        <!-- white controls -->
+        
+      <Grid Visibility="{Binding Mode, Converter={StaticResource StringEqualToVisibilityConverter}, ConverterParameter=white}">
+        <Grid.RowDefinitions>
+          <RowDefinition Height="Auto"/>
+          <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+          <Slider Value="{Binding ColorTemp, Mode=TwoWay}" Minimum="0" Maximum="1000"/>
+
+          <Slider Value="{Binding Brightness, Mode=TwoWay}" Grid.Row="1" Minimum="10" Maximum="1000"/>
+      </Grid>
+      </Grid>
 
       <!--<TextBlock Grid.Row="1" Text="{Binding ValueX, ElementName=xySelector, Mode=OneWay}"/>-->
 

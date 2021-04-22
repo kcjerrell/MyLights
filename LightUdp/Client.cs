@@ -40,27 +40,27 @@ namespace MyLights.LightUdp
 
         public async Task Connect()
         {
-            //log.Log("connecting...");
+            log.Log("connecting...");
             udp = new UdpClient(ListeningPort);
             udp.Connect(Address, Port);
 
-            //log.Log("connection established");
+            log.Log("connection established");
             IsConnected = true;
 
-            //log.Log("saying hello");
+            log.Log("saying hello");
             var buffer = Encoding.UTF8.GetBytes("hello");
             await udp.SendAsync(buffer, buffer.Length);
 
-            //log.Log("awaiting response...");
+            log.Log("awaiting response...");
             var res = await udp.ReceiveAsync();
 
-            //log.Log("response received");
+            log.Log("response received");
             listenTask = Task.Run(() => Listen());
         }
 
         private async Task Listen()
         {
-            //log.Log("starting listener...");
+            log.Log("starting listener...");
 
             IsListening = true;
             //RequestUpdateAll();
@@ -74,7 +74,7 @@ namespace MyLights.LightUdp
 
         public async Task<int> SendMessage(LightDgram dgram)
         {
-            //log.Log($"sending message: {dgram}");
+            //log.Log($"sending message: {dgram.GetFormatted()}");
             dgram.GetBuffer(out byte[] bytes, out int length);
             return await udp.SendAsync(bytes, length);
         }
