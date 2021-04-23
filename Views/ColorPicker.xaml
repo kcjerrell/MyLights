@@ -29,7 +29,7 @@
                                      ThumbStroke="Black" ThumbStrokeSize="1" BorderThickness="2" BorderBrush="Black" Background="#00000000"
                                      ThumbSize="16" TextVisibility="Visible" ValueRange="0,0,1,1" Panel.ZIndex="50"/>
 
-                    <local:ColorSpectrum x:Name="spectrum" Panel.ZIndex="0"/>
+                    <ctrl:ColorSpectrum x:Name="spectrum" Panel.ZIndex="0"/>
                 </Grid>
 
                 <Border x:Name="selectedColorBorder" Grid.Column="1" Grid.Row="0" Grid.RowSpan="2" Margin="0,8,8,8" BorderBrush="Black" 

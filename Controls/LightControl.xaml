@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:MyLights.Controls" 
+             xmlns:ctrl="clr-namespace:MyLights.Controls" 
              xmlns:views="clr-namespace:MyLights.Views" 
              xmlns:util="clr-namespace:MyLights.Util"
              xmlns:vm="clr-namespace:MyLights.ViewModels"
@@ -233,12 +233,12 @@
           <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <local:XYSelector x:Name="xySelector" Panel.ZIndex="50" ValueRange="0,0,1,1"
+        <ctrl:XYSelector x:Name="xySelector" Panel.ZIndex="50" ValueRange="0,0,1,1"
                                           ValueX="{Binding H, Mode=TwoWay}" ValueY="{Binding S, Mode=TwoWay}" ThumbStrokeSize="1"
                                           ThumbFill="#00000000" ThumbStroke="Black" TextVisibility="Visible" BorderBrush="Black"
                                           BorderThickness="1"/>
 
-        <views:ColorSpectrum Panel.ZIndex="0" Mode="HS" ThirdValue="{Binding V, Mode=OneWay}"/>
+        <ctrl:ColorSpectrum Panel.ZIndex="0" Mode="HS" ThirdValue="{Binding V, Mode=OneWay}"/>
 
         <Slider Grid.Row="1" Grid.Column="1" Maximum="1" LargeChange="0.1" SmallChange="0.05" Value="{Binding V, Mode=TwoWay}"/>
 
