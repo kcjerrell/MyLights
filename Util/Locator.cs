@@ -7,62 +7,42 @@ using System.Windows;
 
 namespace MyLights.Util
 {
-    public class Locator : DependencyObject, INotifyPropertyChanged
+    public class Locator
     {
         public Locator()
         {
-            //LightBridge = new RestLightBridge();
-            //LightBridge = new LightUdp.UdpLightBridge();
-            LightBridge = App.Current.LightBridge;
-            Library = new LibraryViewModel();
 
-            if (IsInDesignMode)
-            {
-                LightVMs.CollectionChanged += (s, e) =>
-                {
-                    if (LightVMs.Count >= 1)
-                        DesignLightVM = LightVMs[0];
-                };
-            }
         }
 
-        public ILightBridge LightBridge { get; }
-        public ObservableCollection<LightViewModel> LightVMs { get => LightBridge.LightVMs; }
-        public LibraryViewModel Library { get; private set; }
-
-        private MainWindowViewModel _mainWindowViewModel;
-        public MainWindowViewModel MainWindowViewModel
-        {
-            get
-            {
-                if (_mainWindowViewModel == null) { _mainWindowViewModel = new MainWindowViewModel(); }
-                return _mainWindowViewModel;
-            }
-        }
-
-        SceneSetter _designSceneSetter;
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        public SceneSetter DesignSceneSetter
-        {
-            get
-            {
-                if (_designSceneSetter == null)
-                {
-                    _designSceneSetter = new SceneSetter(new BulbRef() { Name = "Up" });
-                    _designSceneSetter.Mode = "color";
-                    _designSceneSetter.Color = new Models.HSV(1, 1, 1);
-                }
-                return _designSceneSetter;
-            }
-        }
-
+        public ILightBridge LightBridge => lightBridge;
+        public ObservableCollection<LightViewModel> LightVMs => lightBridge.LightVMs;
+        public LibraryViewModel Library => libraryVm;
         public LightViewModel DesignLightVM { get; private set; }
+
+
+        public static Locator Get { get; } = new Locator();
         public static bool IsInDesignMode { get; }
+        private static ILightBridge lightBridge;
+        private static LightViewModel designLightVm;
+        private static LibraryViewModel libraryVm = new LibraryViewModel();
         static Locator()
         {
             IsInDesignMode = DesignerProperties.GetIsInDesignMode(new DependencyObject());
+            
+            if (IsInDesignMode)
+            {
+                lightBridge = new TestLightBridge();
+            }
+            else
+            {
+                lightBridge = new LightUdp.UdpLightBridge();
+            }
+
+            lightBridge.LightVMs.CollectionChanged += (s, e) =>
+            {
+                if (lightBridge.LightVMs.Count >= 1)
+                    designLightVm = lightBridge.LightVMs[0];
+            };
         }
     }
 }

@@ -26,17 +26,10 @@ namespace MyLights.Util
 
         static Logger()
         {
-            uiDispatcher = App.Current.Dispatcher;
-            uiThreadId = uiDispatcher.Thread.ManagedThreadId;
             LogItems = new ReadOnlyObservableCollection<LogItem>(logItems);
-
-            // Log("Here's a dummy message", "Logger",5);
-            // Log("And another one", "Logger");
         }
 
         private static ObservableCollection<LogItem> logItems = new ObservableCollection<LogItem>();
-        private static int uiThreadId;
-        private static Dispatcher uiDispatcher;
 
         public static ReadOnlyObservableCollection<LogItem> LogItems { get; }
         public static int LogToConsolePriority { get; set; } = 3;
@@ -48,10 +41,13 @@ namespace MyLights.Util
         // 4: Important
         // 5: Critical
 
+        private static Dispatcher uiDispatcher;
 
         public static void Log(string message, string callerInfo = "", int priority = 3)
         {
             var item = new LogItem(message, callerInfo, priority);
+
+            uiDispatcher ??= App.Current != null ? App.Current.Dispatcher : Dispatcher.CurrentDispatcher;
 
             uiDispatcher?.Invoke(() => logItems.Add(item));
 
@@ -60,8 +56,7 @@ namespace MyLights.Util
             if (IsTraceEnabled && priority >= LogToConsolePriority)
             {
                 int currentThread = Thread.CurrentThread.ManagedThreadId;
-                string onUi = currentThread == uiThreadId ? "*" : "";
-                string output = $"{callerInfo}: {message} [{currentThread}{onUi}]";
+                string output = $"{callerInfo}: {message} [{currentThread}]";
 
                 if (priority == 5)
                     Trace.TraceError(output);

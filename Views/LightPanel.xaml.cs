@@ -18,15 +18,6 @@ namespace MyLights.Views
         {
             InitializeComponent();
             AddHandler(MouseLeftButtonUpEvent, new MouseButtonEventHandler(SomeMouseLeftButtonUp), true);
-            Loaded += LightPanel_Loaded;
-        }
-
-        private async void LightPanel_Loaded(object sender, RoutedEventArgs e)
-        {
-            //loading.Show();
-            //await Task.Delay(1500);
-            //await LightBridge.Singleton.GetLights();
-            //loading.Hide();
         }
 
         private void FlyoutClosedCallBack()

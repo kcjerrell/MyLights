@@ -14,8 +14,8 @@ namespace MyLights.ViewModels
         public LightPaletteWindowViewModel()
         {
             //var lb = new RestLightBridge();
-            var lb = App.Current.LightBridge;
-            this.Lights = lb.LightVMs;
+            var loc = new Locator();
+            this.Lights = loc.LightVMs;
         }
 
         public ObservableCollection<LightViewModel> Lights { get; set; }

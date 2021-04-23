@@ -35,7 +35,7 @@ namespace MyLights
 
         private Action flyoutCallback;
 
-        private async void MainWindow_Loaded(object sender, RoutedEventArgs e)
+        private void MainWindow_Loaded(object sender, RoutedEventArgs e)
         {
             colorPicker.AvailableColors.Clear();
 

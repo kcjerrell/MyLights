@@ -131,9 +131,7 @@ namespace MyLights.Windows.ViewModels
 
         static Modulator()
         {
-            //var lb = new RestLightBridge();
-            var lb = App.Current.LightBridge;
-            lights = lb.LightVMs;
+            lights = Locator.Get.LightVMs;
 
             //I know this has to be on the correct thread. Actually, maybe it doesn't since it doesn't
             //directly touch the UI at all. we shall see

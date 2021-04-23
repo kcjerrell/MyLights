@@ -8,21 +8,6 @@
   xmlns:views="clr-namespace:MyLights.Views"
   xmlns:vm="clr-namespace:MyLights.ViewModels">
 
-
-  <Style TargetType="{x:Type local:DesignerObject}">
-    <Setter Property="Template">
-      <Setter.Value>
-        <ControlTemplate TargetType="{x:Type local:DesignerObject}">
-          <Border Background="{TemplateBinding Background}"
-                            BorderBrush="{TemplateBinding BorderBrush}"
-                            BorderThickness="{TemplateBinding BorderThickness}">
-            <ContentPresenter/>
-          </Border>
-        </ControlTemplate>
-      </Setter.Value>
-    </Setter>
-  </Style>
-
   <SolidColorBrush x:Key="XYThumbBackgroundColor" Color="Black"/>
 
   <Style TargetType="{x:Type ctrl:XYSelector}">

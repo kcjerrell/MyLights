@@ -25,30 +25,22 @@ namespace MyLights
 
         private void App_Startup(object sender, StartupEventArgs e)
         {
-            //Current = this;
-
-            lightBridge = new UdpLightBridge();
-
-            devConsole = new DevConsole();
-            devConsole.Show();
+            //devConsole = new DevConsole();
+            //devConsole.Show();
         }
 
         private DevConsole devConsole;
 
-        public Locator Locator { get => (Locator)this.Resources["Locator"]; }
-
-        ILightBridge lightBridge;
-
-        // ILightBridge lightBridge = = new TestLightBridge();
-
-
-        public ILightBridge LightBridge => lightBridge;
+        public Locator Locator = new Locator();
 
         public static new App Current
         {
             get
             {
-                return (App)Application.Current;
+                if (Application.Current is App current)
+                    return current;
+                else
+                    return null;
             }
         }
     }

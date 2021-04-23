@@ -24,7 +24,6 @@ namespace MyLights.Models
             colorTemp = propertiesProvider.ColorTempProperty;
 
             WireEvents();
-
         }
 
         private void WireEvents()
@@ -51,8 +50,6 @@ namespace MyLights.Models
                 var handler = PropertyChanged;
                 handler?.Invoke(this, new PropertyChangedEventArgs(property));
             }
-
-            //DetermineLightMode();
         }
 
         private static Dispatcher uiDispatcher;

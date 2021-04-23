@@ -62,6 +62,8 @@
 		really I should just suck it up and figure/implement the protocol in c#. Or try and update/fix TuyaKit/TuyaCore. That might
 		actually be a good idea for hirability. I think both of those are pretty much abandoned.
 
+		Also I need to (maybe do this first) prune the crap I don't need or abandoned, and reorganize the whole thing.
+
 
 Authorization Key
 Access ID/Client ID: vc8ksfa5achz2qp2arkx
