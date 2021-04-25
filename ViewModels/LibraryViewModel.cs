@@ -56,13 +56,14 @@ namespace MyLights.ViewModels
         {
             // Properties.Settings.Default.Reset();                    
             if (isInDesignMode)
-            {
+            {                    
                 Scenes.Add(new Scene("Sample Scene #1"));
                 Scenes.Add(new Scene("Sample Scene #2"));
 
                 FavColors.Add(new HSV(1, 1, 1));
                 FavColors.Add(new HSV(.3, .8, 1));
             }
+
             else
             {
                 try
@@ -114,18 +115,29 @@ namespace MyLights.ViewModels
 
         }
 
+        internal void RemoveScene(Scene scene)
+        {
+            if (Scenes.Remove(scene))
+                SaveScenes();
+        }
+
         private void SaveColors()
         {
             string favColors = JsonConvert.SerializeObject(FavColors.ToArray());
             Properties.Settings.Default.FavColors = favColors;
+            Properties.Settings.Default.Save();
         }
 
-        public void SaveLibrary()
+        private void SaveScenes()
         {
             string scenes = JsonConvert.SerializeObject(Scenes.ToArray());
             Properties.Settings.Default.Scenes = scenes;
             Properties.Settings.Default.Save();
+        }
 
+        public void SaveLibrary()
+        {
+            SaveScenes();
             SaveColors();
         }
 

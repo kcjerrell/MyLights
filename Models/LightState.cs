@@ -25,11 +25,18 @@ namespace MyLights.Models
 
         internal void Apply(Light light)
         {
-            light.SetColor(Color);
-            light.SetMode(Mode);
-            light.SetBrightness(Brightness);
-            light.SetColorTemp(ColorTemp);
             light.SetPower(Power);
+            light.SetMode(Mode);
+
+            if (Mode == "color")
+            {
+                light.SetColor(Color);
+            }
+            else if (Mode == "white")
+            {
+                light.SetBrightness(Brightness);
+                light.SetColorTemp(ColorTemp);
+            }
         }
     }
 }

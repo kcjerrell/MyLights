@@ -107,6 +107,7 @@ namespace MyLights.Controls
         }
         #endregion
 
+
         #region Methods
         private void UpdateValues()
         {

@@ -10,7 +10,7 @@
         xmlns:util="clr-namespace:MyLights.Util" 
         xmlns:ctrl="clr-namespace:MyLights.Controls"
         mc:Ignorable="d"
-        Title="AnotherLightPanelWindow" Height="450" Width="600" Background="{Binding Color, ElementName=hueSlider, Converter={StaticResource BrushCache}}">
+        Title="AnotherLightPanelWindow" Height="450" Width="850" Background="{Binding Color, ElementName=hueSlider, Converter={StaticResource BrushCache}}">
 
   <Window.DataContext>
     <wvm:AnotherLightPanelViewModel/>
@@ -22,7 +22,7 @@
 
   <Grid Background="Gray">
     <Grid.ColumnDefinitions>
-      <ColumnDefinition Width="600"/>
+      <ColumnDefinition Width="620"/>
       <ColumnDefinition Width="*"/>
     </Grid.ColumnDefinitions>
     <ItemsControl x:Name="itemsControl" ItemsSource="{Binding LightVMs}">
@@ -55,8 +55,42 @@
         <ListBox.ItemTemplate>
           <DataTemplate>
             <Grid x:Name="sceneItemRoot">
-              <TextBox x:Name="sceneItemInput" Text="{Binding Name, Mode=TwoWay}" FontSize="18" Padding="8,4" Visibility="Collapsed"/>
-              <TextBlock x:Name="sceneItemLabel" Text="{Binding Name}" FontSize="18" Padding="8,4" Margin="2,1" Visibility="Visible"/>
+              <Grid.RowDefinitions>
+                <RowDefinition Height="10"/>
+                <RowDefinition Height="Auto"/>
+              </Grid.RowDefinitions>
+              <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+              </Grid.ColumnDefinitions>
+
+              <ItemsControl Grid.ColumnSpan="2" ItemsSource="{Binding LightStates}">
+                <ItemsControl.ItemsPanel>
+                  <ItemsPanelTemplate>
+                    <ctrl:UniformStackPanel IsItemsHost="True"/>
+                  </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                  <DataTemplate>
+                    <Border Background="{Binding Value.Color, Converter={StaticResource BrushCache}, ConverterParameter=fullv}"/>
+                  </DataTemplate>
+                </ItemsControl.ItemTemplate>
+              </ItemsControl>
+
+
+
+
+              <TextBox x:Name="sceneItemInput" Grid.Row="1" Text="{Binding Name, Mode=TwoWay}" FontSize="18" Padding="8,4" Visibility="Collapsed"/>
+              <TextBlock x:Name="sceneItemLabel" Grid.Row="1" Text="{Binding Name}" FontSize="18" Padding="8,4" Margin="2,1" Visibility="Visible"/>
+              <Button Width="20" Height="20" Grid.Row="1" Grid.Column="1" Opacity=".5" VerticalAlignment="Bottom" Click="Button_Click_1">
+                <Grid RenderTransformOrigin="0.5,0.5">
+                  <Grid.RenderTransform>
+                    <RotateTransform Angle="45"/>
+                  </Grid.RenderTransform>
+                  <Border Width="3" Height="15" Background="Red"/>
+                  <Border Width="15" Height="3" Background="Red"/>
+                </Grid>
+              </Button>
             </Grid>
           </DataTemplate>
         </ListBox.ItemTemplate>

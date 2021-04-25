@@ -98,5 +98,13 @@ namespace MyLights.Windows
                 Locator.Get.Library.ApplyScene(scene);
             }
         }
+
+        private void Button_Click_1(object sender, RoutedEventArgs e)
+        {
+            var button = (Button)sender;
+            var scene = (Scene)button.DataContext;
+
+            Locator.Get.Library.RemoveScene(scene);
+        }
     }
 }

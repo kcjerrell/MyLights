@@ -63,7 +63,6 @@ namespace MyLights.Bridges.Udp
             }
         }
 
-
         public virtual void UpdateValue(T value)
         {
             if (!Compare(value, _value))
