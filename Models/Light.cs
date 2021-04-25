@@ -1,4 +1,5 @@
-﻿using MyLights.Util;
+﻿using MyLights.Bridges;
+using MyLights.Util;
 using MyLights.ViewModels;
 using PropertyChanged;
 using System;

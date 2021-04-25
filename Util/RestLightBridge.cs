@@ -1,4 +1,5 @@
 ﻿using Flurl.Http;
+using MyLights.Bridges;
 using MyLights.Models;
 using MyLights.ViewModels;
 using System;
@@ -120,6 +121,11 @@ namespace MyLights.Util
                 lightVMs.Add(new LightViewModel(light));
                 lights.Add(light);
             }
+        }
+
+        public Task ConnectAsync()
+        {
+            throw new NotImplementedException();
         }
     }
 }

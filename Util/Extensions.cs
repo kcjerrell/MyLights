@@ -9,7 +9,7 @@ using System.Windows.Media;
 
 namespace MyLights.Util
 {
-    public static class Extensions
+    public static partial class Extensions
     {
         public static double DistanceFrom(this Point origin, Point other)
         {
@@ -52,6 +52,16 @@ namespace MyLights.Util
         {
             Helpers.ColorToHSV(color, out double h, out double s, out double v);
             return new HSV(h, s, v);
+        }
+
+        public static double MapRange(this double x, double localMin, double localMax, double targetMin, double targetMax)
+        {
+            x = (x.Clamp(localMin, localMax));
+            double xr = (x - localMin) / (localMax - localMin);
+
+            double y = xr * (targetMax - targetMin) + targetMin;
+
+            return y;
         }
     }
 }

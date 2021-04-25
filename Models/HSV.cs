@@ -3,6 +3,7 @@ using Newtonsoft.Json;
 using System.ComponentModel;
 using System.Windows.Media;
 using System;
+using MyLights.Models;
 
 namespace MyLights.Models
 {
@@ -69,6 +70,17 @@ namespace MyLights.Models
         public override string ToString()
         {
             return $"(HSV: {H.ToString("F3")}, {S.ToString("F3")}, {V.ToString("F3")})";
+        }
+    }
+}
+
+namespace MyLights.Util
+{
+    public static partial class Extensions
+    {
+        public static HSV V(this HSV color, double v)
+        {
+            return new HSV(color.H, color.S, v);
         }
     }
 }

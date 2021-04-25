@@ -1,29 +1,25 @@
 ﻿using MyLights.Models;
 using MyLights.Util;
 using MyLights.ViewModels;
-using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using System.Windows.Threading;
 using OCL = System.Collections.ObjectModel.ObservableCollection<MyLights.Models.Light>;
 using OCLVM = System.Collections.ObjectModel.ObservableCollection<MyLights.ViewModels.LightViewModel>;
 
-namespace MyLights.LightUdp
+namespace MyLights.Bridges.Udp
 {
-    public class UdpLightBridge : ILightBridge
+    public partial class UdpLightBridge : ILightBridge
     {
         public UdpLightBridge()
         {
 
         }
 
-        public OCL Lights => UdpLightBridge.lights;
+        public OCL Lights => lights;
 
-        public OCLVM LightVMs => UdpLightBridge.lightVms;
+        public OCLVM LightVMs => lightVms;
 
         public bool TryFindBulb(BulbRef key, out Light light)
         {
@@ -50,40 +46,8 @@ namespace MyLights.LightUdp
         private static Client udpClient;
         private static OCL lights = new OCL();
         private static OCLVM lightVms = new OCLVM();
-        private static bool isInDesignMode;
 
         private static Dictionary<string, UdpPropertiesProvider> resourceIds = new Dictionary<string, UdpPropertiesProvider>();
-
-        static UdpLightBridge()
-        {
-            isInDesignMode = Locator.IsInDesignMode;
-
-            if (isInDesignMode)
-            {
-                List<JsonBulb> jbulbs = new List<JsonBulb>();
-
-                jbulbs.Add(new JsonBulb()
-                {
-                    Index = 0,
-                    Name = "DesignBulb1",
-                    Color = new HSV() { H = 0.2, S = 0.8, V = 1 },
-                    Power = true,
-                    Mode = "white"
-                });
-                jbulbs.Add(new JsonBulb()
-                {
-                    Index = 1,
-                    Name = "DesignBulb2",
-                    Color = new HSV() { H = 0.5, S = 0.6, V = 1 },
-                    Power = true,
-                    Mode = "color"
-                });
-            }
-            else
-            {
-                StartClient().ContinueWith((t) => GetLights(true));
-            }
-        }
 
         static async Task StartClient()
         {
@@ -94,10 +58,13 @@ namespace MyLights.LightUdp
             udpClient.LightMessageReceived += UdpClient_LightMessageReceived;
         }
 
-        private static void UdpClient_LightMessageReceived(object sender, LightMessageEventArgs e)
+        private static async void UdpClient_LightMessageReceived(object sender, LightMessageEventArgs e)
         {
-            var msg = e.Message;
+            await RecieveMessage(e.Message);
+        }
 
+        private static async Task RecieveMessage(LightDgram msg)
+        {
             if (resourceIds.ContainsKey(msg.Target))
             {
                 var props = resourceIds[msg.Target];
@@ -105,35 +72,40 @@ namespace MyLights.LightUdp
             }
             else
             {
-                if (msg.Property == LightProperties.Name)
+                if (msg.Property == DgramProperties.Name)
                 {
                     log.Log("creating props", 4);
-                    var props = new UdpPropertiesProvider(msg.Target, msg.Data, udpClient, OnPropertiesInitialized);
+                    var props = new UdpPropertiesProvider();
+                    props.PropertiesInitialized += Props_PropertiesInitialized;
+                    await props.Enloop(msg, udpClient);
                     resourceIds.Add(msg.Target, props);
                 }
 
                 else
                 {
                     log.Log("unknown target referenced, requesting more info");
-                    var req = new LightDgram(DgramVerbs.Wonder, msg.Target, LightProperties.Name);
-                    udpClient.SendMessage(req);
+                    var req = new LightDgram(DgramVerbs.Wonder, msg.Target, DgramProperties.Name);
+                    await udpClient.SendMessage(req);
                 }
             }
         }
 
-        private static void OnPropertiesInitialized(UdpPropertiesProvider props)
+        private static void Props_PropertiesInitialized(object sender, System.EventArgs e)
         {
             log.Log("props are initialized...", 4);
-
-            App.Current.Dispatcher.Invoke(() =>
+                   
+            if (sender is UdpPropertiesProvider props)
             {
-                log.Log("...creating light and vm", 4);
-                var light = new Light(props);
-                var lvm = new LightViewModel(light);
+                App.Current.Dispatcher.Invoke(() =>
+                {
+                    log.Log("...creating light and vm", 4);
+                    var light = new Light(props);
+                    var lvm = new LightViewModel(light);
 
-                lights.Add(light);
-                lightVms.Add(lvm);
-            });
+                    lights.Add(light);
+                    lightVms.Add(lvm);
+                });
+            }
         }
 
         public static async Task GetLights(bool delay = false)
@@ -142,9 +114,35 @@ namespace MyLights.LightUdp
                 await Task.Delay(2000);
 
             log.Log("requesting lights");
-            var msg = new LightDgram(DgramVerbs.Wonder, "*bulb-.*", LightProperties.Name);
+            var msg = new LightDgram(DgramVerbs.Wonder, "*bulb-.*", DgramProperties.Name);
             await udpClient.SendMessage(msg);
         }
+
+        private async static Task StartServer()
+        {
+            if (Locator.IsInDesignMode)
+                return;
+
+            var procs = ProcessCommandLine.SearchProcCommandLine("node", "sockets");
+            if (procs.Count == 0)
+            {
+                var startInfo = new ProcessStartInfo("node");
+                startInfo.ArgumentList.Add("--trace-warnings");
+                startInfo.ArgumentList.Add("--unhandled-rejections=warn");
+                startInfo.ArgumentList.Add("--trace-uncaught");
+                startInfo.ArgumentList.Add(@"C:\Users\kcjer\source\repos\lightrest\dist\sockets.js");
+                Process.Start(startInfo);
+                await Task.Delay(1000);
+            }
+        }
+
+        public async Task ConnectAsync()
+        {
+            await StartServer();
+            await StartClient();
+            await GetLights(true);
+        }
+
         #endregion
     }
 }

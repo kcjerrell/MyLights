@@ -1,10 +1,11 @@
-﻿using System;
+﻿using MyLights.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MyLights.Models
+namespace MyLights.Bridges
 {
     public interface ILightPropertiesProvider
     {

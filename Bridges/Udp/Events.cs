@@ -4,9 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MyLights.LightUdp
+namespace MyLights.Bridges.Udp
 {
     public delegate void LightMessageReceivedEventHandler(object sender, LightMessageEventArgs e);
+
+    public delegate void OutgoingChangeRequestedEventHandler(object sender, OutgoingChangeRequestedEventArgs e);
 
     public class LightMessageEventArgs
     {
@@ -16,5 +18,15 @@ namespace MyLights.LightUdp
         }
 
         public LightDgram Message { get; set; }
+    }
+
+    public class OutgoingChangeRequestedEventArgs
+    {
+        public OutgoingChangeRequestedEventArgs(DgramProperties property)
+        {
+            this.Property = property;
+        }
+
+        public DgramProperties Property { get; set; }
     }
 }

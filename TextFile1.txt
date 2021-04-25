@@ -1,4 +1,20 @@
-212204	I really need to iron out all the async calls in this, and as part of that, make sure that 
+TODO	- Command/Interface to reload devices (need on server side as well)
+
+210424	Okay so I got a lot of that that stuff done. I still need to examine the logs (on both ends)
+		and make sure there's not extra messages being sent or any messages discarded.
+
+		Also, I need to figure out how to do the brightness/colortemp sliders right.
+			- discuss more about this issue here
+
+		I'm not sure the color model here really make sense, at least when it comes to representing
+		color in the GUI. The issue of course is with V (value). Actually the issue comes from the
+		fact that they are light sources, and they aren't surrounded by other light sources (like
+		pixels, where a "dark" pixel has contrast against a "light" pixel.) I think visually, in the
+		GUI, I should be representing the colors with full V, while provided access to V as if it was
+		brightness. hold on let me put the closet back in... and I'm going to maintain a TODO list at
+		the top of this file
+
+210422	I really need to iron out all the async calls in this, and as part of that, make sure that 
 		anything that touches the UI is safely dispatched. I think that's been the reason for a lot
 		of issues I've had the whole time and I didn't even realize it until recently.
 
@@ -81,7 +97,7 @@ ebf8d36fec611039bbggej
 { id: 'eba040c47ea782ca16eiad', key: 'e5cbe0a10dad9c93', ip: '192.168.0.21', name: 'Face' }
 { id: 'eb2773e38adbb12683puvk', key: 'aa736ffedbe56ec8', ip: '192.168.0.23', name: 'UpRight' }
 { id: 'ebf1e92bd63d8c059dbcvn', key: '1022bf390de07246', ip: '192.168.0.18', name: 'DownRight' }
-{ id: 'eb32d7cd40417c0f6addl9', key: '4b29203ead0de281', ip: '192.168.0.22', name: 'DownLeft' }
+{ id: 'eb32d7cd40417c0f6addl9', key: '2bd713fa0d0d07e2', ip: '192.168.0.22', name: 'DownLeft' }
 { id: 'ebf8d36fec611039bbggej', key: '50dad0673f4febbc', ip: '192.168.0.17', name: 'UpLeft' }
 { id: 'ebfc8703b8fcfab217ot0v', key: '1a13a246e713fe58', ip: '192.168.0.24', name: 'Up' }
 

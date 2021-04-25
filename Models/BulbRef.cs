@@ -1,9 +1,16 @@
-﻿namespace MyLights
-{
-    public struct BulbRef
+﻿using Newtonsoft.Json;
+
+namespace MyLights
+{    
+    public class BulbRef
     {
-        public string IP;
-        public string Id;
-        public string Name;
+        [JsonIgnore]
+        public string IP { get; init; }
+
+        [JsonIgnore]
+        public string Id { get; init; }
+
+        [JsonProperty("Name")]
+        public string Name { get; init; }
     }
 }

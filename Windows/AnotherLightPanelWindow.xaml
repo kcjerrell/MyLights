@@ -10,7 +10,7 @@
         xmlns:util="clr-namespace:MyLights.Util" 
         xmlns:ctrl="clr-namespace:MyLights.Controls"
         mc:Ignorable="d"
-        Title="AnotherLightPanelWindow" Height="450" Width="800" Background="{Binding Color, ElementName=hueSlider, Converter={StaticResource BrushCache}}">
+        Title="AnotherLightPanelWindow" Height="450" Width="600" Background="{Binding Color, ElementName=hueSlider, Converter={StaticResource BrushCache}}">
 
   <Window.DataContext>
     <wvm:AnotherLightPanelViewModel/>
@@ -20,10 +20,10 @@
 
   </Window.Resources>
 
-  <Grid>
+  <Grid Background="Gray">
     <Grid.ColumnDefinitions>
-      <ColumnDefinition Width="500"/>
-      <ColumnDefinition Width="Auto"/>
+      <ColumnDefinition Width="600"/>
+      <ColumnDefinition Width="*"/>
     </Grid.ColumnDefinitions>
     <ItemsControl x:Name="itemsControl" ItemsSource="{Binding LightVMs}">
       <ItemsControl.ItemTemplate>
@@ -40,30 +40,38 @@
 
     </ItemsControl>
 
-    <Grid Grid.Column="1" VerticalAlignment="Top">
+    <Grid Grid.Column="1">
       <Grid.RowDefinitions>
-        <RowDefinition/>
-        <RowDefinition/>
-        <RowDefinition/>
-        <RowDefinition/>
+        <RowDefinition Height="Auto"/>
+        <RowDefinition Height="*"/>
       </Grid.RowDefinitions>
       <Grid.ColumnDefinitions>
-        <ColumnDefinition/>
-        <ColumnDefinition/>
+        <ColumnDefinition Width="*"/>
       </Grid.ColumnDefinitions>
 
-      <ctrl:ColorSlider x:Name="hueSlider" Width="100" VerticalAlignment="Top" Height="20" Margin="4"
-                                  Saturation="{Binding Saturation, ElementName=satSlider, Mode=TwoWay}" Value="{Binding Value, ElementName=valSlider, Mode=TwoWay}"/>
-      <TextBlock Grid.Column="1" Text="{Binding HSV, ElementName=hueSlider}"/>
+      <Button Content="Save as scene..." HorizontalAlignment="Left" Padding="2" Margin="2" Command="{Binding Library.SaveStateAsSceneCommand}"/>
 
-      <ctrl:ColorSlider x:Name="satSlider" Width="100" Height="20" Grid.Row="1" Margin="4" Mode="Saturation"
-                                  Hue="{Binding Hue, ElementName=hueSlider, Mode=TwoWay}" Value="{Binding Value, ElementName=valSlider, Mode=TwoWay}"/>
-      <TextBlock Grid.Column="1" Grid.Row="1"  Text="{Binding HSV, ElementName=satSlider}"/>
+      <ListBox x:Name="scenesList" Grid.Row="1" ItemsSource="{Binding Library.Scenes}" Background="#88222222" Margin="2" SelectionChanged="scenesList_SelectionChanged">
+        <ListBox.ItemTemplate>
+          <DataTemplate>
+            <Grid x:Name="sceneItemRoot">
+              <TextBox x:Name="sceneItemInput" Text="{Binding Name, Mode=TwoWay}" FontSize="18" Padding="8,4" Visibility="Collapsed"/>
+              <TextBlock x:Name="sceneItemLabel" Text="{Binding Name}" FontSize="18" Padding="8,4" Margin="2,1" Visibility="Visible"/>
+            </Grid>
+          </DataTemplate>
+        </ListBox.ItemTemplate>
 
-      <ctrl:ColorSlider x:Name="valSlider" Width="100" Height="20" Grid.Row="2" Margin="4" Mode="Value"
-                                  Saturation="{Binding Saturation, ElementName=satSlider, Mode=TwoWay}" Hue="{Binding Hue, ElementName=hueSlider, Mode=TwoWay}"/>
-      <TextBlock Grid.Column="1" Grid.Row="2"  Text="{Binding HSV, ElementName=valSlider}"/>
-      <Button Content="Heyyy" Grid.Row="3" Click="Button_Click"/>
+        <ListBox.ItemContainerStyle>
+          <Style TargetType="ListBoxItem">
+            <Setter Property="Background" Value="#88DDDDDD"/>
+            <Setter Property="Margin" Value="2"/>
+            <Setter Property="Padding" Value="2"/>
+            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+            <Setter Property="VerticalContentAlignment" Value="Stretch"/>
+            <EventSetter Event="MouseDoubleClick" Handler="ListBoxItem_MouseDoubleClick"/>
+          </Style>
+        </ListBox.ItemContainerStyle>
+      </ListBox>
     </Grid>
 
   </Grid>

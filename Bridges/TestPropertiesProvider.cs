@@ -1,50 +1,24 @@
 ﻿using MyLights.Models;
-using MyLights.ViewModels;
 using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
-namespace MyLights.Util
+namespace MyLights.Bridges
 {
-    class TestLightBridge : ILightBridge
-    {
-        public ObservableCollection<Light> Lights => lights;
-
-        public ObservableCollection<LightViewModel> LightVMs => lightVMs;
-
-        public bool TryFindBulb(BulbRef key, out Light light)
-        {
-            light = null;
-            return false;
-        }
-
-        static TestLightBridge()
-        {
-            for (int i = 0; i < 3; i++)
-            {
-                var props = new TestPropertiesProvider();
-                var light = new Light(props);
-
-                lights.Add(light);
-
-                lightVMs.Add(new LightViewModel(light));
-            }
-        }
-
-        static ObservableCollection<Light> lights = new();
-
-        static ObservableCollection<LightViewModel> lightVMs = new();
-    }
-
     class TestPropertiesProvider : ILightPropertiesProvider
     {
-        public int Index => 1;
+        public TestPropertiesProvider()
+        {
+            nCreated += 1;
+            Index = nCreated;
+            Name = $"TestLight{Index}";
+        }
 
-        public string Name => "TestLight";
+        private static int nCreated = 0;
+
+        public int Index { get; init; }
+
+        public string Name { get; init; }
 
         public IDeviceProperty<bool> PowerProperty { get; } = new TestProperty<bool>("Power", true);
 
@@ -60,7 +34,7 @@ namespace MyLights.Util
         {
             public TestProperty(string propertyName, T initialValue)
             {
-                this.name = propertyName;
+                name = propertyName;
                 updatedEventArgs = new PropertyChangedEventArgs(name);
                 Value = initialValue;
             }

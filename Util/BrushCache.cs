@@ -57,7 +57,7 @@ namespace MyLights.Util
                 return GetBrush(outColor);
             }
 
-            if (value is HSV hsv)
+            else if (value is HSV hsv)
             {
                 if (parameter is string param)
                 {

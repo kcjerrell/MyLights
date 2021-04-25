@@ -11,6 +11,37 @@ using System.Windows.Media;
 
 namespace MyLights.ViewModels
 {
+    /*
+     * Trying to decide how to keep sliders smooth and still syncronize
+     * Since I seem to be going the way of using async/await and delays/gates
+     * around syncing with remote resources, I think I'll switch the VM to use
+     * a cached value, and - ...
+     * well there's couple ways to go, and they depend on which value is or should 
+     * be the ultimate/target value for a property
+     * using brightness as the example here...
+     * 
+     * vm._brightness
+     *      - with this as the definitive value, I would probably start a timer
+     *        (aka an async task with a Task.Delay()) to follow up on changes
+     *        sent to the the model. maybe.
+     *      - the other issue is getting the initial value... with the udpprovider,
+     *        I don't think it will be an issue because the Light isn't constructed 
+     *        until all the current values have been gathered. I'm not sure what would
+     *        happen with the REST provider, but then again, I might never use that again
+     * 
+     * light.Brightness
+     *      - this is how it works now, and that's why the sliders are unresponsive
+     *      - I'm no sure how that issue can be dealt with, since the slider value
+     *        will have to keep reverting back to this value. It probably won't even 
+     *        matter though. I'll just go with the first option above
+     * 
+     * bulb-01.brightness
+     */
+
+
+
+
+
     public class LightViewModel : INotifyPropertyChanged
     {
         public LightViewModel(Light light)
@@ -20,19 +51,16 @@ namespace MyLights.ViewModels
 
             Name = light.Name;
             hsv = light.Color;
-        }
+            _brightness = light.Brightness;
 
-        private void Light_PropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            var handler = PropertyChanged;
-            handler?.Invoke(this, e);
         }
 
         private HSV hsv;
+        private double _colorTemp;
+        private double _brightness;
 
-        public Light Light { get; }
-        public string Name { get; }
-
+        public Light Light { get; init; }
+        public string Name { get; init; }
         public string Mode
         {
             get => Light.Mode;
@@ -41,7 +69,6 @@ namespace MyLights.ViewModels
                 Light.SetMode(value);
             }
         }
-
         public bool Power
         {
             get => Light.Power;
@@ -50,25 +77,24 @@ namespace MyLights.ViewModels
                 Light.SetPower(value);
             }
         }
-
         public double Brightness
         {
-            get => Light.Brightness;
+            get => _brightness;
             set
             {
+                _brightness = value;
                 Light.SetBrightness(value);
             }
         }
-
         public double ColorTemp
         {
-            get => Light.ColorTemp;
+            get => _colorTemp;
             set
             {
+                _colorTemp = value;
                 Light.SetColorTemp(value);
             }
         }
-
         public HSV Color
         {
             get => Light.Color;
@@ -77,7 +103,6 @@ namespace MyLights.ViewModels
                 UpdateColor(value.H, value.S, value.V);
             }
         }
-
         public double H
         {
             get => this.hsv.H;
@@ -86,7 +111,6 @@ namespace MyLights.ViewModels
                 UpdateColor(h: value);
             }
         }
-
         public double S
         {
             get => this.hsv.S;
@@ -95,7 +119,6 @@ namespace MyLights.ViewModels
                 UpdateColor(s: value);
             }
         }
-
         public double V
         {
             get => this.hsv.V;
@@ -103,6 +126,36 @@ namespace MyLights.ViewModels
             {
                 UpdateColor(v: value);
             }
+        }
+        /// <summary>
+        /// Maps to Color.Value if in color mode, Brightness if in white mode.
+        /// Valid range: 0-1 inclusive, corresponds to 0.01 - 1.0 (color) and 10-1000 (bright)
+        /// </summary>
+        public double SharedBrightValue
+        {
+            get
+            {
+                if (Mode == "color")
+                    return V.MapRange(0.01, 1.0, 0, 1);
+                else //if (Mode == "white")
+                    return Brightness.MapRange(10, 1000, 0, 1);
+            }
+
+            set
+            {
+                if (Mode == "color")
+                    V = value.MapRange(0, 1, 0.01, 1);
+                else //(Mode == "white")
+                    Brightness = value.MapRange(0, 1, 10, 1000);
+            }
+        }
+        public bool IsSelected { get; set; }
+
+
+        private void Light_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            var handler = PropertyChanged;
+            handler?.Invoke(this, e);
         }
 
         private void UpdateColor(double h = -1.0, double s = -1.0, double v = -1.0)
@@ -119,82 +172,16 @@ namespace MyLights.ViewModels
             Light.SetColor(hsv);
         }
 
-        public bool IsSelected { get; set; }
-
-        public int Index { get => 0; }
-
         public override string ToString()
         {
             return $"(LVM: {Name}-{(Power ? "on" : "off")}-{Mode}-{Color}";
         }
 
-        //[DependsOn("Mode", "Power")]
-        //public LightModes LightMode
-        //{
-        //    get
-        //    {
-        //        if (Light.Power && Light.Mode.ToLower() == "color")
-        //            return LightModes.Color;
-        //        else if (Light.Power && Light.Mode.ToLower() == "white")
-        //            return LightModes.White;
-        //        else
-        //            return LightModes.Off;
-        //    }
-        //    set
-        //    {
-        //        if (value == LightModes.Off)
-        //        {
-        //            Power = false;
-        //        }
-        //        else if (value == LightModes.Color)
-        //        {
-        //            Power = true;
-        //            Mode = "color";
-        //        }
-        //        else if (value == LightModes.White)
-        //        {
-        //            Power = true;
-        //            Mode = "white";
-        //        }
-        //    }
-        //}
-
-        //private LightModes _lightMode;
-        //public LightModes LightMode
-        //{
-        //    get
-        //    {
-        //        if (!Power)
-        //            return LightModes.Off;
-        //        else if (Mode == "color")
-        //            return LightModes.Color;
-        //        else
-        //            return LightModes.White;
-        //    }
-        //    set
-        //    {
-        //        if (value == LightModes.Off)
-        //        {
-        //            Power = false;
-        //        }
-        //        else
-        //        {
-        //            if (value == LightModes.Color)
-        //                Mode = "color";
-        //            else if (value == LightModes.White)
-        //                Mode = "white";
-        //
-        //
-        //            Power = true;
-        //        }
-        //    }
-        //}
-
         public event PropertyChangedEventHandler PropertyChanged;
     }
 
     public enum LightModes
-    {       
+    {
         Color,
         White
     }

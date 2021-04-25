@@ -9,7 +9,6 @@ using System.Diagnostics;
 using MyLights.Util;
 using MyLights.Windows;
 using MyLights.Models;
-using MyLights.LightUdp;
 
 namespace MyLights
 {
@@ -20,13 +19,12 @@ namespace MyLights
     {
         public App()
         {
-            Startup += App_Startup;
+            Startup += App_Startup;            
         }
 
-        private void App_Startup(object sender, StartupEventArgs e)
+        private async void App_Startup(object sender, StartupEventArgs e)
         {
-            //devConsole = new DevConsole();
-            //devConsole.Show();
+            await Locator.StartServices();
         }
 
         private DevConsole devConsole;

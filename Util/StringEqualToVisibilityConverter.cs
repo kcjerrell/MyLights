@@ -13,6 +13,9 @@ namespace MyLights.Util
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
+            //if (Locator.IsInDesignMode)
+            //    return Visibility.Visible;
+
             if (value is string valueText && parameter is string matchText)
             {
                 if (valueText == matchText)
