@@ -57,7 +57,7 @@ namespace MyLights.Util
 
             for (int i = 0; i < nLights; i++)
             {
-                var state = GetLightState(white, random);
+                var state = GetLightState(white, random, (double) i / (double) nLights);
                 scene.Add($"scene {counter["light state"]}", state);
             }
 

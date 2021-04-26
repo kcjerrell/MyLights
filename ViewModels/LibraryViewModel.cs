@@ -56,9 +56,10 @@ namespace MyLights.ViewModels
         {
             // Properties.Settings.Default.Reset();                    
             if (isInDesignMode)
-            {                    
-                Scenes.Add(new Scene("Sample Scene #1"));
-                Scenes.Add(new Scene("Sample Scene #2"));
+            {
+                Scenes.Add(DesignerHelpers.GetScene(5, false, true));
+                Scenes.Add(DesignerHelpers.GetScene(5, true, false));
+                Scenes.Add(DesignerHelpers.GetScene(5, false, false));
 
                 FavColors.Add(new HSV(1, 1, 1));
                 FavColors.Add(new HSV(.3, .8, 1));
@@ -140,8 +141,6 @@ namespace MyLights.ViewModels
             SaveScenes();
             SaveColors();
         }
-
-        // #review_remove 
 
         internal void ApplyScene(Scene scene)
         {

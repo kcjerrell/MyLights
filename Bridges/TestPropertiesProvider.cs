@@ -12,6 +12,11 @@ namespace MyLights.Bridges
             nCreated += 1;
             Index = nCreated;
             Name = $"TestLight{Index}";
+
+            if (nCreated % 2 == 0)
+                ModeProperty = new TestProperty<LightMode>("Mode", LightMode.Color);
+            else
+                ModeProperty = new TestProperty<LightMode>("Mode", LightMode.White);
         }
 
         private static int nCreated = 0;
@@ -24,7 +29,7 @@ namespace MyLights.Bridges
 
         public IDeviceProperty<HSV> ColorProperty { get; } = new TestProperty<HSV>("Color", new HSV(0.7, 0.7, 0.7));
 
-        public IDeviceProperty<LightMode> ModeProperty { get; } = new TestProperty<LightMode>("Mode", LightMode.Color);
+        public IDeviceProperty<LightMode> ModeProperty { get; }
 
         public IDeviceProperty<double> BrightnessProperty { get; } = new TestProperty<double>("Brightness", 0.9);
 

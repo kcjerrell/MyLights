@@ -88,10 +88,11 @@ namespace MyLights.Util
                      * */
 
                     double x = colorTemp.Clamp(0, 1000) / 1000.0;
-                    double rg = x * 64 + 191;
+                    double rg = x * 69 + 186;
                     double b = x * -32 + 240;
 
                     outColor = Color.FromRgb((byte)rg, (byte)rg, (byte)b);
+                    return GetBrush(outColor);
                 }
             }
 
