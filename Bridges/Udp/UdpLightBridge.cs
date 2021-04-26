@@ -72,7 +72,7 @@ namespace MyLights.Bridges.Udp
             }
             else
             {
-                if (msg.Property == DgramProperties.Name)
+                if (msg.Property == LightProperties.Name)
                 {
                     log.Log("creating props", 4);
                     var props = new UdpPropertiesProvider();
@@ -84,7 +84,7 @@ namespace MyLights.Bridges.Udp
                 else
                 {
                     log.Log("unknown target referenced, requesting more info");
-                    var req = new LightDgram(DgramVerbs.Wonder, msg.Target, DgramProperties.Name);
+                    var req = new LightDgram(DgramVerbs.Wonder, msg.Target, LightProperties.Name);
                     await udpClient.SendMessage(req);
                 }
             }
@@ -114,7 +114,7 @@ namespace MyLights.Bridges.Udp
                 await Task.Delay(2000);
 
             log.Log("requesting lights");
-            var msg = new LightDgram(DgramVerbs.Wonder, "*bulb-.*", DgramProperties.Name);
+            var msg = new LightDgram(DgramVerbs.Wonder, "*bulb-.*", LightProperties.Name);
             await udpClient.SendMessage(msg);
         }
 

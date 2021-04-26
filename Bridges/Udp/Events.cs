@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MyLights.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -22,11 +23,11 @@ namespace MyLights.Bridges.Udp
 
     public class OutgoingChangeRequestedEventArgs
     {
-        public OutgoingChangeRequestedEventArgs(DgramProperties property)
+        public OutgoingChangeRequestedEventArgs(LightProperties property)
         {
             this.Property = property;
         }
 
-        public DgramProperties Property { get; set; }
+        public LightProperties Property { get; set; }
     }
 }

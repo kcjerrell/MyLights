@@ -46,7 +46,7 @@ namespace MyLights.Bridges.Udp
 
     public struct LightDgram
     {
-        public LightDgram(DgramVerbs verb = DgramVerbs.None, string target = "", DgramProperties property = DgramProperties.None, string data = "")
+        public LightDgram(DgramVerbs verb = DgramVerbs.None, string target = "", LightProperties property = LightProperties.None, string data = "")
         {
             Verb = verb;
             Target = target;
@@ -56,7 +56,7 @@ namespace MyLights.Bridges.Udp
 
         public DgramVerbs Verb { get; init; }
         public string Target { get; init; }
-        public DgramProperties Property { get; init; }
+        public LightProperties Property { get; init; }
 
         private string _data;
         public string Data
@@ -106,7 +106,7 @@ namespace MyLights.Bridges.Udp
             {
                 Verb = (DgramVerbs)Enum.Parse(typeof(DgramVerbs), segments[0], true),
                 Target = segments[1],
-                Property = (DgramProperties)Enum.Parse(typeof(DgramProperties), segments[2], true),
+                Property = (LightProperties)Enum.Parse(typeof(LightProperties), segments[2], true),
                 Data = segments[3]
             };
         }

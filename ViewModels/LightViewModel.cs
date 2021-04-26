@@ -164,12 +164,6 @@ namespace MyLights.ViewModels
         public event PropertyChangedEventHandler PropertyChanged;
     }
 
-    public enum LightModes
-    {
-        Color,
-        White
-    }
-
     public class ModeOptions
     {
         public static List<string> ListOptions()

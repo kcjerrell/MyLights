@@ -16,7 +16,12 @@ namespace MyLights.Models
         {
             var state = new LightState(light);
 
-            LightStates.Add(light.Name, state);
+            Add(light.Name, state);
+        }
+
+        public void Add(string name, LightState state)
+        {
+            LightStates.Add(name, state);
         }
     }
 }

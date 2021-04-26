@@ -46,7 +46,7 @@ namespace MyLights.Bridges.Udp
     {
         private volatile bool _hasPendingChange;
         public bool HasPendingChange { get => _hasPendingChange; protected set => _hasPendingChange = value; }
-        protected abstract DgramProperties AssociatedProperty { get; }
+        protected abstract LightProperties AssociatedProperty { get; }
         public abstract string GetOutgoingFragment(bool clearPendingStatus = false);
     }
 
@@ -127,15 +127,15 @@ namespace MyLights.Bridges.Udp
 
         protected override string GetWishFragment(bool value)
         {
-            return $"{DgramProperties.Power.ToString().ToLower()}={value}";
+            return $"{LightProperties.Power.ToString().ToLower()}={value}";
         }
 
         protected override string GetWonderFragment()
         {
-            return $"{DgramProperties.Power.ToString().ToLower()}";
+            return $"{LightProperties.Power.ToString().ToLower()}";
         }
 
-        protected override DgramProperties AssociatedProperty => DgramProperties.Power;
+        protected override LightProperties AssociatedProperty => LightProperties.Power;
     }
 
     public class UdpColor : UdpProperty<HSV>
@@ -193,21 +193,21 @@ namespace MyLights.Bridges.Udp
 
         protected override string GetWishFragment(HSV value)
         {
-            return $"{DgramProperties.Color.ToString().ToLower()}={EncodeColor(value)}";
+            return $"{LightProperties.Color.ToString().ToLower()}={EncodeColor(value)}";
         }
 
         protected override string GetWonderFragment()
         {
-            return $"{DgramProperties.Color.ToString().ToLower()}";
+            return $"{LightProperties.Color.ToString().ToLower()}";
         }
 
-        protected override DgramProperties AssociatedProperty => DgramProperties.Color;
+        protected override LightProperties AssociatedProperty => LightProperties.Color;
 
     }
 
     public class UdpMode : UdpProperty<string>
     {
-        private volatile DgramLightMode mode;
+        private volatile LightMode mode;
         public override string OutgoingValue
         {
             get
@@ -227,40 +227,40 @@ namespace MyLights.Bridges.Udp
 
         protected override string GetWishFragment(string value)
         {
-            return $"{DgramProperties.Mode.ToString().ToLower()}={value}";
+            return $"{LightProperties.Mode.ToString().ToLower()}={value}";
         }
 
         protected override string GetWonderFragment()
         {
-            return $"{DgramProperties.Mode.ToString().ToLower()}";
+            return $"{LightProperties.Mode.ToString().ToLower()}";
         }
 
-        public static string ModeToString(DgramLightMode mode)
+        public static string ModeToString(LightMode mode)
         {
             return mode switch
             {
-                DgramLightMode.Default => "",
-                DgramLightMode.Color => "color",
-                DgramLightMode.White => "white",
-                DgramLightMode.Music => "music",
+                LightMode.None => "",
+                LightMode.Color => "color",
+                LightMode.White => "white",
+                LightMode.Music => "music",
                 _ => ""
             };
         }
 
-        public static DgramLightMode StringToMode(string mode)
+        public static LightMode StringToMode(string mode)
         {
             return mode switch
             {
-                "color" => DgramLightMode.Color,
-                "white" => DgramLightMode.White,
-                "music" => DgramLightMode.Music,
-                _ => DgramLightMode.Default
+                "color" => LightMode.Color,
+                "white" => LightMode.White,
+                "music" => LightMode.Music,
+                _ => LightMode.None
             };
         }
 
         private static PropertyChangedEventArgs updateEventArgs = new PropertyChangedEventArgs("Mode");
         protected override PropertyChangedEventArgs UpdateEventArgs => updateEventArgs;
-        protected override DgramProperties AssociatedProperty => DgramProperties.Mode;
+        protected override LightProperties AssociatedProperty => LightProperties.Mode;
 
     }
 
@@ -291,14 +291,14 @@ namespace MyLights.Bridges.Udp
 
         protected override string GetWishFragment(double value)
         {
-            return $"{DgramProperties.Brightness.ToString().ToLower()}={value.ToString("F2")}";
+            return $"{LightProperties.Brightness.ToString().ToLower()}={value.ToString("F2")}";
         }
 
         protected override string GetWonderFragment()
         {
-            return $"{DgramProperties.Brightness.ToString().ToLower()}";
+            return $"{LightProperties.Brightness.ToString().ToLower()}";
         }
-        protected override DgramProperties AssociatedProperty => DgramProperties.Brightness;
+        protected override LightProperties AssociatedProperty => LightProperties.Brightness;
 
     }
 
@@ -329,15 +329,15 @@ namespace MyLights.Bridges.Udp
 
         protected override string GetWishFragment(double value)
         {
-            return $"{DgramProperties.ColorTemp.ToString().ToLower()}={value.ToString("F2")}";
+            return $"{LightProperties.ColorTemp.ToString().ToLower()}={value.ToString("F2")}";
         }
 
         protected override string GetWonderFragment()
         {
-            return $"{DgramProperties.ColorTemp.ToString().ToLower()}";
+            return $"{LightProperties.ColorTemp.ToString().ToLower()}";
         }
 
-        protected override DgramProperties AssociatedProperty => DgramProperties.ColorTemp;
+        protected override LightProperties AssociatedProperty => LightProperties.ColorTemp;
 
     }
 }

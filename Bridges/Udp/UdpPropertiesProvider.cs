@@ -14,23 +14,23 @@ namespace MyLights.Bridges.Udp
     {
         public UdpPropertiesProvider()
         {
-            propertiesInitialized[DgramProperties.Power] = false;
+            propertiesInitialized[LightProperties.Power] = false;
             power = new UdpPower();
             power.OutgoingChangeRequested += OnOutgoingChangeRequested;
 
-            propertiesInitialized[DgramProperties.Color] = false;
+            propertiesInitialized[LightProperties.Color] = false;
             color = new UdpColor();
             color.OutgoingChangeRequested += OnOutgoingChangeRequested;
 
-            propertiesInitialized[DgramProperties.Mode] = false;
+            propertiesInitialized[LightProperties.Mode] = false;
             mode = new UdpMode();
             mode.OutgoingChangeRequested += OnOutgoingChangeRequested;
 
-            propertiesInitialized[DgramProperties.Brightness] = false;
+            propertiesInitialized[LightProperties.Brightness] = false;
             brightness = new UdpBrightness();
             brightness.OutgoingChangeRequested += OnOutgoingChangeRequested;
 
-            propertiesInitialized[DgramProperties.ColorTemp] = false;
+            propertiesInitialized[LightProperties.ColorTemp] = false;
             colorTemp = new UdpColorTemp();
             colorTemp.OutgoingChangeRequested += OnOutgoingChangeRequested;
 
@@ -100,7 +100,7 @@ namespace MyLights.Bridges.Udp
 
         private Task outgoing;
 
-        Dictionary<DgramProperties, bool> propertiesInitialized = new Dictionary<DgramProperties, bool>();
+        Dictionary<LightProperties, bool> propertiesInitialized = new Dictionary<LightProperties, bool>();
         bool initialized = false;
 
         public int Index { get; private set; }
@@ -141,19 +141,19 @@ namespace MyLights.Bridges.Udp
             {
                 switch (msg.Property)
                 {
-                    case DgramProperties.Power:
+                    case LightProperties.Power:
                         power.UpdateValue(bool.Parse(msg.Data));
                         break;
-                    case DgramProperties.Mode:
+                    case LightProperties.Mode:
                         mode.UpdateValue(msg.Data);
                         break;
-                    case DgramProperties.Brightness:
+                    case LightProperties.Brightness:
                         brightness.UpdateValue(double.Parse(msg.Data));
                         break;
-                    case DgramProperties.ColorTemp:
+                    case LightProperties.ColorTemp:
                         colorTemp.UpdateValue(double.Parse(msg.Data));
                         break;
-                    case DgramProperties.Color:
+                    case LightProperties.Color:
                         color.UpdateValue(UdpColor.DecodeColor(msg.Data));
                         break;
                 }
