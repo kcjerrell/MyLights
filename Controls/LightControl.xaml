@@ -227,7 +227,8 @@
 
           <!-- Color controls -->
 
-          <Grid x:Name="spectrumRoot" Margin="0" Visibility="{Binding Mode, Converter={StaticResource StringEqualToVisibilityConverter}, ConverterParameter=color}" >
+          <Grid x:Name="spectrumRoot" Margin="0" Opacity="0"
+                Visibility="{Binding Mode, Converter={StaticResource StringEqualToVisibilityConverter}, ConverterParameter=color}" >
             <Grid.RowDefinitions>
               <RowDefinition Height="*"/>
               <RowDefinition Height="Auto"/>
@@ -255,18 +256,33 @@
               <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
 
-            <Slider Value="{Binding ColorTemp, Mode=TwoWay}" Minimum="0" Maximum="1000"/>
+            <Slider Value="{Binding ColorTemp, Mode=TwoWay}" Minimum="0" Maximum="1000">
+              <Slider.Background>
+                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                  <LinearGradientBrush.RelativeTransform>
+                    <TransformGroup>
+                      <ScaleTransform CenterY="0.5" CenterX="0.5"/>
+                      <SkewTransform CenterY="0.5" CenterX="0.5"/>
+                      <RotateTransform Angle="90" CenterY="0.5" CenterX="0.5"/>
+                      <TranslateTransform/>
+                    </TransformGroup>
+                  </LinearGradientBrush.RelativeTransform>
+                  <GradientStop Color="#FFACB0FF"/>
+                  <GradientStop Color="#FFFDFFCF" Offset="1"/>
+                </LinearGradientBrush>
+              </Slider.Background>
+            </Slider>
 
-            <Slider Value="{Binding Brightness, Mode=TwoWay}" Grid.Row="1" Minimum="10" Maximum="1000"/>
           </Grid>
 
         </Grid>
-        
+
         <!-- favColors  -->
 
         <Grid x:Name="favesRoot" Visibility="Collapsed">
 
-          <ListBox Background="Transparent" ItemsSource="{Binding Library.FavColors, Mode=OneWay, Source={StaticResource Locator}}" KeyDown="ListBox_KeyDown">
+          <ListBox Background="Transparent" ItemsSource="{Binding Library.FavColors, Mode=OneWay, Source={StaticResource Locator}}" 
+                   KeyDown="ListBox_KeyDown" SelectionChanged="ListBox_SelectionChanged">
             <ListBox.ItemsPanel>
               <ItemsPanelTemplate>
                 <WrapPanel/>
@@ -275,7 +291,8 @@
 
             <ListBox.ItemTemplate>
               <DataTemplate DataType="{x:Type mod:HSV}">
-                <Border Width="40" Height="40" BorderBrush="Black" BorderThickness="1" CornerRadius="4" Background="{Binding Converter={StaticResource BrushCache}, Mode=OneWay}"/>
+                <Border Width="40" Height="40" BorderBrush="Black" BorderThickness="1" CornerRadius="4" 
+                        Background="{Binding Converter={StaticResource BrushCache}, Mode=OneWay}"/>
               </DataTemplate>
             </ListBox.ItemTemplate>
           </ListBox>
@@ -289,8 +306,13 @@
             <ColumnDefinition Width="Auto"/>
           </Grid.ColumnDefinitions>
 
-          <Slider x:Name="slider" Grid.Column="0" Minimum="0" Maximum="1" LargeChange="0.2" SmallChange="0.05" Value="{Binding SharedBrightValue, Mode=TwoWay}"
-                            Height="20" Margin="5"/>
+          <Slider x:Name="brightnessSlider" Grid.Column="0" Minimum="10" Maximum="1000" LargeChange="0.2" SmallChange="0.05" 
+                  Value="{Binding Brightness, Mode=TwoWay}" Height="20" Margin="5"
+                  Visibility="{Binding Mode, Converter={StaticResource StringEqualToVisibilityConverter}, ConverterParameter=white}"/>
+
+          <Slider x:Name="valueSlider" Grid.Column="0" Minimum=".01" Maximum="1" LargeChange="0.2" SmallChange="0.05" 
+                  Value="{Binding V, Mode=TwoWay}" Height="20" Margin="5"
+                  Visibility="{Binding Mode, Converter={StaticResource StringEqualToVisibilityConverter}, ConverterParameter=color}"/>
 
           <Button x:Name="addColorToFavsButton" Grid.Column="1" Width="30" Height="30" Margin="2" HorizontalContentAlignment="Stretch"
                   VerticalContentAlignment="Stretch" Click="addColorToFavsButton_Click">

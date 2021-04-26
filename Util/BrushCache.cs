@@ -10,6 +10,8 @@ using System.Windows.Media;
 
 using WeakBrush = System.WeakReference<System.Windows.Media.SolidColorBrush>;
 
+
+
 namespace MyLights.Util
 {
     public class BrushCache : IValueConverter
@@ -33,7 +35,7 @@ namespace MyLights.Util
                 cache[color].SetTarget(brush);
             }
 
-            return brush;            
+            return brush;
         }
 
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
@@ -72,6 +74,25 @@ namespace MyLights.Util
                 }
 
                 return GetBrush(outColor);
+            }
+
+            else if (value is double colorTemp)
+            {
+                if (parameter is string param && param == "colortemp")
+                {
+                    /* ColorTemp:      0 - 1000
+                     *            C0C3F3 - FDFFCE
+                     *       Red: 191    - 255     (range 64)  
+                     *     Green:   191  -   255   (range 64)
+                     *      Blue:    240 -    208  (range 32)
+                     * */
+
+                    double x = colorTemp.Clamp(0, 1000) / 1000.0;
+                    double rg = x * 64 + 191;
+                    double b = x * -32 + 240;
+
+                    outColor = Color.FromRgb((byte)rg, (byte)rg, (byte)b);
+                }
             }
 
             return value;

@@ -1,5 +1,6 @@
 ﻿using MyLights.Models;
 using MyLights.Util;
+using MyLights.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,6 +28,11 @@ namespace MyLights.Controls
             InitializeComponent();
 
             Loaded += LightControl_Loaded;
+        }
+
+        private LightViewModel GetDataContext()
+        {
+            return (LightViewModel)this.DataContext;
         }
 
         private void LightControl_Loaded(object sender, RoutedEventArgs e)
@@ -64,6 +70,14 @@ namespace MyLights.Controls
                     Locator.Get.Library.RemoveColor(color);
                 }
             }
+        }
+
+        private void ListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            var lb = (ListBox)sender;
+            var color = (HSV)lb.SelectedItem;
+
+            GetDataContext().Color = color;
         }
     }
 }

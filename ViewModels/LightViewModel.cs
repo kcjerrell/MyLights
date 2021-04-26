@@ -131,24 +131,8 @@ namespace MyLights.ViewModels
         /// Maps to Color.Value if in color mode, Brightness if in white mode.
         /// Valid range: 0-1 inclusive, corresponds to 0.01 - 1.0 (color) and 10-1000 (bright)
         /// </summary>
-        public double SharedBrightValue
-        {
-            get
-            {
-                if (Mode == "color")
-                    return V.MapRange(0.01, 1.0, 0, 1);
-                else //if (Mode == "white")
-                    return Brightness.MapRange(10, 1000, 0, 1);
-            }
+        [AlsoNotifyFor("Mode")]
 
-            set
-            {
-                if (Mode == "color")
-                    V = value.MapRange(0, 1, 0.01, 1);
-                else //(Mode == "white")
-                    Brightness = value.MapRange(0, 1, 10, 1000);
-            }
-        }
         public bool IsSelected { get; set; }
 
 

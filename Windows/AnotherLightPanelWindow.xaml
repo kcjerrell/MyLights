@@ -56,7 +56,7 @@
           <DataTemplate>
             <Grid x:Name="sceneItemRoot">
               <Grid.RowDefinitions>
-                <RowDefinition Height="10"/>
+                <RowDefinition Height="5"/>
                 <RowDefinition Height="Auto"/>
               </Grid.RowDefinitions>
               <Grid.ColumnDefinitions>
@@ -72,7 +72,8 @@
                 </ItemsControl.ItemsPanel>
                 <ItemsControl.ItemTemplate>
                   <DataTemplate>
-                    <Border Background="{Binding Value.Color, Converter={StaticResource BrushCache}, ConverterParameter=fullv}"/>
+                    <Border Background="{Binding Value.Color, Converter={StaticResource BrushCache}, ConverterParameter=fullv}"
+                            BorderBrush="Black" BorderThickness="0.5,0"/>
                   </DataTemplate>
                 </ItemsControl.ItemTemplate>
               </ItemsControl>
