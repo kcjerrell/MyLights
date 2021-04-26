@@ -50,7 +50,7 @@ namespace MyLights.Bridges.Udp
         public abstract string GetOutgoingFragment(bool clearPendingStatus = false);
     }
 
-    public abstract class UdpProperty<T> : UdpProperty, IDeviceProperty<T> where T : IEquatable<T>
+    public abstract class UdpProperty<T> : UdpProperty, IDeviceProperty<T>
     {
 
         private T _value;
@@ -205,27 +205,27 @@ namespace MyLights.Bridges.Udp
 
     }
 
-    public class UdpMode : UdpProperty<string>
+    public class UdpMode : UdpProperty<LightMode>
     {
         private volatile LightMode mode;
-        public override string OutgoingValue
+        public override LightMode OutgoingValue
         {
             get
             {
-                return ModeToString(mode);
+                return mode;
             }
             protected set
             {
-                mode = StringToMode(value);
+                mode = value;
             }
         }
 
-        public override void UpdateValue(string value)
+        public override void UpdateValue(LightMode value)
         {
-            base.UpdateValue(value == "colour" ? "color" : value);
+            base.UpdateValue(value);
         }
 
-        protected override string GetWishFragment(string value)
+        protected override string GetWishFragment(LightMode value)
         {
             return $"{LightProperties.Mode.ToString().ToLower()}={value}";
         }
@@ -233,29 +233,6 @@ namespace MyLights.Bridges.Udp
         protected override string GetWonderFragment()
         {
             return $"{LightProperties.Mode.ToString().ToLower()}";
-        }
-
-        public static string ModeToString(LightMode mode)
-        {
-            return mode switch
-            {
-                LightMode.None => "",
-                LightMode.Color => "color",
-                LightMode.White => "white",
-                LightMode.Music => "music",
-                _ => ""
-            };
-        }
-
-        public static LightMode StringToMode(string mode)
-        {
-            return mode switch
-            {
-                "color" => LightMode.Color,
-                "white" => LightMode.White,
-                "music" => LightMode.Music,
-                _ => LightMode.None
-            };
         }
 
         private static PropertyChangedEventArgs updateEventArgs = new PropertyChangedEventArgs("Mode");

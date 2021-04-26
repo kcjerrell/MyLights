@@ -141,71 +141,7 @@ namespace MyLights.ViewModels
             SaveColors();
         }
 
-        private void LoadDesignLibrary()
-        {
-            var sceneNew = new SceneViewModel.NewItem(AddSceneCommand);
-            var sceneA = new SceneViewModel(EditCommand)
-            {
-                Color = Colors.Pink,
-                Name = "SexyTime",
-                DateCreated = DateTime.Now - TimeSpan.FromDays(7),
-                DateUpdated = DateTime.Now - TimeSpan.FromDays(1)
-            };
-
-            var br = new BulbRef() { Name = "UpRight" };
-            sceneA.Add(new SceneSetter(br) { Power = true, Color = new HSV(0.5, 0.8, 1), Mode = "color" });
-            br = new BulbRef() { Name = "Face" };
-            sceneA.Add(new SceneSetter(br) { Power = true, Color = new HSV(1, 0.8, 1), Mode = "color" });
-            br = new BulbRef() { Name = "Up" };
-            sceneA.Add(new SceneSetter(br) { Power = true, Color = new HSV(0.7, 1, 1), Mode = "color" });
-
-            var sceneB = new SceneViewModel(EditCommand)
-            {
-                Color = Colors.Blue,
-                Name = "Movie Nite",
-                DateCreated = DateTime.Now - TimeSpan.FromDays(4),
-                DateUpdated = DateTime.Now - TimeSpan.FromDays(4)
-            };
-            var sceneC = new SceneViewModel(EditCommand)
-            {
-                Color = Colors.White,
-                Name = "Reading",
-                DateCreated = DateTime.Now - TimeSpan.FromDays(8),
-                DateUpdated = DateTime.Now - TimeSpan.FromDays(6)
-            };
-
-            // scenes = new List<SceneViewModel>() { sceneA, sceneB, sceneC, sceneNew };
-
-            // Scenes = new ObservableCollection<SceneViewModel>(scenes);
-
-            var sequenceNew = new SequenceViewModel.NewItem();
-            var sequenceA = new SequenceViewModel()
-            {
-                Color = Colors.Red,
-                Name = "Striptease",
-                DateCreated = DateTime.Now - TimeSpan.FromDays(7),
-                DateUpdated = DateTime.Now - TimeSpan.FromDays(1)
-            };
-            var sequenceB = new SequenceViewModel()
-            {
-                Color = Colors.Green,
-                Name = "Trippy",
-                DateCreated = DateTime.Now - TimeSpan.FromDays(2),
-                DateUpdated = DateTime.Now - TimeSpan.FromDays(2)
-            };
-            var sequenceC = new SequenceViewModel()
-            {
-                Color = Colors.Gray,
-                Name = "Alarm",
-                DateCreated = DateTime.Now - TimeSpan.FromDays(5),
-                DateUpdated = DateTime.Now - TimeSpan.FromDays(3)
-            };
-
-            // sequences = new List<SequenceViewModel>() { sequenceA, sequenceB, sequenceC,
-            //                                           sequenceNew};
-            // Sequences = new ObservableCollection<SequenceViewModel>(sequences);
-
-        }
+        // #review_remove 
 
         internal void ApplyScene(Scene scene)
         {

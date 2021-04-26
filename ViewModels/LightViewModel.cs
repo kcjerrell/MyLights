@@ -61,7 +61,7 @@ namespace MyLights.ViewModels
 
         public Light Light { get; init; }
         public string Name { get; init; }
-        public string Mode
+        public LightMode Mode
         {
             get => Light.Mode;
             set

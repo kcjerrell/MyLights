@@ -19,7 +19,7 @@ namespace MyLights.Models
 
         public bool Power { get; set; }
         public HSV Color { get; set; }
-        public string Mode { get; set; }
+        public LightMode Mode { get; set; }
         public double Brightness { get; set; }
         public double ColorTemp { get; set; }
 
@@ -28,11 +28,11 @@ namespace MyLights.Models
             light.SetPower(Power);
             light.SetMode(Mode);
 
-            if (Mode == "color")
+            if (Mode == LightMode.Color)
             {
                 light.SetColor(Color);
             }
-            else if (Mode == "white")
+            else if (Mode == LightMode.White)
             {
                 light.SetBrightness(Brightness);
                 light.SetColorTemp(ColorTemp);

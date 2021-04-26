@@ -13,7 +13,7 @@ namespace MyLights.Bridges
         string Name { get; }
         IDeviceProperty<bool> PowerProperty { get; }
         IDeviceProperty<HSV> ColorProperty { get; }
-        IDeviceProperty<string> ModeProperty { get; }
+        IDeviceProperty<LightMode> ModeProperty { get; }
         IDeviceProperty<double> BrightnessProperty { get; }
         IDeviceProperty<double> ColorTempProperty { get; }
     }

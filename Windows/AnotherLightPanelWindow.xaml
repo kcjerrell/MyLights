@@ -73,7 +73,17 @@
                 <ItemsControl.ItemTemplate>
                   <DataTemplate>
                     <Border Background="{Binding Value.Color, Converter={StaticResource BrushCache}, ConverterParameter=fullv}"
-                            BorderBrush="Black" BorderThickness="0.5,0"/>
+                            BorderBrush="Black" BorderThickness="0.5,0">
+                      <Border.Style>
+                        <Style TargetType="Border">
+                          <Style.Triggers>
+                            <DataTrigger Binding="{Binding Library.Scenes/LightStates.Value.Mode}" >
+                              
+                            </DataTrigger>
+                          </Style.Triggers>
+                        </Style>
+                      </Border.Style>
+                    </Border>
                   </DataTemplate>
                 </ItemsControl.ItemTemplate>
               </ItemsControl>

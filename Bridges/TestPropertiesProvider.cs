@@ -24,13 +24,13 @@ namespace MyLights.Bridges
 
         public IDeviceProperty<HSV> ColorProperty { get; } = new TestProperty<HSV>("Color", new HSV(0.7, 0.7, 0.7));
 
-        public IDeviceProperty<string> ModeProperty { get; } = new TestProperty<string>("Mode", "color");
+        public IDeviceProperty<LightMode> ModeProperty { get; } = new TestProperty<LightMode>("Mode", LightMode.Color);
 
         public IDeviceProperty<double> BrightnessProperty { get; } = new TestProperty<double>("Brightness", 0.9);
 
         public IDeviceProperty<double> ColorTempProperty { get; } = new TestProperty<double>("ColorTemp", 0.9);
 
-        class TestProperty<T> : IDeviceProperty<T> where T : IEquatable<T>
+        class TestProperty<T> : IDeviceProperty<T>
         {
             public TestProperty(string propertyName, T initialValue)
             {

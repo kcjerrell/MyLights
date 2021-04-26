@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace MyLights.Models
 {
-    public interface IDeviceProperty<T> where T : IEquatable<T>
+    public interface IDeviceProperty<T>
     {
         public T Value { get; }
         public Task Set(T value);

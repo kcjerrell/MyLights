@@ -13,7 +13,8 @@
 
   <UserControl.Resources>
 
-    <util:StringEqualToVisibilityConverter x:Key="StringEqualToVisibilityConverter"/>
+    <util:StringEqualToObjectsConverter x:Key="StringEqualToVisibilityConverter" IgnoreCase="True" TrueValue="Visible"
+                                        FalseValue="Collapsed" ReturnEnum="True" EnumType="{x:Type Visibility}"/>
 
     <!-- Templates for the Mode selector buttons -->
 
@@ -227,7 +228,7 @@
 
           <!-- Color controls -->
 
-          <Grid x:Name="spectrumRoot" Margin="0" Opacity="0"
+          <Grid x:Name="spectrumRoot" Margin="0"
                 Visibility="{Binding Mode, Converter={StaticResource StringEqualToVisibilityConverter}, ConverterParameter=color}" >
             <Grid.RowDefinitions>
               <RowDefinition Height="*"/>

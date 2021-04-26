@@ -25,7 +25,7 @@ namespace MyLights.Models
         public HSV Color { get; set; }
 
         [JsonProperty("mode")]
-        public string Mode { get; set; }
+        public LightMode Mode { get; set; }
 
         [JsonProperty("colortemp")]
         public int ColorTemp { get; set; }
@@ -37,7 +37,7 @@ namespace MyLights.Models
 
         public IDeviceProperty<HSV> ColorProperty => new DpsColor(Index.ToString(), Color);
 
-        public IDeviceProperty<string> ModeProperty => new DpsMode(Index.ToString(), Mode);
+        public IDeviceProperty<LightMode> ModeProperty => new DpsMode(Index.ToString(), Mode);
 
         public IDeviceProperty<double> BrightnessProperty => new DpsBrightness(Index.ToString(), Brightness);
 
@@ -97,6 +97,6 @@ namespace MyLights.Models
         public HSV Color { get; set; }
 
         [JsonProperty("mode")]
-        public string Mode { get; set; }
+        public LightMode Mode { get; set; }
     }
 }

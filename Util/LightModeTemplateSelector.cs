@@ -1,4 +1,5 @@
-﻿using MyLights.ViewModels;
+﻿using MyLights.Models;
+using MyLights.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,13 +14,13 @@ namespace MyLights.Util
     {
         public override DataTemplate SelectTemplate(object item, DependencyObject container)
         {
-            if (item is LightModes mode)
+            if (item is LightMode mode)
             {
                 return mode switch
                 {
                     //LightModes.Off => Off,
-                    LightModes.Color => Color,
-                    LightModes.White => White,
+                    LightMode.Color => Color,
+                    LightMode.White => White,
                     _ => null
                 };
             }

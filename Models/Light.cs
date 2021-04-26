@@ -56,7 +56,7 @@ namespace MyLights.Models
         private static Dispatcher uiDispatcher;
 
         protected IDeviceProperty<HSV> color;
-        protected IDeviceProperty<string> mode;
+        protected IDeviceProperty<LightMode> mode;
         protected IDeviceProperty<bool> power;
         protected IDeviceProperty<double> brightness;
         protected IDeviceProperty<double> colorTemp;
@@ -69,7 +69,7 @@ namespace MyLights.Models
         public string Name { get; private set; }
         public HSV Color { get => color.Value; }
         public bool Power { get => power.Value; }
-        public string Mode { get => mode.Value; }
+        public LightMode Mode { get => mode.Value; }
         public double Brightness { get => brightness.Value; }
         public double ColorTemp { get => colorTemp.Value; }
 
@@ -83,7 +83,7 @@ namespace MyLights.Models
             power.Set(value);
         }
 
-        public void SetMode(string value)
+        public void SetMode(LightMode value)
         {
             mode.Set(value);
         }

@@ -33,7 +33,7 @@ namespace MyLights.Util
                 return new LightState()
                 {
                     Power = true,
-                    Mode = "white",
+                    Mode = LightMode.White,
                     Brightness = 0.9,
                     ColorTemp = xr * 1000.0,
                 };
@@ -44,7 +44,7 @@ namespace MyLights.Util
                 return new LightState()
                 {
                     Power = true,
-                    Mode = "color",
+                    Mode = LightMode.Color,
                     Color = new HSV(xr, 0.9, 0.9),
                 };
             }

@@ -15,13 +15,13 @@ namespace MyLights.ViewModels
             Light?.SetMode(Mode);
             Light?.SetPower(Power);
 
-            if (Mode == "white")
-            {
-
-            }
-            else if (Mode == "color")
+            if (IsColorMode)
             {
                 Light?.SetColor(Color);
+            }
+            else
+            {
+               
             }
         }
 
@@ -49,22 +49,18 @@ namespace MyLights.ViewModels
             }
         }
    
-        public string Mode
+        public LightMode Mode
         {
             get
             {
                 if (IsColorMode)
-                    return "color";
+                    return LightMode.Color;
                 else
-                    return "white";
+                    return LightMode.White;
             }
             set
             {
-                string low = value.ToLower();
-                if (low == "color")
-                    IsColorMode = true;
-                else if (low == "white")
-                    IsColorMode = false;
+                IsColorMode = value == LightMode.Color;
             }
         }
 

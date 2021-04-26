@@ -84,7 +84,7 @@ namespace MyLights.Util
                     Name = "DesignBulb1",
                     Color = new HSV() { H = 0.2, S = 0.8, V = 1 },
                     Power = true,
-                    Mode = "white"
+                    Mode = LightMode.White
                 });
                 jbulbs.Add(new JsonBulb()
                 {
@@ -92,7 +92,7 @@ namespace MyLights.Util
                     Name = "DesignBulb2",
                     Color = new HSV() { H = 0.5, S = 0.6, V = 1 },
                     Power = true,
-                    Mode = "color"
+                    Mode = LightMode.Color
                 });
             }
 

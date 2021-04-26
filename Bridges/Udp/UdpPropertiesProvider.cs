@@ -111,7 +111,7 @@ namespace MyLights.Bridges.Udp
 
         public IDeviceProperty<HSV> ColorProperty => color;
 
-        public IDeviceProperty<string> ModeProperty => mode;
+        public IDeviceProperty<LightMode> ModeProperty => mode;
 
         public IDeviceProperty<double> BrightnessProperty => brightness;
 
@@ -145,7 +145,7 @@ namespace MyLights.Bridges.Udp
                         power.UpdateValue(bool.Parse(msg.Data));
                         break;
                     case LightProperties.Mode:
-                        mode.UpdateValue(msg.Data);
+                        mode.UpdateValue(Helpers.StringToMode(msg.Data));
                         break;
                     case LightProperties.Brightness:
                         brightness.UpdateValue(double.Parse(msg.Data));

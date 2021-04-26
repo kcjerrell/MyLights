@@ -11,7 +11,7 @@ namespace MyLights.Models
 {
     // I would need DpsProperty<string>, DpsProperty<bool>, and DpsProperty<HSV>
     // I guess they can just be subtypes
-    public abstract class DpsProperty<T> : IDeviceProperty<T> where T : IEquatable<T>
+    public abstract class DpsProperty<T> : IDeviceProperty<T>
     {   
         public DpsProperty(string propertyPath, string indexPath = "", T initialValue = default)
         {
@@ -133,31 +133,19 @@ namespace MyLights.Models
         protected abstract object GetQuery(T value);
     }
 
-    public class DpsMode : DpsProperty<string>
+    public class DpsMode : DpsProperty<LightMode>
     {
-        public DpsMode(string indexPath = "", string initialValue = default) : base("mode", indexPath, initialValue)
+        public DpsMode(string indexPath = "", LightMode initialValue = default) : base("mode", indexPath, initialValue)
         {
-            if (initialValue == "colour")
-                Value = "color";
         }
 
-        protected override object GetQuery(string value)
+        protected override object GetQuery(LightMode value)
         {
-            string mode;
-
-            if (value == "colour")
-                mode = "color";
-            else
-                mode = value;
-
-            return new { v = mode };
+            return new { v = value };
         }
 
-        protected override string GetValue(JsonDps dps)
+        protected override LightMode GetValue(JsonDps dps)
         {
-            if (dps.Mode == "colour")
-                return "color";
-            else
                 return dps.Mode;
         }
     }

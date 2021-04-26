@@ -8,7 +8,7 @@ using System.Windows.Media;
 
 namespace MyLights.Util
 {
-    internal static class Helpers
+    internal static partial class Helpers
     {
         internal static Color HsvToColor(HSV hsv)
         {

@@ -29,9 +29,9 @@ namespace MyLights.Util
             if (AssociatedObject.DataContext is LightViewModel lvm)
             {
                 if (AssociatedObject.IsVisible)
-                    lvm.Mode = "colour";
+                    lvm.Mode = Models.LightMode.Color;
                 else
-                    lvm.Mode = "white";
+                    lvm.Mode = Models.LightMode.White;
             }
         }
 
