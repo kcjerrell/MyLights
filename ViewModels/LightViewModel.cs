@@ -38,21 +38,17 @@ namespace MyLights.ViewModels
      * bulb-01.brightness
      */
 
-
-
-
-
     public class LightViewModel : INotifyPropertyChanged
     {
         public LightViewModel(Light light)
         {
             this.Light = light;
-            light.PropertyChanged += Light_PropertyChanged;
+            light.PropertyChanged += Light_PropertyChanged; 
 
             Name = light.Name;
             hsv = light.Color;
             _brightness = light.Brightness;
-
+            _colorTemp = light.ColorTemp;
         }
 
         private HSV hsv;
@@ -93,6 +89,7 @@ namespace MyLights.ViewModels
             {
                 _colorTemp = value;
                 Light.SetColorTemp(value);
+                //RaisePropertyChanged("ColorTemp");
             }
         }
         public HSV Color
@@ -103,43 +100,88 @@ namespace MyLights.ViewModels
                 UpdateColor(value.H, value.S, value.V);
             }
         }
+        [AlsoNotifyFor("Color")]
         public double H
         {
-            get => this.hsv.H;
+            get => Color.H; // this.hsv.H;
             set
             {
                 UpdateColor(h: value);
             }
         }
+        [DependsOn("Color")]
         public double S
         {
-            get => this.hsv.S;
+            get => Color.S; // this.hsv.S;
             set
             {
                 UpdateColor(s: value);
             }
         }
+        [AlsoNotifyFor("Color")]
         public double V
         {
-            get => this.hsv.V;
+            get => Color.V; // this.hsv.V;
             set
             {
                 UpdateColor(v: value);
             }
         }
-        /// <summary>
-        /// Maps to Color.Value if in color mode, Brightness if in white mode.
-        /// Valid range: 0-1 inclusive, corresponds to 0.01 - 1.0 (color) and 10-1000 (bright)
-        /// </summary>
-        [AlsoNotifyFor("Mode")]
 
         public bool IsSelected { get; set; }
 
+        // private void Light_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        // {
+        //     switch (e.PropertyName)
+        //     {
+        //         case "Power":
+        //             RaisePropertyChanged("Power");
+        //             break;
+        // 
+        //         case "Mode":
+        //             RaisePropertyChanged("Mode");
+        //             break;
+        // 
+        //         case "Color":
+        //             RaisePropertyChanged("Color");
+        //             RaisePropertyChanged("H");
+        //             RaisePropertyChanged("S");
+        //             RaisePropertyChanged("V");
+        //             break;
+        // 
+        //         case "Brightness":
+        //             _brightness = Light.Brightness;
+        //             RaisePropertyChanged("Brightness");
+        //             break;
+        // 
+        //         case "ColorTemp":
+        //             RaisePropertyChanged("ColorTemp");
+        //             break;
+        // 
+        //         default:
+        //             break;
+        //     }
+        // }
+
+        // private void RaisePropertyChanged(string property)
+        // {
+        //     var e = new PropertyChangedEventArgs(property);
+        // 
+        //     var handler = PropertyChanged;
+        //     handler?.Invoke(this, e);
+        // }
 
         private void Light_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             var handler = PropertyChanged;
             handler?.Invoke(this, e);
+
+            if (e.PropertyName == "Color")
+            {
+                handler?.Invoke(this, new PropertyChangedEventArgs("H"));
+                handler?.Invoke(this, new PropertyChangedEventArgs("S"));
+                handler?.Invoke(this, new PropertyChangedEventArgs("V"));
+            }
         }
 
         private void UpdateColor(double h = -1.0, double s = -1.0, double v = -1.0)

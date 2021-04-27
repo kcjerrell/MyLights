@@ -115,7 +115,11 @@ namespace MyLights.Bridges.Udp
         public static string MakeWish(string target, IEnumerable<string> propValues)
         {
             return $"{DgramVerbs.Wish.ToString().ToLower()}:{target}:{string.Join(':', propValues)}";
+        }
 
+        public static string MakeHoller()
+        {
+            return $"{DgramVerbs.Holler.ToString().ToLower()}:::";
         }
     }
 }

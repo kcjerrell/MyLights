@@ -15,6 +15,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Bridges\Rest\**" />
+    <EmbeddedResource Remove="Bridges\Rest\**" />
+    <None Remove="Bridges\Rest\**" />
+    <Page Remove="Bridges\Rest\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Remove="Resource\Delete-256-w.png" />
     <None Remove="Resource\Media-Play-256-w.png" />
     <None Remove="Resource\Pencil-256-w.png" />
@@ -62,7 +69,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Bridges\Rest\" />
     <Folder Include="Etc\" />
   </ItemGroup>
 

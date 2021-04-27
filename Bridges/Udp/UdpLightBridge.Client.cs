@@ -51,8 +51,8 @@ namespace MyLights.Bridges.Udp
                 IsConnected = true;
 
                 log.Log("saying hello");
-                var buffer = Encoding.UTF8.GetBytes("hello");
-                await udp.SendAsync(buffer, buffer.Length);
+                var msg = LightDgram.MakeHoller();
+                await SendMessage(msg);
 
                 log.Log("awaiting response...");
                 var res = await udp.ReceiveAsync();
