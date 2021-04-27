@@ -1,5 +1,6 @@
 ﻿using MyLights.Models;
 using MyLights.ViewModels;
+using PropertyChanged;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -12,35 +13,11 @@ using static MyLights.Bridges.Udp.UdpLightBridge;
 
 namespace MyLights.Bridges.Udp
 {
-    /*  For bundling/gating property changes, here's the pattern
-     *  
-     *  - Consumer calls Set() on a property
-     *  - the property stores that value in OutgoingValue
-     *      - if multiple changes are requested before processed, only the most recent
-     *        request will be saved
-     *  - the property sets a flag, HasPendingChange
-     *  - the property raises the event ChangeRequested
-     *  - Subscribed to that event is the PropertiesProvider
-     *      - If it's already processing changes, the event is disccarded. otherwise,
-     *        the properties provider starts its loop
-     *      - after a brief delay (to gather multiple changes requested in a brief window),
-     *        the PropertiesProvider iterates through it's properties for any that have
-     *        HasPendingChange true
-     *      - PP gathers the dgram formatted requests from these properties, resetting
-     *        HasPendingCHhange.
-     *      - It combines the requests into a single message and sends it
-     *      - After a brief delay, the properties are checked again for HasPendingChanges
-     *      - if there are any, the cycle repeats. If not, it ends
-     *      
-     *      - although right now I have:
-     *          - OnUpdated()
-     *          - UpdateValue()
-     *          - Set()
-     *          - RequestChange()
-     *          - UPdate()
-     *          
-     *       lols
-     * */
+    /* The IDeviceProperties classes are going to maintain their Value as the primary, conclusive
+     * value for the device. Property changes will be received and forwarded to the IDeviceProperty,
+     * where instead of changing it's Value to match and notifying upward, it will schedule another 
+     * request to the device, changing it to match THIS value.
+    */
 
     public abstract class UdpProperty
     {
@@ -50,42 +27,68 @@ namespace MyLights.Bridges.Udp
         public abstract string GetOutgoingFragment(bool clearPendingStatus = false);
     }
 
+    [DoNotNotify]
     public abstract class UdpProperty<T> : UdpProperty, IDeviceProperty<T>
     {
-
         private T _value;
-        public T Value
-        {
+
+        public T Value 
+        { 
             get => _value;
             protected set
             {
-                UpdateValue(value);
-            }
-        }
-
-        public virtual void UpdateValue(T value)
-        {
-            if (!Compare(value, _value))
-            {
                 _value = value;
-
                 var handler = Updated;
                 handler?.Invoke(this, UpdateEventArgs);
             }
         }
 
-        public event EventHandler OutgoingChangeRequested;
+        private void UpdateDevice(T value)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Use this to notify the IDeviceProperty of the remote device's property's value 
+        /// </summary>
+        /// <param name="value">The value received from the remote device</param>
+        public virtual void UpdateValue(T remoteValue, bool syncToRemote = false)
+        {
+            if (syncToRemote)
+            {
+                Value = remoteValue;
+            }
+
+            else if (!Compare(remoteValue, Value))
+            {
+                // request resync after period
+            }
+        }
+
         public Task Set(T newValue)
         {
-            OutgoingValue = newValue;
-            HasPendingChange = true;
-            //var handler = OutgoingChangeRequested;
-            //handler?.Invoke(this, OutgoingChangeRequestedEventArgs);
+            if (ValidateValue(newValue) && !Compare(newValue, Value))
+            {
+                Value = newValue;
 
-            OutgoingChangeRequested.Invoke(this, EventArgs.Empty);
+                OutgoingValue = newValue;
+                HasPendingChange = true;
+
+                OutgoingChangeRequested.Invoke(this, EventArgs.Empty);
+            }
+
             return Task.CompletedTask;
         }
 
+        protected virtual bool ValidateValue(T newValue)
+        {
+            return true;
+        }
+
+        /// <summary>
+        /// This will be used to resync local values with remote values
+        /// </summary>
+        /// <returns></returns>
         public async Task Update()
         {
 
@@ -99,7 +102,9 @@ namespace MyLights.Bridges.Udp
             return GetWishFragment(OutgoingValue);
         }
 
+        public event EventHandler OutgoingChangeRequested;
         public event PropertyChangedEventHandler Updated;
+
         public abstract T OutgoingValue { get; protected set; }
         protected abstract PropertyChangedEventArgs UpdateEventArgs { get; }
         protected abstract string GetWishFragment(T value);
@@ -220,11 +225,6 @@ namespace MyLights.Bridges.Udp
             }
         }
 
-        public override void UpdateValue(LightMode value)
-        {
-            base.UpdateValue(value);
-        }
-
         protected override string GetWishFragment(LightMode value)
         {
             return $"{LightProperties.Mode.ToString().ToLower()}={value}";
@@ -263,6 +263,12 @@ namespace MyLights.Bridges.Udp
                 }
             }
         }
+
+        protected override bool ValidateValue(double newValue)
+        {
+            return newValue >= 10.0 && newValue <= 1000.0;
+        }
+
         protected override PropertyChangedEventArgs UpdateEventArgs => updateEventArgs;
         private static PropertyChangedEventArgs updateEventArgs = new PropertyChangedEventArgs("Brightness");
 
@@ -301,6 +307,12 @@ namespace MyLights.Bridges.Udp
                 }
             }
         }
+
+        protected override bool ValidateValue(double newValue)
+        {
+            return newValue >= 0 && newValue <= 1000;
+        }
+
         protected override PropertyChangedEventArgs UpdateEventArgs => updateEventArgs;
         private static PropertyChangedEventArgs updateEventArgs = new PropertyChangedEventArgs("ColorTemp");
 

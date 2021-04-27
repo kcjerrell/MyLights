@@ -20,6 +20,8 @@ TODO	- Command/Interface to reload devices (need on server side as well)
 			  maintaining the local state. Perhaps periodically resyncing, but even with that, a
 			  discrepancy would be handled by sending another message to change to the app's value.
 			  I think I'll try that strategy.
+			- Also, I'm thinking of disabling Fody for the LightViewModel. For most things, Fody is
+			  great, but I think I want more control over things.
 
 
 210424	Okay so I got a lot of that that stuff done. I still need to examine the logs (on both ends)
