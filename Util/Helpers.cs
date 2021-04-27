@@ -10,6 +10,14 @@ namespace MyLights.Util
 {
     internal static partial class Helpers
     {
+        internal static Color ColorTempToColor(double colorTemp)
+        {
+            double x = colorTemp.Clamp(0, 1000) / 1000.0;
+            double rg = x * 69 + 186;
+            double b = x * -32 + 240;
+
+            return Color.FromRgb((byte)rg, (byte)rg, (byte)b);
+        }
         internal static Color HsvToColor(HSV hsv)
         {
             return HsvToColor(hsv.H, hsv.S, hsv.V);
