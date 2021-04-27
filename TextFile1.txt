@@ -1,5 +1,27 @@
 TODO	- Command/Interface to reload devices (need on server side as well)
 
+210426	I need to iron out some issues with LightViewModel and property notifications. There's a couple
+		issues here:
+			- Color has 3 components that are handled separately in the UI (I don't think there's any 
+			  kind of 1-dimensional color control, except like a palette) but the Light class, and the 
+			  device itself, treat it as a single discrete value. It's really not that complicated of a
+			  thing, I'm just having trouble getting the 5 values all in sync and notifying properly
+			  - Light.Color
+			  - LightViewModel.Color
+			  - LightViewModel.H
+			  - LightViewModel.S
+			  - LightViewModel.V
+			- Complicating this issue somewhat is the delay issue, which is the other big problem.
+			  Sliders need to stay responsive and still in sync.
+			- I've never thought about doing it this way before... the only update *from* the device
+			  that is necesary is the first one. It's not like they are going to change on their own
+			  (unless I change them with another device/app). I could try refocusing everything on
+			  *outgoing* values and for the *most* part, disregarding incoming notifications and simply
+			  maintaining the local state. Perhaps periodically resyncing, but even with that, a
+			  discrepancy would be handled by sending another message to change to the app's value.
+			  I think I'll try that strategy.
+
+
 210424	Okay so I got a lot of that that stuff done. I still need to examine the logs (on both ends)
 		and make sure there's not extra messages being sent or any messages discarded.
 
