@@ -268,8 +268,8 @@
                       <TranslateTransform/>
                     </TransformGroup>
                   </LinearGradientBrush.RelativeTransform>
-                  <GradientStop Color="#FFACB0FF"/>
-                  <GradientStop Color="#FFFDFFCF" Offset="1"/>
+                  <GradientStop Color="#FFBABAF0"/>
+                  <GradientStop Color="#FFFFd0" Offset="1"/>
                 </LinearGradientBrush>
               </Slider.Background>
             </Slider>
