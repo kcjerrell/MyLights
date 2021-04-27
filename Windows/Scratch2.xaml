@@ -6,10 +6,27 @@
         xmlns:ctrl="clr-namespace:MyLights.Controls"
         xmlns:local="clr-namespace:MyLights.Windows"
         mc:Ignorable="d"
-        Title="Scratch2" Height="450" Width="800">
-    <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
+        Title="Scratch2" Height="452" Width="595">
+  <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
+
+    <!--<ctrl:RenameText Text="Hi Try To Rename Me" FontSize="36"/>-->
+
+    <ScrollViewer>
       
-    <ctrl:RenameText Text="Hi Try To Rename Me" FontSize="36"/>
-      
+    <ctrl:UniformishWrapPanel MaxChildWidth="20" MinChildWidth="1" AspectRatio=".5">
+      <Border Background="Red" Margin="3" BorderBrush="Black" BorderThickness="1"/>
+      <Border Background="Red" Margin="3" BorderBrush="Black" BorderThickness="1"/>
+      <Border Background="Red" Margin="3" BorderBrush="Black" BorderThickness="1"/>
+      <Border Background="Red" Margin="3" BorderBrush="Black" BorderThickness="1"/>
+      <Border Background="Red" Margin="3" BorderBrush="Black" BorderThickness="1"/>
+      <Border Background="Red" Margin="3" BorderBrush="Black" BorderThickness="1"/>
+      <Border Background="Red" Margin="3" BorderBrush="Black" BorderThickness="1"/>
+      <Border Background="Red" Margin="3" BorderBrush="Black" BorderThickness="1"/>
+      <Border Background="Red" Margin="3" BorderBrush="Black" BorderThickness="1"/>
+      <Border Background="Red" Margin="3" BorderBrush="Black" BorderThickness="1"/>
+      <Border Background="Red" Margin="3" BorderBrush="Black" BorderThickness="1"/>
+    </ctrl:UniformishWrapPanel>
+
+    </ScrollViewer>
   </Grid>
 </Window>

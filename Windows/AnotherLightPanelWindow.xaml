@@ -26,19 +26,21 @@
 
   <Grid Background="Gray">
     <Grid.ColumnDefinitions>
-      <ColumnDefinition Width="620"/>
       <ColumnDefinition Width="*"/>
+      <ColumnDefinition Width="220"/>
     </Grid.ColumnDefinitions>
     <ItemsControl x:Name="itemsControl" ItemsSource="{Binding LightVMs}">
       <ItemsControl.ItemTemplate>
         <DataTemplate DataType="{x:Type vm:LightViewModel}">
-          <ctrl:LightControl/>
+          <Viewbox>
+          <ctrl:LightControl/>            
+          </Viewbox>
         </DataTemplate>
       </ItemsControl.ItemTemplate>
 
       <ItemsControl.ItemsPanel>
         <ItemsPanelTemplate>
-          <WrapPanel/>
+          <ctrl:UniformishWrapPanel MaxChildWidth="300"/>
         </ItemsPanelTemplate>
       </ItemsControl.ItemsPanel>
 
