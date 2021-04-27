@@ -28,6 +28,29 @@ namespace MyLights.Controls
             InitializeComponent();
 
             Loaded += LightControl_Loaded;
+            DataContextChanged += LightControl_DataContextChanged;
+        }
+
+        private LightViewModel viewModel;
+
+        private void LightControl_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            if (e.OldValue is LightViewModel oldLvm)
+            {
+                oldLvm.PropertyChanged -= ViewModel_PropertyChanged;
+            }
+
+            if (e.NewValue is LightViewModel newLvm)
+            {
+                viewModel = newLvm;
+                viewModel.PropertyChanged += ViewModel_PropertyChanged;
+            }
+                
+        }
+
+        private void ViewModel_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            throw new NotImplementedException();
         }
 
         private LightViewModel GetDataContext()
@@ -79,5 +102,30 @@ namespace MyLights.Controls
 
             GetDataContext().Color = color;
         }
+               
+
+        public LightControlDisplayMode DisplayMode
+        {
+            get { return (LightControlDisplayMode)GetValue(DisplayModeProperty); }
+            set { SetValue(DisplayModeProperty, value); }
+        }
+
+        public static readonly DependencyProperty DisplayModeProperty =
+            DependencyProperty.Register("DisplayMode", typeof(LightControlDisplayMode), typeof(LightControl),
+                new PropertyMetadata(LightControlDisplayMode.LightModeProperties, (s, e) => ((LightControl)s).OnDisplayModeChanged(e)));
+
+        private void OnDisplayModeChanged(DependencyPropertyChangedEventArgs e)
+        {
+
+        }
+
+    }
+
+    public enum LightControlDisplayMode
+    {
+        Minimized,
+        LightModeProperties,
+        FavColors,
+        Special
     }
 }

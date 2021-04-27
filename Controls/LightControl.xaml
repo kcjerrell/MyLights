@@ -224,6 +224,8 @@
           <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
+        <!-- Container for the LightMode properties -->
+        
         <Grid x:Name="colorWhiteContainer">
 
           <!-- Color controls -->
@@ -245,7 +247,6 @@
                                           BorderThickness="1" Grid.ColumnSpan="2"/>
 
             <ctrl:ColorSpectrum Panel.ZIndex="0" Grid.ColumnSpan="2" Mode="HS" ThirdValue="1"/>
-
 
           </Grid>
 
