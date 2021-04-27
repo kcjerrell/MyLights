@@ -142,19 +142,19 @@ namespace MyLights.Bridges.Udp
                 switch (msg.Property)
                 {
                     case LightProperties.Power:
-                        power.UpdateValue(bool.Parse(msg.Data));
+                        power.UpdateValue(bool.Parse(msg.Data), !initialized);
                         break;
                     case LightProperties.Mode:
-                        mode.UpdateValue(Helpers.StringToMode(msg.Data));
+                        mode.UpdateValue(Helpers.StringToMode(msg.Data),  !initialized);
                         break;
                     case LightProperties.Brightness:
-                        brightness.UpdateValue(double.Parse(msg.Data));
+                        brightness.UpdateValue(double.Parse(msg.Data),  !initialized);
                         break;
                     case LightProperties.ColorTemp:
-                        colorTemp.UpdateValue(double.Parse(msg.Data));
+                        colorTemp.UpdateValue(double.Parse(msg.Data),  !initialized);
                         break;
                     case LightProperties.Color:
-                        color.UpdateValue(UdpColor.DecodeColor(msg.Data));
+                        color.UpdateValue(UdpColor.DecodeColor(msg.Data),  !initialized);
                         break;
                 }
 
