@@ -47,9 +47,8 @@ namespace MyLights.Models
             }
             else
             {
-                string property = e.PropertyName.Capitalize();
                 var handler = PropertyChanged;
-                handler?.Invoke(this, new PropertyChangedEventArgs(property));
+                handler?.Invoke(this, e);
             }
         }
 

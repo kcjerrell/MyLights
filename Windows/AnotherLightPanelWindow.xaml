@@ -77,15 +77,9 @@
                 <ItemsControl.ItemTemplate>
                   <DataTemplate DataType="{x:Type models:LightState}">
                     <Grid>
-                      <Border x:Name="lightStateBackgroundColor" 
+                      <Border x:Name="lightStateBackground"
                               BorderBrush="Black" BorderThickness="0.5,0" 
-                              Background="{Binding Color, Converter={StaticResource BrushCache}, ConverterParameter=fullv}"
-                              Visibility="{Binding Mode, Converter={StaticResource StringEqualToObjectsConverter}, ConverterParameter=color, Mode=OneWay}" />
-                      
-                      <Border x:Name="lightStateBackgroundWhite"
-                              BorderBrush="Black" BorderThickness="0.5,0" 
-                              Background="{Binding ColorTemp, Converter={StaticResource BrushCache}, ConverterParameter=colortemp}"
-                              Visibility="{Binding Mode, Converter={StaticResource StringEqualToObjectsConverter}, ConverterParameter=white, Mode=OneWay}" />
+                              Background="{Binding Converter={StaticResource BrushCache}}"/>
                     </Grid>
                   </DataTemplate>
                 </ItemsControl.ItemTemplate>

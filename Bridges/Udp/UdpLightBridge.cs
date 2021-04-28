@@ -17,6 +17,9 @@ namespace MyLights.Bridges.Udp
 
         }
 
+        private const string BulbsRequest = "*bulb-.*";
+            //"bulb-1"; // 
+
         public OCL Lights => lights;
 
         public OCLVM LightVMs => lightVms;
@@ -38,6 +41,7 @@ namespace MyLights.Bridges.Udp
                 return false;
             }
         }
+
 
         #region Static
 
@@ -114,7 +118,7 @@ namespace MyLights.Bridges.Udp
                 await Task.Delay(2000);
 
             log.Log("requesting lights");
-            var msg = new LightDgram(DgramVerbs.Wonder, "*bulb-.*", LightProperties.Name);
+            var msg = new LightDgram(DgramVerbs.Wonder, BulbsRequest, LightProperties.Name);
             await udpClient.SendMessage(msg);
         }
 

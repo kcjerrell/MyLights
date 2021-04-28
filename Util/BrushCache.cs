@@ -1,4 +1,5 @@
 ﻿using MyLights.Models;
+using MyLights.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -80,19 +81,24 @@ namespace MyLights.Util
             {
                 if (parameter is string param && param == "colortemp")
                 {
-                    /* ColorTemp:      0 - 1000
-                     *            C0C3F3 - FDFFCE
-                     *       Red: 191    - 255     (range 64)  
-                     *     Green:   191  -   255   (range 64)
-                     *      Blue:    240 -    208  (range 32)
-                     * */
+                    return GetBrush(Helpers.ColorTempToColor(colorTemp));
+                }
+            }
 
-                    double x = colorTemp.Clamp(0, 1000) / 1000.0;
-                    double rg = x * 69 + 186;
-                    double b = x * -32 + 240;
-
-                    outColor = Color.FromRgb((byte)rg, (byte)rg, (byte)b);
+            else if (value is LightState ls)
+            {
+                if (!ls.Power)
+                {
+                    return GetBrush(Color.FromRgb(34, 34, 34));
+                }
+                else if (ls.Mode == LightMode.Color)
+                {
+                    outColor = ls.Color.V(1).ToColor();
                     return GetBrush(outColor);
+                }
+                else if (ls.Mode == LightMode.White)
+                {
+                    return GetBrush(Helpers.ColorTempToColor(ls.ColorTemp));
                 }
             }
 
