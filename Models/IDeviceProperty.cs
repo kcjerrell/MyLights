@@ -10,8 +10,8 @@ namespace MyLights.Models
     public interface IDeviceProperty<T>
     {
         public T Value { get; }
-        public Task Set(T value);
-        public Task Update();
+        public Task Set(T value, bool immediate = false);
+        public Task Update();    
 
         public event PropertyChangedEventHandler Updated;
     }

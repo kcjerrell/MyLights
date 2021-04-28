@@ -24,7 +24,7 @@
 
       <util:LightModeTemplateSelector.White>
         <DataTemplate>
-          <Border Width="30" Height="30" BorderBrush="#FF444444" BorderThickness="1" CornerRadius="15">
+          <Border Width="24" Height="24" BorderBrush="#FF444444" BorderThickness="1" CornerRadius="15">
             <Border.Background>
               <RadialGradientBrush>
                 <GradientStop Color="#FFFFF5C9" Offset="0.17"/>
@@ -39,7 +39,7 @@
 
       <util:LightModeTemplateSelector.Color>
         <DataTemplate>
-          <Border Width="30" Height="30" BorderBrush="#FF444444" BorderThickness="1" CornerRadius="15">
+          <Border Width="24" Height="24" BorderBrush="#FF444444" BorderThickness="1" CornerRadius="15">
             <Border.Background>
               <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
                 <LinearGradientBrush.RelativeTransform>
@@ -149,7 +149,7 @@
       <!-- Label for the LightControl -->
 
       <TextBlock Text="{Binding Name}" RenderTransformOrigin="0.5,0.5" VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="2,0" FontSize="16"
-                 TextOptions.TextFormattingMode="Display" Background="{Binding Color, Converter={StaticResource BrushCache}, ConverterParameter=fullv}">
+                 TextOptions.TextFormattingMode="Display">
         <TextBlock.LayoutTransform>
           <RotateTransform Angle="270"/>
         </TextBlock.LayoutTransform>
@@ -169,7 +169,7 @@
           <ToggleButton Margin="2,4" IsChecked="{Binding Power, Mode=TwoWay}">
             <ToggleButton.Template>
               <ControlTemplate>
-                <Border x:Name="powerButton" Width="30" Height="30" Background="#FF222222" BorderBrush="#FF444444" BorderThickness="1">
+                <Border x:Name="powerButton" Width="24" Height="24" Background="#FF222222" BorderBrush="#FF444444" BorderThickness="1">
                   <VisualStateManager.VisualStateGroups>
                     <VisualStateGroup x:Name="CheckStates">
                       <VisualState x:Name="Unchecked"/>
@@ -213,6 +213,8 @@
             </ListBox.ItemsPanel>
           </ListBox>
 
+          <Button x:Name="dmButtonSpecial" Width="24" Height="24" Margin="2,4" Click="dmButtonSpecial_Click"/>
+
         </StackPanel>
       </Border>
 
@@ -226,12 +228,12 @@
 
         <!-- Container for the LightMode properties -->
         
-        <Grid x:Name="colorWhiteContainer">
+        <Grid x:Name="dispModeLightModeContainer">
 
           <!-- Color controls -->
 
           <Grid x:Name="spectrumRoot" Margin="0"
-                Visibility="{Binding Mode, Converter={StaticResource StringEqualToVisibilityConverter}, ConverterParameter=color}" >
+                Visibility="{Binding Mode, Converter={StaticResource StringEqualToVisibilityConverter}, ConverterParameter=color}">
             <Grid.RowDefinitions>
               <RowDefinition Height="*"/>
               <RowDefinition Height="Auto"/>
@@ -281,7 +283,7 @@
 
         <!-- favColors  -->
 
-        <Grid x:Name="favesRoot" Visibility="Collapsed">
+        <Grid x:Name="dispModeFavColorContainer" Visibility="Collapsed">
 
           <ListBox Background="Transparent" ItemsSource="{Binding Library.FavColors, Mode=OneWay, Source={StaticResource Locator}}" 
                    KeyDown="ListBox_KeyDown" SelectionChanged="ListBox_SelectionChanged">
@@ -300,6 +302,12 @@
           </ListBox>
         </Grid>
 
+        <!-- LightControl Special -->
+
+        <Grid x:Name="dispModeSpecialContainer" Visibility="Collapsed">
+          
+        </Grid>
+        
         <!-- Brightness/Value slider and color buttons -->
         <Grid Grid.Row="1">
           <Grid.ColumnDefinitions>
@@ -308,7 +316,7 @@
             <ColumnDefinition Width="Auto"/>
           </Grid.ColumnDefinitions>
 
-          <Slider x:Name="brightnessSlider" Grid.Column="0" Minimum="10" Maximum="1000" LargeChange="0.2" SmallChange="0.05" 
+          <Slider x:Name="brightnessSlider" Grid.Column="0" Minimum="10" Maximum="1000" LargeChange="0.2" SmallChange="0.05"
                   Value="{Binding Brightness, Mode=TwoWay}" Height="20" Margin="5"
                   Visibility="{Binding Mode, Converter={StaticResource StringEqualToVisibilityConverter}, ConverterParameter=white}"/>
 
@@ -316,19 +324,17 @@
                   Value="{Binding V, Mode=TwoWay}" Height="20" Margin="5"
                   Visibility="{Binding Mode, Converter={StaticResource StringEqualToVisibilityConverter}, ConverterParameter=color}"/>
 
-          <Button x:Name="addColorToFavsButton" Grid.Column="1" Width="30" Height="30" Margin="2" HorizontalContentAlignment="Stretch"
+          <Button x:Name="addColorToFavsButton" Grid.Column="1" Width="24" Height="24" Margin="2" HorizontalContentAlignment="Stretch"
                   VerticalContentAlignment="Stretch" Click="addColorToFavsButton_Click">
             <Grid>
               <Border Width="5" Height="20" Panel.ZIndex="10" Margin="1,-1,0,0" Background="#FF5AAE5A" CornerRadius="2"/>
               <Border Width="20" Height="5" Background="#FF5AAE5A" Panel.ZIndex="10" Margin="1,-1,0,0" CornerRadius="2"/>
-              <!--<Border Width="6" Height="21" Background="Black" Panel.ZIndex="1"/>
-              <Border Width="21" Height="6" Background="Black" Panel.ZIndex="1"/>-->
             </Grid>
           </Button>
 
-          <ToggleButton x:Name="colorViewToggleButton" Grid.Column="2" Width="30"
-                            Height="30" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" 
-                        Margin="2" Checked="colorViewToggleButton_Checked" Unchecked="colorViewToggleButton_Unchecked">
+          <ToggleButton x:Name="dmButtonFavColor" Grid.Column="2" Width="24"
+                            Height="24" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" 
+                        Margin="2" Checked="dmButtonFavColor_Checked" Unchecked="dmButtonFavColor_Unchecked">
 
             <ToggleButton.Template>
               <ControlTemplate>

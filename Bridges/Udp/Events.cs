@@ -9,7 +9,7 @@ namespace MyLights.Bridges.Udp
 {
     public delegate void LightMessageReceivedEventHandler(object sender, LightMessageEventArgs e);
 
-    public delegate void OutgoingChangeRequestedEventHandler(object sender, OutgoingChangeRequestedEventArgs e);
+    public delegate void OutgoingChangeRequestedEventHandler(UdpProperty sender, OutgoingChangeRequestedEventArgs e);
 
     public class LightMessageEventArgs
     {
@@ -23,11 +23,9 @@ namespace MyLights.Bridges.Udp
 
     public class OutgoingChangeRequestedEventArgs
     {
-        public OutgoingChangeRequestedEventArgs(LightProperties property)
+        public OutgoingChangeRequestedEventArgs()
         {
-            this.Property = property;
         }
-
-        public LightProperties Property { get; set; }
+        public static OutgoingChangeRequestedEventArgs Default { get; } = new OutgoingChangeRequestedEventArgs();
     }
 }

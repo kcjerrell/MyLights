@@ -25,6 +25,7 @@
     <None Remove="Resource\Delete-256-w.png" />
     <None Remove="Resource\Media-Play-256-w.png" />
     <None Remove="Resource\Pencil-256-w.png" />
+    <None Remove="Resource\Puzzles-256.png" />
     <None Remove="Slice.png" />
   </ItemGroup>
 
@@ -55,6 +56,7 @@
     <Resource Include="Resource\Pencil-256-w.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
+    <Resource Include="Resource\Puzzles-256.png" />
     <Resource Include="Slice.png" />
   </ItemGroup>
 
@@ -70,6 +72,7 @@
 
   <ItemGroup>
     <Folder Include="Etc\" />
+    <Folder Include="Util\Framework\" />
   </ItemGroup>
 
   <ItemGroup>

@@ -75,7 +75,7 @@ namespace MyLights.Bridges.Udp
         }
 
         public event EventHandler OutgoingChangeRequested;
-        public Task Set(T newValue)
+        public Task Set(T newValue, bool immediate = false)
         {
             OutgoingValue = newValue;
             HasPendingChange = true;

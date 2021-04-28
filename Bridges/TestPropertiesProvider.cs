@@ -66,7 +66,7 @@ namespace MyLights.Bridges
 
             public event PropertyChangedEventHandler Updated;
 
-            public async Task Set(T value)
+            public async Task Set(T value, bool immediate = false)
             {
                 Value = value;
             }
