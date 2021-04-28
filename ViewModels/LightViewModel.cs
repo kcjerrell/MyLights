@@ -11,33 +11,6 @@ using System.Windows.Media;
 
 namespace MyLights.ViewModels
 {
-    /*
-     * Trying to decide how to keep sliders smooth and still syncronize
-     * Since I seem to be going the way of using async/await and delays/gates
-     * around syncing with remote resources, I think I'll switch the VM to use
-     * a cached value, and - ...
-     * well there's couple ways to go, and they depend on which value is or should 
-     * be the ultimate/target value for a property
-     * using brightness as the example here...
-     * 
-     * vm._brightness
-     *      - with this as the definitive value, I would probably start a timer
-     *        (aka an async task with a Task.Delay()) to follow up on changes
-     *        sent to the the model. maybe.
-     *      - the other issue is getting the initial value... with the udpprovider,
-     *        I don't think it will be an issue because the Light isn't constructed 
-     *        until all the current values have been gathered. I'm not sure what would
-     *        happen with the REST provider, but then again, I might never use that again
-     * 
-     * light.Brightness
-     *      - this is how it works now, and that's why the sliders are unresponsive
-     *      - I'm no sure how that issue can be dealt with, since the slider value
-     *        will have to keep reverting back to this value. It probably won't even 
-     *        matter though. I'll just go with the first option above
-     * 
-     * bulb-01.brightness
-     */
-
     public class LightViewModel : INotifyPropertyChanged
     {
         public LightViewModel(Light light)

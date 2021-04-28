@@ -65,7 +65,10 @@ namespace MyLights.Bridges.Udp
             }
         }
 
-        public Task Set(T newValue)
+
+        public event EventHandler OutgoingChangeRequested;
+        public Task Set(T newValue, bool immediate = false)
+
         {
             if (ValidateValue(newValue) && !Compare(newValue, Value))
             {

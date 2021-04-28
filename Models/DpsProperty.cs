@@ -54,7 +54,7 @@ namespace MyLights.Models
             handler?.Invoke(this, eventArgs);
         }
 
-        public virtual async Task Set(T newValue)
+        public virtual async Task Set(T newValue, bool immediate = false)
         {
             // #review 
             // should this be a lock or other sync primitive? I don't know if it matters for async.
@@ -93,7 +93,7 @@ namespace MyLights.Models
                     this.Value = GetValue(dps);
 
                 requestInProgress = false;
-                Set(nextValue);
+                Set(nextValue, immediate: false);
             }
         }
 
@@ -219,7 +219,7 @@ namespace MyLights.Models
             throw new NotImplementedException();
         }
 
-        public async override Task Set(double newValue)
+        public async override Task Set(double newValue, bool immediate = false)
         {
             Value = newValue;
         }
@@ -246,7 +246,7 @@ namespace MyLights.Models
             throw new NotImplementedException();
         }
 
-        public async override Task Set(double newValue)
+        public async override Task Set(double newValue, bool immediate = false)
         {
             Value = newValue;
         }

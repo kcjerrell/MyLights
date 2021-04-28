@@ -28,6 +28,15 @@ namespace MyLights.Controls
             InitializeComponent();
 
             Loaded += LightControl_Loaded;
+            DataContextChanged += LightControl_DataContextChanged;
+        }
+
+        private LightViewModel viewModel;
+
+        private void LightControl_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            if (e.NewValue is LightViewModel newLvm)
+                viewModel = newLvm;
         }
 
         private LightViewModel GetDataContext()
@@ -48,16 +57,14 @@ namespace MyLights.Controls
             Locator.Get.Library.AddColor(new Models.HSV(xySelector.ValueX, xySelector.ValueY, 1));
         }
 
-        private void colorViewToggleButton_Checked(object sender, RoutedEventArgs e)
+        private void dmButtonFavColor_Checked(object sender, RoutedEventArgs e)
         {
-            colorWhiteContainer.Visibility = Visibility.Collapsed;
-            favesRoot.Visibility = Visibility.Visible;
+            DisplayMode = LightControlDisplayMode.FavColors;
         }
 
-        private void colorViewToggleButton_Unchecked(object sender, RoutedEventArgs e)
+        private void dmButtonFavColor_Unchecked(object sender, RoutedEventArgs e)
         {
-            colorWhiteContainer.Visibility = Visibility.Visible;
-            favesRoot.Visibility = Visibility.Collapsed;
+            DisplayMode = LightControlDisplayMode.LightModeProperties;
         }
 
         private void ListBox_KeyDown(object sender, KeyEventArgs e)
@@ -77,7 +84,58 @@ namespace MyLights.Controls
             var lb = (ListBox)sender;
             var color = (HSV)lb.SelectedItem;
 
-            GetDataContext().Color = color;
+            if (viewModel != null)
+                viewModel.Color = color;
         }
+
+
+        public LightControlDisplayMode DisplayMode
+        {
+            get { return (LightControlDisplayMode)GetValue(DisplayModeProperty); }
+            set { SetValue(DisplayModeProperty, value); }
+        }
+
+        public static readonly DependencyProperty DisplayModeProperty =
+            DependencyProperty.Register("DisplayMode", typeof(LightControlDisplayMode), typeof(LightControl),
+                new PropertyMetadata(LightControlDisplayMode.LightModeProperties, (s, e) => ((LightControl)s).OnDisplayModeChanged(e)));
+
+        private void OnDisplayModeChanged(DependencyPropertyChangedEventArgs e)
+        {
+            var mode = (LightControlDisplayMode)e.NewValue;
+
+            dispModeLightModeContainer.Visibility = Visibility.Collapsed;
+            dispModeFavColorContainer.Visibility = Visibility.Collapsed;
+            dispModeSpecialContainer.Visibility = Visibility.Collapsed;
+
+            switch (mode)
+            {
+                case LightControlDisplayMode.Minimized:
+                    break;
+                case LightControlDisplayMode.LightModeProperties:
+                    dispModeLightModeContainer.Visibility = Visibility.Visible;
+                    break;
+                case LightControlDisplayMode.FavColors:
+                    dispModeFavColorContainer.Visibility = Visibility.Visible;
+                    break;
+                case LightControlDisplayMode.Special:
+                    dispModeSpecialContainer.Visibility = Visibility.Visible;
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        private void dmButtonSpecial_Click(object sender, RoutedEventArgs e)
+        {
+            DisplayMode = LightControlDisplayMode.Special;
+        }
+    }
+
+    public enum LightControlDisplayMode
+    {
+        Minimized,
+        LightModeProperties,
+        FavColors,
+        Special
     }
 }
