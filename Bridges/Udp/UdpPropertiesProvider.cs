@@ -14,24 +14,26 @@ namespace MyLights.Bridges.Udp
     {
         public UdpPropertiesProvider()
         {
+            Func<string, Task> ic = (data) => ImmediateWish(data);
+
             propertiesInitialized[LightProperties.Power] = false;
-            power = new UdpPower();
+            power = new UdpPower(ic);
             power.OutgoingChangeRequested += OnOutgoingChangeRequested;
 
             propertiesInitialized[LightProperties.Color] = false;
-            color = new UdpColor();
+            color = new UdpColor(ic);
             color.OutgoingChangeRequested += OnOutgoingChangeRequested;
 
             propertiesInitialized[LightProperties.Mode] = false;
-            mode = new UdpMode();
+            mode = new UdpMode(ic);
             mode.OutgoingChangeRequested += OnOutgoingChangeRequested;
 
             propertiesInitialized[LightProperties.Brightness] = false;
-            brightness = new UdpBrightness();
+            brightness = new UdpBrightness(ic);
             brightness.OutgoingChangeRequested += OnOutgoingChangeRequested;
 
             propertiesInitialized[LightProperties.ColorTemp] = false;
-            colorTemp = new UdpColorTemp();
+            colorTemp = new UdpColorTemp(ic);
             colorTemp.OutgoingChangeRequested += OnOutgoingChangeRequested;
 
             properties = new UdpProperty[] { power, color, mode, brightness, colorTemp };
@@ -85,6 +87,11 @@ namespace MyLights.Bridges.Udp
 
             outgoing = null;
 
+        }
+
+        private async Task ImmediateWish(string data)
+        {
+            await client.SendMessage(LightDgram.MakeWish(ResourceId, data.SingleEnumerator()));
         }
 
         private Logger log;

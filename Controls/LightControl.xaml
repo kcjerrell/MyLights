@@ -8,6 +8,7 @@
              xmlns:util="clr-namespace:MyLights.Util"
              xmlns:vm="clr-namespace:MyLights.ViewModels"
              xmlns:mod="clr-namespace:MyLights.Models"
+             xmlns:lm="clr-namespace:MyLights.LightMods"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="500">
 
@@ -305,7 +306,22 @@
         <!-- LightControl Special -->
 
         <Grid x:Name="dispModeSpecialContainer" Visibility="Collapsed">
-          
+          <ItemsControl ItemsSource="{Binding ModHost.DeviceEffectsPlugins, Mode=OneWay, Source={StaticResource Locator}}">
+            <ItemsControl.ItemTemplate>
+              <DataTemplate DataType="{x:Type lm:ILightPlugin}">
+                <Button Click="LightModButton_Click">
+                  <Image Source="{Binding Icon}" Width="48" Height="48"/>
+                </Button>
+              </DataTemplate>
+            </ItemsControl.ItemTemplate>
+
+            <ItemsControl.ItemsPanel>
+              <ItemsPanelTemplate>
+                <StackPanel Orientation="Vertical" HorizontalAlignment="Left"/>
+              </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+            
+          </ItemsControl>
         </Grid>
         
         <!-- Brightness/Value slider and color buttons -->

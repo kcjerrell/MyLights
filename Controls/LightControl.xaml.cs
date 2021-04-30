@@ -1,4 +1,5 @@
-﻿using MyLights.Models;
+﻿using MyLights.LightMods;
+using MyLights.Models;
 using MyLights.Util;
 using MyLights.ViewModels;
 using System;
@@ -99,8 +100,10 @@ namespace MyLights.Controls
             DependencyProperty.Register("DisplayMode", typeof(LightControlDisplayMode), typeof(LightControl),
                 new PropertyMetadata(LightControlDisplayMode.LightModeProperties, (s, e) => ((LightControl)s).OnDisplayModeChanged(e)));
 
+        private LightControlDisplayMode prevDispMode;
         private void OnDisplayModeChanged(DependencyPropertyChangedEventArgs e)
         {
+            prevDispMode = (LightControlDisplayMode)e.OldValue;
             var mode = (LightControlDisplayMode)e.NewValue;
 
             dispModeLightModeContainer.Visibility = Visibility.Collapsed;
@@ -127,7 +130,32 @@ namespace MyLights.Controls
 
         private void dmButtonSpecial_Click(object sender, RoutedEventArgs e)
         {
-            DisplayMode = LightControlDisplayMode.Special;
+            if (DisplayMode == LightControlDisplayMode.Special)
+                DisplayMode = prevDispMode;
+            else
+                DisplayMode = LightControlDisplayMode.Special;
+        }
+
+        private Dictionary<ILightPlugin, IDeviceEffect> effects = new();
+        private void LightModButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is FrameworkElement button && button.DataContext is ILightPlugin mc)
+            {
+                if (effects.ContainsKey(mc))
+                {
+                    if (effects[mc].IsActive)
+                        effects[mc].Suspend();
+                    else
+                        effects[mc].Start();
+                }
+                else
+                {
+                    var lf = Locator.Get.ModHost.Create(mc, viewModel);
+                    effects[mc] = lf;
+
+                    lf.Start();
+                }
+            }
         }
     }
 

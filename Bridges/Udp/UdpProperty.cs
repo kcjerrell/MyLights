@@ -30,6 +30,13 @@ namespace MyLights.Bridges.Udp
     [DoNotNotify]
     public abstract class UdpProperty<T> : UdpProperty, IDeviceProperty<T>
     {
+        public UdpProperty(Func<string,Task> immediateCallback)
+        {
+            this.immediateCallback = immediateCallback;
+        }
+
+        private Func<string, Task> immediateCallback;
+
         private T _value;
 
         public T Value 
@@ -65,11 +72,14 @@ namespace MyLights.Bridges.Udp
             }
         }
 
-
-        public event EventHandler OutgoingChangeRequested;
         public Task Set(T newValue, bool immediate = false)
-
         {
+            if (immediate)
+            {
+                Value = newValue;
+                return immediateCallback(GetWishFragment(newValue));
+            }
+
             if (ValidateValue(newValue) && !Compare(newValue, Value))
             {
                 Value = newValue;
@@ -125,6 +135,11 @@ namespace MyLights.Bridges.Udp
         private static PropertyChangedEventArgs updateEventArgs = new PropertyChangedEventArgs("Power");
 
         private volatile bool _outgoingValue;
+
+        public UdpPower(Func<string, Task> immediateCallback) : base(immediateCallback)
+        {
+        }
+
         public override bool OutgoingValue
         {
             get => _outgoingValue;
@@ -172,6 +187,11 @@ namespace MyLights.Bridges.Udp
         protected override PropertyChangedEventArgs UpdateEventArgs => updateEventArgs;
 
         private static Regex pattern = new Regex("h([0-9.]+)s([0-9.]+)v([0-9.]+)");
+
+        public UdpColor(Func<string, Task> immediateCallback) : base(immediateCallback)
+        {
+        }
+
         internal static HSV DecodeColor(string data)
         {
             var match = pattern.Match(data).Groups;
@@ -239,6 +259,11 @@ namespace MyLights.Bridges.Udp
         }
 
         private static PropertyChangedEventArgs updateEventArgs = new PropertyChangedEventArgs("Mode");
+
+        public UdpMode(Func<string, Task> immediateCallback) : base(immediateCallback)
+        {
+        }
+
         protected override PropertyChangedEventArgs UpdateEventArgs => updateEventArgs;
         protected override LightProperties AssociatedProperty => LightProperties.Mode;
 
@@ -274,6 +299,10 @@ namespace MyLights.Bridges.Udp
 
         protected override PropertyChangedEventArgs UpdateEventArgs => updateEventArgs;
         private static PropertyChangedEventArgs updateEventArgs = new PropertyChangedEventArgs("Brightness");
+
+        public UdpBrightness(Func<string, Task> immediateCallback) : base(immediateCallback)
+        {
+        }
 
         protected override string GetWishFragment(double value)
         {
@@ -318,6 +347,10 @@ namespace MyLights.Bridges.Udp
 
         protected override PropertyChangedEventArgs UpdateEventArgs => updateEventArgs;
         private static PropertyChangedEventArgs updateEventArgs = new PropertyChangedEventArgs("ColorTemp");
+
+        public UdpColorTemp(Func<string, Task> immediateCallback) : base(immediateCallback)
+        {
+        }
 
         protected override string GetWishFragment(double value)
         {

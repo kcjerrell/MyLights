@@ -22,6 +22,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Remove="Util\ModHostX.cs" />
+    <Compile Remove="Util\PluginLoadContext.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Remove="Resource\Delete-256-w.png" />
     <None Remove="Resource\Media-Play-256-w.png" />
     <None Remove="Resource\Pencil-256-w.png" />
@@ -73,6 +78,11 @@
   <ItemGroup>
     <Folder Include="Etc\" />
     <Folder Include="Util\Framework\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Util\ModHostX.cs" />
+    <None Include="Util\PluginLoadContext.cs" />
   </ItemGroup>
 
   <ItemGroup>
