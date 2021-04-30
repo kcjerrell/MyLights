@@ -79,13 +79,13 @@ namespace MyLights.LightMods
             {
                 for (int i = 0; i < nLights; i++)
                 {
-                    double h = (p / 400.0 + (double)i / nLights) % 1.0;
+                    double h = (p / 360.0 + (double)i / nLights) % 1.0;
                     HSV col = lights[i].Color;
-                    lights[i].SetColor(new HSV(h, col.S, col.V));
+                    lights[i].SetColor(new HSV(h, col.S, col.V), true);
                 }
 
-                p = (p + 1) % 400;
-                await Task.Delay(200);
+                p = (p + 1) % 360;
+                await Task.Delay(100);
             }
         }
 
