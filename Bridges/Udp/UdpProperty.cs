@@ -204,7 +204,7 @@ namespace MyLights.Bridges.Udp
 
         internal static string EncodeColor(HSV color)
         {
-            return $"h{color.H}s{color.S}v{color.V}";
+            return $"h{color.H.ToString("F4")}s{color.S.ToString("F4")}v{color.V.ToString("F4")}";
         }
 
         protected override bool Compare(HSV a, HSV b)

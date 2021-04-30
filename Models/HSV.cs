@@ -78,9 +78,20 @@ namespace MyLights.Util
 {
     public static partial class Extensions
     {
-        public static HSV V(this HSV color, double v)
+        public static HSV Alter(this HSV color, double h = double.NaN, double s = double.NaN, double v = double.NaN)
         {
-            return new HSV(color.H, color.S, v);
+            return new HSV(h.IsNaN() ? color.H : h, 
+                           s.IsNaN() ? color.S : s,
+                           v.IsNaN() ? color.V : h);
+        }
+
+        public static string ToTuya(this HSV color)
+        {
+            int h = (int)(color.H * 360);
+            int s = (int)(color.S * 1000);
+            int v = (int)(color.V * 1000);
+
+            return $"{h.ToString().PadLeft(4, '0')}{s.ToString().PadLeft(4, '0')}{v.ToString().PadLeft(4, '0')}";
         }
     }
 }

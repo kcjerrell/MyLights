@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace MyLights.Util
 {
-    public class ModHost : INotifyPropertyChanged
+    public class ModHost : IModHost, INotifyPropertyChanged
     {
         public ModHost(bool isInDesignMode)
         {
@@ -27,10 +27,12 @@ namespace MyLights.Util
         private void Plugins_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
             var handler = PropertyChanged;
-            handler?.Invoke(this, new PropertyChangedEventArgs("DeviceEffectsPlugin"));
+            handler?.Invoke(this, new PropertyChangedEventArgs(nameof(DeviceEffectsPlugins)));
+            handler?.Invoke(this, new PropertyChangedEventArgs(nameof(GlobalModPlugins)));
         }
 
         public ObservableCollection<ILightPlugin> Plugins { get; } = new ObservableCollection<ILightPlugin>();
+        public ReadOnlyObservableCollection<LightViewModel> LightViewModels { get; private set; }
         public IEnumerable<ILightPlugin> DeviceEffectsPlugins
         {
             get
@@ -40,9 +42,20 @@ namespace MyLights.Util
                        select p;
             }
         }
+        public IEnumerable<ILightPlugin> GlobalModPlugins
+        {
+            get
+            {
+                return from p in Plugins
+                       where (p.Properties & PluginProperties.GlobalMod) == PluginProperties.GlobalMod
+                       select p;
+            }
+        }
 
         internal async Task Load(bool isInDesignMode)
         {
+            LightViewModels = new ReadOnlyObservableCollection<LightViewModel>(Locator.Get.LightVMs);
+
             if (!isInDesignMode)
             {
                 //Assembly.LoadFrom(@"C:\Users\kcjer\source\repos\LightBridge\LightMods\bin\Debug\net5.0-windows\LightMods.dll");
@@ -57,7 +70,6 @@ namespace MyLights.Util
                             {
                                 ILightPlugin pluginclass = Activator.CreateInstance(t) as ILightPlugin;
                                 Plugins.Add(pluginclass);
-                                return;
                             }
                             catch
                             {
@@ -75,5 +87,10 @@ namespace MyLights.Util
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
+    }
+
+    public interface IModHost
+    {
+        public ReadOnlyObservableCollection<LightViewModel> LightViewModels { get; }
     }
 }

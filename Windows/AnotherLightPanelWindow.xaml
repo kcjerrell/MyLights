@@ -10,6 +10,7 @@
         xmlns:util="clr-namespace:MyLights.Util" 
         xmlns:models="clr-namespace:MyLights.Models"
         xmlns:ctrl="clr-namespace:MyLights.Controls"
+        xmlns:mod="clr-namespace:MyLights.LightMods"
         mc:Ignorable="d"
         Title="AnotherLightPanelWindow" Height="450" Width="850" Background="{Binding Color, ElementName=hueSlider, Converter={StaticResource BrushCache}}">
 
@@ -84,10 +85,7 @@
                   </DataTemplate>
                 </ItemsControl.ItemTemplate>
               </ItemsControl>
-
-
-
-
+                                        
               <TextBox x:Name="sceneItemInput" Grid.Row="1" Text="{Binding Name, Mode=TwoWay}" FontSize="18" Padding="8,4" Visibility="Collapsed"/>
               <TextBlock x:Name="sceneItemLabel" Grid.Row="1" Text="{Binding Name}" FontSize="18" Padding="8,4" Margin="2,1" Visibility="Visible"/>
               <Button Width="20" Height="20" Grid.Row="1" Grid.Column="1" Opacity=".5" VerticalAlignment="Bottom" Click="Button_Click_1">
@@ -113,7 +111,27 @@
             <EventSetter Event="MouseDoubleClick" Handler="ListBoxItem_MouseDoubleClick"/>
           </Style>
         </ListBox.ItemContainerStyle>
+        
+        
       </ListBox>
+
+          <ItemsControl ItemsSource="{Binding ModHost.GlobalModPlugins, Mode=OneWay, Source={StaticResource Locator}}">
+            <ItemsControl.ItemTemplate>
+              <DataTemplate DataType="{x:Type mod:ILightPlugin}">
+                <Button Click="GlobalMod_Click">
+                  <Image Source="{Binding Icon}" Width="32" Height="32"/>
+                </Button>
+              </DataTemplate>
+            </ItemsControl.ItemTemplate>
+
+            <ItemsControl.ItemsPanel>
+              <ItemsPanelTemplate>
+                <StackPanel Orientation="Vertical" HorizontalAlignment="Left"/>
+              </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+            
+          </ItemsControl>
+      
     </Grid>
 
   </Grid>

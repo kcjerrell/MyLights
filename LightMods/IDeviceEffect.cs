@@ -1,4 +1,5 @@
-﻿using MyLights.ViewModels;
+﻿using MyLights.Util;
+using MyLights.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -47,7 +48,7 @@ namespace MyLights.LightMods
     {
         public string Name { get; }
         public ImageSource Icon { get; }
-        public IGlobalMod GetGlobalMod();
+        public IGlobalMod GetGlobalMod(IModHost host);
         public IDeviceEffect GetDeviceMod(LightViewModel lightViewModel);
         public PluginProperties Properties { get; }
     }
@@ -64,6 +65,8 @@ namespace MyLights.LightMods
 
         public ILightPlugin AssociatedPlugin { get; }
         public IEnumerable<IPluginSetting> Parameters { get; }
+        public PluginProperties Properties { get; }
+
 
     }
 

@@ -141,11 +141,6 @@ namespace MyLights.LightMods
 
         public ImageSource Icon { get; } = new BitmapImage(new Uri("/Puzzles-256.png", UriKind.Relative));
 
-        public IGlobalMod GetGlobalMod()
-        {
-            return null;
-        }
-
         public IDeviceEffect GetDeviceMod(LightViewModel lightViewModel)
         {
             return new BlinkerEffect(lightViewModel, this);
@@ -153,5 +148,9 @@ namespace MyLights.LightMods
 
         public PluginProperties Properties { get; } = PluginProperties.DeviceEffect;
 
+        public IGlobalMod GetGlobalMod(IModHost host)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

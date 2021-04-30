@@ -1,4 +1,5 @@
-﻿using MyLights.Models;
+﻿using MyLights.LightMods;
+using MyLights.Models;
 using MyLights.Util;
 using MyLights.Windows.ViewModels;
 using System;
@@ -105,6 +106,26 @@ namespace MyLights.Windows
             var scene = (Scene)button.DataContext;
 
             Locator.Get.Library.RemoveScene(scene);
+        }
+
+        private Dictionary<ILightPlugin, IGlobalMod> globalMods = new();
+        private void GlobalMod_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is Button button && button.DataContext is ILightPlugin lp)
+            {
+                if (globalMods.ContainsKey(lp))
+                {
+                    if (globalMods[lp].IsActive)
+                        globalMods[lp].Suspend();
+                    else
+                        globalMods[lp].Start();
+                }
+                else
+                {
+                    globalMods[lp] = lp.GetGlobalMod(Locator.Get.ModHost);
+                    globalMods[lp].Start();
+                }
+            }
         }
     }
 }

@@ -68,5 +68,10 @@ namespace MyLights.Util
         {
             yield return item;
         }
+
+        public static bool IsNaN(this double x)
+        {
+            return double.IsNaN(x);
+        }
     }
 }
