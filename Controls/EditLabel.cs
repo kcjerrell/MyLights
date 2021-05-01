@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -15,13 +16,11 @@ using System.Windows.Shapes;
 
 namespace MyLights.Controls
 {
-    public class RenameText : Control
+    public class EditLabel : Control
     {
-        public RenameText()
+        public EditLabel()
         {
         }
-
-        private bool isEditing;
 
         private TextBox inputElement;
         private TextBlock labelElement;
@@ -38,11 +37,11 @@ namespace MyLights.Controls
         #region Methods
         private void StartEditing()
         {
-            isEditing = true;
             labelElement.Visibility = Visibility.Collapsed;
             inputElement.Visibility = Visibility.Visible;
 
-            FocusManager.SetFocusedElement(inputElement, inputElement);
+            CaptureMouse();
+            inputElement.Focus();
             inputElement.CaretIndex = inputElement.Text.Length;
             inputElement.SelectAll();
         }
@@ -51,9 +50,6 @@ namespace MyLights.Controls
         {
             this.Text = inputElement.Text;
 
-            inputElement.MoveFocus(new TraversalRequest(FocusNavigationDirection.Next));
-
-            isEditing = false;
             labelElement.Visibility = Visibility.Visible;
             inputElement.Visibility = Visibility.Collapsed;
         }
@@ -64,11 +60,18 @@ namespace MyLights.Controls
         public override void OnApplyTemplate()
         {
             inputElement = (TextBox)this.Template.FindName("input", this);
-            inputElement.TextChanged += InputElement_TextChanged;
             inputElement.KeyDown += InputElement_KeyDown;
 
+            inputElement.LostFocus += InputElement_LostFocus;
+
             labelElement = (TextBlock)this.Template.FindName("label", this);
+
             base.OnApplyTemplate();
+        }
+
+        private void InputElement_LostFocus(object sender, RoutedEventArgs e)
+        {
+            EndEditing();
         }
 
         private void InputElement_KeyDown(object sender, KeyEventArgs e)
@@ -85,19 +88,15 @@ namespace MyLights.Controls
             }
         }
 
-
         protected override void OnMouseDoubleClick(MouseButtonEventArgs e)
         {
+            e.Handled = true;
             StartEditing();
         }
         #endregion
 
 
         #region EventHandlers
-        private void InputElement_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            //throw new NotImplementedException();
-        }
         #endregion
 
 
@@ -111,19 +110,14 @@ namespace MyLights.Controls
 
         #region Static
 
-        static RenameText()
+        static EditLabel()
         {
-            DefaultStyleKeyProperty.OverrideMetadata(typeof(RenameText), new FrameworkPropertyMetadata(typeof(RenameText)));
+            DefaultStyleKeyProperty.OverrideMetadata(typeof(EditLabel), new FrameworkPropertyMetadata(typeof(EditLabel)));
         }
 
-
-
         public static readonly DependencyProperty TextProperty =
-            DependencyProperty.Register("Text", typeof(string), typeof(RenameText),
-                new PropertyMetadata("", (s, e) => ((RenameText)s).OnTextChanged(e)));
-
-        
+            DependencyProperty.Register("Text", typeof(string), typeof(EditLabel),
+                new PropertyMetadata("", (s, e) => ((EditLabel)s).OnTextChanged(e)));
         #endregion
-
     }
 }

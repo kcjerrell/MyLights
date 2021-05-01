@@ -95,6 +95,8 @@ namespace MyLights.ViewModels
 
                     SaveLibrary();
                 }
+
+                App.Current.Exit += (s, e) => SaveLibrary();
             }
         }
 
