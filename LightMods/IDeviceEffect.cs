@@ -15,17 +15,11 @@ namespace MyLights.LightMods
     public interface IDeviceEffect
     {
         public void Start();
-
         public void Suspend();
-
         public void Shutdown();
-
         public bool IsActive { get; }
-
         public IEnumerable<IPluginSetting> Settings { get; }
-
         public ILightPlugin AssociatedPlugin { get; }
-
         public PluginProperties Properties { get; }
     }
 
@@ -37,46 +31,12 @@ namespace MyLights.LightMods
 
     }
 
-    public enum PluginSettingType
-    {
-        Default,
-        Double,
-        Boolean,
-    }
-
     public interface ILightPlugin
     {
         public string Name { get; }
         public ImageSource Icon { get; }
-        public IGlobalMod GetGlobalMod(IModHost host);
+        public IDeviceEffect GetGlobalMod(IModHost host);
         public IDeviceEffect GetDeviceMod(LightViewModel lightViewModel);
         public PluginProperties Properties { get; }
-    }
-
-    public interface IGlobalMod
-    {
-        public void Start();
-
-        public void Suspend();
-
-        public void Shutdown();
-
-        public bool IsActive { get; }
-
-        public ILightPlugin AssociatedPlugin { get; }
-        public IEnumerable<IPluginSetting> Parameters { get; }
-        public PluginProperties Properties { get; }
-
-
-    }
-
-    [Flags]
-    public enum PluginProperties
-    {
-        Default = 0b0,
-        GlobalMod = 0b1,
-        DeviceEffect = 0b10,
-        CanSuspend = 0b100,
-
     }
 }

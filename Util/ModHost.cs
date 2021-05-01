@@ -18,7 +18,7 @@ namespace MyLights.Util
         {
             if (isInDesignMode)
             {
-                Plugins.Add(new Blinker());
+                Plugins.Add(new BlinkerPlugin());
             }
 
             Plugins.CollectionChanged += Plugins_CollectionChanged;

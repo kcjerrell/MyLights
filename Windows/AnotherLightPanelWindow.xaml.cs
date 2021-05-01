@@ -52,7 +52,7 @@ namespace MyLights.Windows
             Locator.Get.Library.RemoveScene(scene);
         }
 
-        private Dictionary<ILightPlugin, IGlobalMod> globalMods = new();
+        private Dictionary<ILightPlugin, IDeviceEffect> globalMods = new();
         private void GlobalMod_Click(object sender, RoutedEventArgs e)
         {
             if (sender is Button button && button.DataContext is ILightPlugin lp)

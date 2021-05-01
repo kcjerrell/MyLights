@@ -51,6 +51,7 @@
       <Grid.RowDefinitions>
         <RowDefinition Height="Auto"/>
         <RowDefinition Height="*"/>
+        <RowDefinition Height="Auto"/>
       </Grid.RowDefinitions>
       <Grid.ColumnDefinitions>
         <ColumnDefinition Width="*"/>
@@ -58,7 +59,8 @@
 
       <Button Content="Save as scene..." HorizontalAlignment="Left" Padding="2" Margin="2" Command="{Binding Library.SaveStateAsSceneCommand}"/>
 
-      <ListBox x:Name="scenesList" Grid.Row="1" ItemsSource="{Binding Library.Scenes}" Background="#88222222" Margin="2" SelectionChanged="scenesList_SelectionChanged">
+      <ListBox x:Name="scenesList" Grid.Row="1" ItemsSource="{Binding Library.Scenes}" Background="#88222222" Margin="2" 
+               SelectionChanged="scenesList_SelectionChanged">
         <ListBox.ItemTemplate>
           <DataTemplate>
             <Grid x:Name="sceneItemRoot">
@@ -90,7 +92,8 @@
 
               <ctrl:EditLabel x:Name="sceneItemLabel" Grid.Row="1" Text="{Binding Name, Mode=TwoWay}" FontSize="18" Padding="8,4" 
                                Margin="2,1" Visibility="Visible"/>
-              <Button Width="20" Height="20" Grid.Row="1" Grid.Column="1" Opacity=".5" VerticalAlignment="Bottom" Click="Button_Click_1">
+              <Button Width="20" Height="20" Grid.Row="1" Grid.Column="1" Opacity=".5" VerticalAlignment="Bottom" Click="Button_Click_1"
+                      Margin="1">
                 <Grid RenderTransformOrigin="0.5,0.5">
                   <Grid.RenderTransform>
                     <RotateTransform Angle="45"/>
@@ -107,7 +110,7 @@
           <Style TargetType="ListBoxItem">
             <Setter Property="Background" Value="#88DDDDDD"/>
             <Setter Property="Margin" Value="2"/>
-            <Setter Property="Padding" Value="2"/>
+            <Setter Property="Padding" Value="0"/>
             <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
             <Setter Property="VerticalContentAlignment" Value="Stretch"/>
           </Style>
@@ -116,18 +119,18 @@
         
       </ListBox>
 
-          <ItemsControl ItemsSource="{Binding ModHost.GlobalModPlugins, Mode=OneWay, Source={StaticResource Locator}}">
+          <ItemsControl Grid.Row="2" ItemsSource="{Binding ModHost.GlobalModPlugins, Mode=OneWay, Source={StaticResource Locator}}">
             <ItemsControl.ItemTemplate>
               <DataTemplate DataType="{x:Type mod:ILightPlugin}">
-                <Button Click="GlobalMod_Click">
-                  <Image Source="{Binding Icon}" Width="32" Height="32"/>
+                <Button Click="GlobalMod_Click" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Width="32" Height="32" Margin="2">
+                  <Image Source="{Binding Icon}"/>
                 </Button>
               </DataTemplate>
             </ItemsControl.ItemTemplate>
 
             <ItemsControl.ItemsPanel>
               <ItemsPanelTemplate>
-                <StackPanel Orientation="Vertical" HorizontalAlignment="Left"/>
+                <WrapPanel IsItemsHost="True" Orientation="Horizontal"/>
               </ItemsPanelTemplate>
             </ItemsControl.ItemsPanel>
             
