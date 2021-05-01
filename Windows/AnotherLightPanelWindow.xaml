@@ -27,19 +27,21 @@
 
   <Grid Background="Gray">
     <Grid.ColumnDefinitions>
-      <ColumnDefinition Width="620"/>
       <ColumnDefinition Width="*"/>
+      <ColumnDefinition Width="220"/>
     </Grid.ColumnDefinitions>
     <ItemsControl x:Name="itemsControl" ItemsSource="{Binding LightVMs}">
       <ItemsControl.ItemTemplate>
         <DataTemplate DataType="{x:Type vm:LightViewModel}">
-          <ctrl:LightControl/>
+          <Viewbox>
+          <ctrl:LightControl/>            
+          </Viewbox>
         </DataTemplate>
       </ItemsControl.ItemTemplate>
 
       <ItemsControl.ItemsPanel>
         <ItemsPanelTemplate>
-          <WrapPanel/>
+          <ctrl:UniformishWrapPanel MaxChildWidth="300"/>
         </ItemsPanelTemplate>
       </ItemsControl.ItemsPanel>
 
@@ -85,9 +87,9 @@
                   </DataTemplate>
                 </ItemsControl.ItemTemplate>
               </ItemsControl>
-                                        
-              <TextBox x:Name="sceneItemInput" Grid.Row="1" Text="{Binding Name, Mode=TwoWay}" FontSize="18" Padding="8,4" Visibility="Collapsed"/>
-              <TextBlock x:Name="sceneItemLabel" Grid.Row="1" Text="{Binding Name}" FontSize="18" Padding="8,4" Margin="2,1" Visibility="Visible"/>
+
+              <ctrl:EditLabel x:Name="sceneItemLabel" Grid.Row="1" Text="{Binding Name, Mode=TwoWay}" FontSize="18" Padding="8,4" 
+                               Margin="2,1" Visibility="Visible"/>
               <Button Width="20" Height="20" Grid.Row="1" Grid.Column="1" Opacity=".5" VerticalAlignment="Bottom" Click="Button_Click_1">
                 <Grid RenderTransformOrigin="0.5,0.5">
                   <Grid.RenderTransform>
@@ -108,7 +110,6 @@
             <Setter Property="Padding" Value="2"/>
             <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
             <Setter Property="VerticalContentAlignment" Value="Stretch"/>
-            <EventSetter Event="MouseDoubleClick" Handler="ListBoxItem_MouseDoubleClick"/>
           </Style>
         </ListBox.ItemContainerStyle>
         

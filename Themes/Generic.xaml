@@ -99,28 +99,28 @@
   </ControlTemplate>
 
 
-  <Style TargetType="{x:Type ctrl:RenameText}">
+  <Style TargetType="{x:Type ctrl:EditLabel}">
     <Setter Property="Template">
       <Setter.Value>
-        <ControlTemplate TargetType="{x:Type ctrl:RenameText}">
+        <ControlTemplate TargetType="{x:Type ctrl:EditLabel}">
           <Border Background="{TemplateBinding Background}"
                             BorderBrush="{TemplateBinding BorderBrush}"
                             BorderThickness="{TemplateBinding BorderThickness}">
-
-            <Grid>
+            <Grid Background="Transparent">
 
               <Border BorderThickness="1" BorderBrush="Transparent" Padding="1,0">
                 <TextBlock x:Name="label" Text="{TemplateBinding Text}" FontFamily="{TemplateBinding FontFamily}" 
                            FontSize="{TemplateBinding FontSize}" FontStyle="{TemplateBinding FontStyle}" 
                            FontWeight="{TemplateBinding FontWeight}" FontStretch="{TemplateBinding FontStretch}"
-                           Panel.ZIndex="10" Foreground="{TemplateBinding Foreground}"/>
+                           Panel.ZIndex="10" Foreground="{TemplateBinding Foreground}" Padding="2" HorizontalAlignment="Stretch"
+                           VerticalAlignment="Stretch"/>
               </Border>
 
-              <TextBox x:Name="input" Text="{TemplateBinding Text}" FontFamily="{TemplateBinding FontFamily}" 
-                           FontSize="{TemplateBinding FontSize}" FontStyle="{TemplateBinding FontStyle}" 
-                           FontWeight="{TemplateBinding FontWeight}" FontStretch="{TemplateBinding FontStretch}" Panel.ZIndex="5" 
-                       Foreground="{TemplateBinding Foreground}" Visibility="Collapsed" AcceptsTab="False" AcceptsReturn="False" IsUndoEnabled="True" MaxLines="1" MinLines="1"/>
-
+              <TextBox x:Name="input" Text="{TemplateBinding Text}" FontFamily="{TemplateBinding FontFamily}" Padding="2"
+                       FontSize="{TemplateBinding FontSize}" FontStyle="{TemplateBinding FontStyle}" 
+                       FontWeight="{TemplateBinding FontWeight}" FontStretch="{TemplateBinding FontStretch}" Panel.ZIndex="5" 
+                       Foreground="{TemplateBinding Foreground}" Visibility="Collapsed" AcceptsTab="False" AcceptsReturn="False" 
+                       HorizontalAlignment="Stretch" VerticalAlignment="Stretch" IsUndoEnabled="True" MaxLines="1" MinLines="1"/>
             </Grid>
 
           </Border>
@@ -135,7 +135,7 @@
 
   <SolidColorBrush x:Key="TextBox.Focus.Border" Color="#FF569DE5"/>
 
-  <Style x:Key="RenameTextInputStyle" TargetType="{x:Type TextBox}">
+  <Style x:Key="EditLabelInputStyle" TargetType="{x:Type TextBox}">
     <Setter Property="Background" Value="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"/>
     <Setter Property="BorderBrush" Value="{StaticResource TextBox.Static.Border}"/>
     <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"/>

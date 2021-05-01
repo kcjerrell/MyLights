@@ -7,9 +7,19 @@
         xmlns:local="clr-namespace:MyLights.Windows"
         mc:Ignorable="d"
         Title="Scratch2" Height="450" Width="800">
-    <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
+    <Grid>
       
-    <ctrl:RenameText Text="Hi Try To Rename Me" FontSize="36"/>
+    <ctrl:EditLabel x:Name="EditLabel" Background="#44222222" Text="Hi Try To Rename Me" FontSize="36"
+                     HorizontalAlignment="Center" VerticalAlignment="Center" Width="500" Height="60"/>
+
+    <TextBlock HorizontalAlignment="Left" VerticalAlignment="Bottom" Text="{Binding IsMouseCaptured ,ElementName=EditLabel}"
+               Margin="2"/>
+    <TextBlock HorizontalAlignment="Left" VerticalAlignment="Bottom" Text="{Binding OtherMouseOver ,ElementName=EditLabel}"
+               Margin="2,2,2,30"/>
+    <TextBlock HorizontalAlignment="Left" VerticalAlignment="Bottom" Text="{Binding IsMouseOver, ElementName=EditLabel}"
+               Margin="2,2,2,60"/>
+
+    <TextBlock HorizontalAlignment="Right" VerticalAlignment="Bottom" Text="{Binding Text, ElementName=EditLabel}"/>
       
   </Grid>
 </Window>

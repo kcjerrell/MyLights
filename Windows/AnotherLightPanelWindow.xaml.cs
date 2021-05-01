@@ -35,62 +35,6 @@ namespace MyLights.Windows
             vm.LightVMs.Add(App.Current.Locator.DesignLightVM);
         }
 
-        private void ListBoxItem_MouseDoubleClick(object sender, MouseButtonEventArgs e)
-        {
-            DependencyObject item = (DependencyObject)sender;
-            TextBlock label;
-            TextBox input;
-
-            do
-            {
-                item = VisualTreeHelper.GetChild(item, 0);
-                if (item is ContentPresenter cp)
-                {
-                    label = (TextBlock)cp.ContentTemplate.FindName("sceneItemLabel", cp);
-                    input = (TextBox)cp.ContentTemplate.FindName("sceneItemInput", cp);
-
-                    label.Visibility = Visibility.Collapsed;
-                    input.Visibility = Visibility.Visible;
-
-                    input.LostFocus += Input_LostFocus;
-                    input.KeyDown += Input_KeyDown;
-
-                    editingSceneLabel = label;
-                    editingSceneInput = input;
-
-                    break;
-                }
-            }
-            while (item != null);
-        }
-
-        private TextBlock editingSceneLabel;
-        private TextBox editingSceneInput;
-
-        private void Input_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.Key == Key.Enter)
-            {
-                EndEditing();
-            }
-        }
-
-        private void Input_LostFocus(object sender, RoutedEventArgs e)
-        {
-            EndEditing();
-        }
-
-        private void EndEditing()
-        {
-            editingSceneLabel.Visibility = Visibility.Visible;
-            editingSceneInput.Visibility = Visibility.Collapsed;
-
-            editingSceneInput.KeyDown -= Input_KeyDown;
-            editingSceneInput.LostFocus -= Input_LostFocus;
-
-            Locator.Get.Library.SaveLibrary();
-        }
-
         private void scenesList_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (e.AddedItems.Count >= 1)
