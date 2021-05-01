@@ -74,27 +74,27 @@ namespace MyLights.Models
 
         public void SetColor(HSV value)
         {
-            color.Set(value);
+            color.Set(value, immediate: false);
         }
 
         public void SetPower(bool value)
         {
-            power.Set(value);
+            power.Set(value, immediate: false);
         }
 
         public void SetMode(LightMode value)
         {
-            mode.Set(value);
+            mode.Set(value, immediate: false);
         }
 
         public void SetBrightness(double value)
         {
-            brightness.Set(value);
+            brightness.Set(value, immediate: false);
         }
 
         public void SetColorTemp(double value)
         {
-            colorTemp.Set(value);
+            colorTemp.Set(value, immediate: false);
         }
     }
 }

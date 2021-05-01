@@ -20,6 +20,6 @@
                Margin="2,2,2,60"/>
 
     <TextBlock HorizontalAlignment="Right" VerticalAlignment="Bottom" Text="{Binding Text, ElementName=EditLabel}"/>
-
+      
   </Grid>
 </Window>

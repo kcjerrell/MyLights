@@ -1,5 +1,9 @@
 TODO	- Command/Interface to reload devices (need on server side as well)
 
+210427	I need to figure out a way to enable immediate property sets, that bypass the grouping delay
+		and gate. In a way that will work for different bridges/providers. Which means modifying the 
+		interfaces, I guess. And the Light or LightViewModel...
+
 210426	I need to iron out some issues with LightViewModel and property notifications. There's a couple
 		issues here:
 			- Color has 3 components that are handled separately in the UI (I don't think there's any 
