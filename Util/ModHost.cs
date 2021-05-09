@@ -1,96 +1,83 @@
-﻿using MyLights.LightMods;
+﻿using MyLights.Util;
 using MyLights.ViewModels;
-using PropertyChanged;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
-using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
 
-namespace MyLights.Util
+namespace MyLights.LightMods
 {
     public class ModHost : IModHost, INotifyPropertyChanged
     {
         public ModHost(bool isInDesignMode)
         {
-            if (isInDesignMode)
-            {
-                Plugins.Add(new BlinkerPlugin());
-            }
-
-            Plugins.CollectionChanged += Plugins_CollectionChanged;
+            LightViewModels = new(Locator.Get.LightVMs);
         }
 
-        private void Plugins_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
-        {
-            var handler = PropertyChanged;
-            handler?.Invoke(this, new PropertyChangedEventArgs(nameof(DeviceEffectsPlugins)));
-            handler?.Invoke(this, new PropertyChangedEventArgs(nameof(GlobalModPlugins)));
-        }
-
-        public ObservableCollection<ILightPlugin> Plugins { get; } = new ObservableCollection<ILightPlugin>();
-        public ReadOnlyObservableCollection<LightViewModel> LightViewModels { get; private set; }
-        public IEnumerable<ILightPlugin> DeviceEffectsPlugins
-        {
-            get
-            {
-                return from p in Plugins
-                       where (p.Properties & PluginProperties.DeviceEffect) == PluginProperties.DeviceEffect
-                       select p;
-            }
-        }
-        public IEnumerable<ILightPlugin> GlobalModPlugins
-        {
-            get
-            {
-                return from p in Plugins
-                       where (p.Properties & PluginProperties.GlobalMod) == PluginProperties.GlobalMod
-                       select p;
-            }
-        }
+        public List<LightEffectsInfo> SingleEffectTypes { get; } = new();
+        public List<LightEffectsInfo> MultiEffectTypes { get; } = new();
+        public ReadOnlyObservableCollection<LightViewModel> LightViewModels { get; }
 
         internal async Task Load(bool isInDesignMode)
         {
-            LightViewModels = new ReadOnlyObservableCollection<LightViewModel>(Locator.Get.LightVMs);
-
             if (!isInDesignMode)
             {
                 //Assembly.LoadFrom(@"C:\Users\kcjer\source\repos\LightBridge\LightMods\bin\Debug\net5.0-windows\LightMods.dll");
 
                 foreach (Assembly a in AppDomain.CurrentDomain.GetAssemblies())
                 {
-                    foreach (Type t in a.GetTypes())
-                    {
-                        if (t.GetInterface("ILightPlugin") != null)
-                        {
-                            try
-                            {
-                                ILightPlugin pluginclass = Activator.CreateInstance(t) as ILightPlugin;
-                                Plugins.Add(pluginclass);
-                            }
-                            catch
-                            {
-                            }
-                        }
-                    }
+                    var lfx = (from t in a.GetTypes()
+                               where t.GetInterface(nameof(ILightEffect)) != null
+                               select t).ToList();
+
+                    var singlefx = from t in a.GetTypes()
+                                   where t.GetInterface(nameof(ILightEffect)) != null
+                                   where Attribute.IsDefined(t, typeof(LightEffectAttribute))
+                                   select new LightEffectsInfo(t);
+
+                    SingleEffectTypes.AddRange(singlefx);
+
+                    var doublelefx = from t in a.GetTypes()
+                                     where t.GetInterface(nameof(ILightEffect)) != null
+                                     where Attribute.IsDefined(t, typeof(MultiLightEffectAttribute))
+                                     select new LightEffectsInfo(t);
+
+                    MultiEffectTypes.AddRange(doublelefx);
                 }
             }
         }
-
-        internal IDeviceEffect Create(ILightPlugin mc, LightViewModel viewModel)
-        {
-            var effect = mc.GetDeviceMod(viewModel);
-            return effect;
-        }
-
         public event PropertyChangedEventHandler PropertyChanged;
     }
 
-    public interface IModHost
+    public class LightEffectsInfo
     {
-        public ReadOnlyObservableCollection<LightViewModel> LightViewModels { get; }
+        public LightEffectsInfo(Type type)
+        {
+            var attr = (LightEffectAttribute)Attribute.GetCustomAttribute(type, typeof(LightEffectAttribute));
+            Name = attr.Name;
+            ImageSource Icon = new BitmapImage(new Uri("/Puzzles-256.png", UriKind.Relative));
+            this.Type = type;
+        }
+
+        public Type Type { get; set; }
+        public string Name { get; set; }
+        public BitmapSource Icon { get; set; }
+        public ILightEffect Load()
+        {
+            try
+            {
+                var effect = Activator.CreateInstance(this.Type) as ILightEffect;             
+                return effect;
+            }
+
+            catch (Exception ex) {
+                throw new Exception("oops", ex);
+            }
+        }
     }
 }

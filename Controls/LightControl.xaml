@@ -200,12 +200,14 @@
           <!-- Modes listbox -->
 
           <ListBox x:Name="lightModeListBox"
-                       ItemsSource="{Binding Source={StaticResource MyEnumValues}}"
-                       SelectedItem="{Binding Mode, Mode=TwoWay}" 
-                       VerticalAlignment="Center" 
-                       ItemTemplateSelector="{StaticResource lightModeTemplateSelector}"
-                       ItemContainerStyle="{StaticResource LightModeListBoxItemStyle}" 
-                       Background="Transparent" BorderThickness="0" Padding="0" Margin="0">
+                   ItemsSource="{Binding Source={StaticResource MyEnumValues}}"
+                   SelectedItem="{Binding Mode, Mode=TwoWay}" 
+                   VerticalAlignment="Center" 
+                   MouseLeftButtonDown="lightModeListBox_MouseButtonDown"
+                   MouseRightButtonDown="lightModeListBox_MouseButtonDown"
+                   ItemTemplateSelector="{StaticResource lightModeTemplateSelector}"
+                   ItemContainerStyle="{StaticResource LightModeListBoxItemStyle}" 
+                   Background="Transparent" BorderThickness="0" Padding="0" Margin="0">
 
             <ListBox.ItemsPanel>
               <ItemsPanelTemplate>
@@ -214,10 +216,11 @@
             </ListBox.ItemsPanel>
           </ListBox>
 
-          <Button x:Name="dmButtonSpecial" Width="24" Height="24" Margin="2,4" Click="dmButtonSpecial_Click"/>
 
         </StackPanel>
       </Border>
+          <Button x:Name="dmButtonSpecial" Grid.Column="1" Width="24" Height="24" 
+                  VerticalAlignment="Bottom" Margin="2,4" Click="dmButtonSpecial_Click"/>
 
       <!-- Container for the property control -->
 
@@ -306,9 +309,9 @@
         <!-- LightControl Special -->
 
         <Grid x:Name="dispModeSpecialContainer" Visibility="Collapsed">
-          <ItemsControl ItemsSource="{Binding ModHost.DeviceEffectsPlugins, Mode=OneWay, Source={StaticResource Locator}}">
+          <ItemsControl ItemsSource="{Binding ModHost.SingleEffectTypes, Mode=OneWay, Source={StaticResource Locator}}">
             <ItemsControl.ItemTemplate>
-              <DataTemplate DataType="{x:Type lm:ILightPlugin}">
+              <DataTemplate DataType="{x:Type lm:ILightEffect}">
                 <Button Click="LightModButton_Click">
                   <Image Source="{Binding Icon}" Width="48" Height="48"/>
                 </Button>
@@ -320,7 +323,7 @@
                 <StackPanel Orientation="Vertical" HorizontalAlignment="Left"/>
               </ItemsPanelTemplate>
             </ItemsControl.ItemsPanel>
-            
+
           </ItemsControl>
         </Grid>
         
@@ -379,6 +382,7 @@
                     </VisualStateGroup>
                   </VisualStateManager.VisualStateGroups>
 
+                  
                   <Grid>
                     <Grid x:Name="favColorsIcon">
                       <Grid.Resources>

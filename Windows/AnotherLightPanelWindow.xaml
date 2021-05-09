@@ -41,10 +41,18 @@
 
       <ItemsControl.ItemsPanel>
         <ItemsPanelTemplate>
-          <ctrl:UniformishWrapPanel MaxChildWidth="300"/>
+          <ctrl:UniformishWrapPanel MaxChildWidth="300" VerticalAlignment="Top"/>
         </ItemsPanelTemplate>
       </ItemsControl.ItemsPanel>
 
+      <ItemsControl.Template>
+        <ControlTemplate>
+          <ScrollViewer>
+            <ItemsPresenter/>
+          </ScrollViewer>
+        </ControlTemplate>
+      </ItemsControl.Template>
+      
     </ItemsControl>
 
     <Grid Grid.Column="1">
@@ -119,9 +127,9 @@
         
       </ListBox>
 
-          <ItemsControl Grid.Row="2" ItemsSource="{Binding ModHost.GlobalModPlugins, Mode=OneWay, Source={StaticResource Locator}}">
+          <ItemsControl Grid.Row="2" ItemsSource="{Binding ModHost.MultiEffectTypes, Mode=OneWay, Source={StaticResource Locator}}">
             <ItemsControl.ItemTemplate>
-              <DataTemplate DataType="{x:Type mod:ILightPlugin}">
+              <DataTemplate DataType="{x:Type mod:LightEffectsInfo}">
                 <Button Click="GlobalMod_Click" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Width="32" Height="32" Margin="2">
                   <Image Source="{Binding Icon}"/>
                 </Button>

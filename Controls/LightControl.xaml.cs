@@ -89,7 +89,6 @@ namespace MyLights.Controls
                 viewModel.Color = color;
         }
 
-
         public LightControlDisplayMode DisplayMode
         {
             get { return (LightControlDisplayMode)GetValue(DisplayModeProperty); }
@@ -136,26 +135,31 @@ namespace MyLights.Controls
                 DisplayMode = LightControlDisplayMode.Special;
         }
 
-        private Dictionary<ILightPlugin, IDeviceEffect> effects = new();
+        private Dictionary<LightEffectsInfo, ILightEffect> effects = new();
         private void LightModButton_Click(object sender, RoutedEventArgs e)
         {
-            if (sender is FrameworkElement button && button.DataContext is ILightPlugin mc)
+            if (sender is Button button && button.DataContext is LightEffectsInfo lp)
             {
-                if (effects.ContainsKey(mc))
+                if (effects.ContainsKey(lp))
                 {
-                    if (effects[mc].IsActive)
-                        effects[mc].Suspend();
+                    if (effects[lp].IsActive)
+                        effects[lp].Suspend();
                     else
-                        effects[mc].Start();
+                        effects[lp].Start();
                 }
                 else
                 {
-                    var lf = Locator.Get.ModHost.Create(mc, viewModel);
-                    effects[mc] = lf;
-
-                    lf.Start();
+                    effects[lp] = lp.Load();
+                    effects[lp].Attach(Locator.Get.ModHost, new List<LightViewModel>() { viewModel });
+                    effects[lp].Start();
                 }
             }
+        }
+
+        private void lightModeListBox_MouseButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            if (DisplayMode != LightControlDisplayMode.LightModeProperties)
+                DisplayMode = LightControlDisplayMode.LightModeProperties;
         }
     }
 

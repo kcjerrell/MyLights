@@ -1,20 +1,10 @@
 ﻿using MyLights.LightMods;
 using MyLights.Models;
 using MyLights.Util;
-using MyLights.Windows.ViewModels;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace MyLights.Windows
 {
@@ -26,13 +16,6 @@ namespace MyLights.Windows
         public AnotherLightPanelWindow()
         {
             InitializeComponent();
-        }
-
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-            Logger.Log("click");
-            var vm = (AnotherLightPanelViewModel)DataContext;
-            vm.LightVMs.Add(App.Current.Locator.DesignLightVM);
         }
 
         private void scenesList_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -52,22 +35,23 @@ namespace MyLights.Windows
             Locator.Get.Library.RemoveScene(scene);
         }
 
-        private Dictionary<ILightPlugin, IDeviceEffect> globalMods = new();
+        private Dictionary<LightEffectsInfo, ILightEffect> effects = new();
+
         private void GlobalMod_Click(object sender, RoutedEventArgs e)
         {
-            if (sender is Button button && button.DataContext is ILightPlugin lp)
+            if (sender is Button button && button.DataContext is LightEffectsInfo lp)
             {
-                if (globalMods.ContainsKey(lp))
+                if (effects.ContainsKey(lp))
                 {
-                    if (globalMods[lp].IsActive)
-                        globalMods[lp].Suspend();
+                    if (effects[lp].IsActive)
+                        effects[lp].Suspend();
                     else
-                        globalMods[lp].Start();
+                        effects[lp].Start();
                 }
                 else
                 {
-                    globalMods[lp] = lp.GetGlobalMod(Locator.Get.ModHost);
-                    globalMods[lp].Start();
+                    effects[lp] = lp.Load();
+                    effects[lp].Attach(Locator.Get.ModHost, Locator.Get.LightVMs.ToList());
                 }
             }
         }

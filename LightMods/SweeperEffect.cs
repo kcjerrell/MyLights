@@ -1,52 +1,70 @@
-﻿using MyLights.ViewModels;
+﻿using MyLights.Util;
+using MyLights.ViewModels;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace MyLights.LightMods
 {
-    public class SweeperEffect : IDeviceEffect
+    [LightEffect("Sweeper", "/Resource/Puzzles-256.png")]
+    [MultiLightEffect("Sweeper", "/Resource/Puzzles-256.png")]
+    public class SweeperEffect : ILightEffect
     {
-        private LightViewModel lightViewModel;
+        private IList<LightViewModel> lights;
+        private CancellationTokenSource cancelSource;
+        private Task sweepTask;
 
-        public SweeperEffect(LightViewModel lightViewModel)
-        {
-            this.lightViewModel = lightViewModel;
-        }
+        public bool IsActive { get; private set; }
+        public List<PluginSetting> Settings { get; }
 
-        public async Task Sweep()
+        public async Task Sweep(CancellationToken token)
         {
             while (IsActive)
             {
-                var col = lightViewModel.Color;
+                for (int i = 0; i < lights.Count; i++)
+                {
+                    var light = lights[i].Light;
+                    var col = light.Color;
+                    double h = (col.H + 0.008) % 1.0;
+                    col = new Models.HSV(h, col.S, col.V);
+                    light.SetColor(col, true);
+                }
 
-                double h = (col.H + 0.008) % 1.0;
-                col = new Models.HSV(h, col.S, col.V);
+                await Task.Delay(200);
 
-                lightViewModel.Light.SetColor(col, true);
-
-                await Task.Delay(100);
+                if (token.IsCancellationRequested)
+                {
+                    IsActive = false;
+                }
             }
         }
 
-        public async void Start()
+        public void Attach(IModHost modHost, IList<LightViewModel> lights)
         {
-            IsActive = true;
-            Sweep();
+            this.lights = lights;
         }
 
         public void Suspend()
         {
-            IsActive = false;
+            cancelSource?.Cancel();
         }
 
         public void Shutdown()
         {
-
+            cancelSource?.Cancel();
         }
 
-        public bool IsActive { get; private set; }
-        public IEnumerable<IPluginSetting> Settings { get; }
-        public ILightPlugin AssociatedPlugin { get; }
-        public PluginProperties Properties { get; } = PluginProperties.DeviceEffect;
+        IEnumerable<PluginSetting> ILightEffect.Settings { get; }
+
+        public void Start()
+        {
+            IsActive = true;
+            cancelSource = new CancellationTokenSource();
+            sweepTask = Sweep(cancelSource.Token).ContinueWith((task) =>
+            {
+                cancelSource.Dispose();
+                cancelSource = null;
+            });
+        }
     }
 }

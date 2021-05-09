@@ -10,11 +10,10 @@ namespace MyLights.LightMods
     }
 
     [Flags]
-    public enum PluginProperties
+    public enum AttachmentsPoints
     {
         Default = 0b0,
-        GlobalMod = 0b1,
-        DeviceEffect = 0b10,
-        CanSuspend = 0b100,
+        AllLights = 0b1,
+        SingleLight = 0b10,
     }
 }
