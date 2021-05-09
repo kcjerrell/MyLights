@@ -63,5 +63,15 @@ namespace MyLights.Util
 
             return y;
         }
+
+        public static IEnumerable<T> SingleEnumerator<T>(this T item)
+        {
+            yield return item;
+        }
+
+        public static bool IsNaN(this double x)
+        {
+            return double.IsNaN(x);
+        }
     }
 }

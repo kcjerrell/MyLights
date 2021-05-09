@@ -1,19 +1,10 @@
-﻿using MyLights.Models;
+﻿using MyLights.LightMods;
+using MyLights.Models;
 using MyLights.Util;
-using MyLights.Windows.ViewModels;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace MyLights.Windows
 {
@@ -25,13 +16,6 @@ namespace MyLights.Windows
         public AnotherLightPanelWindow()
         {
             InitializeComponent();
-        }
-
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-            Logger.Log("click");
-            var vm = (AnotherLightPanelViewModel)DataContext;
-            vm.LightVMs.Add(App.Current.Locator.DesignLightVM);
         }
 
         private void scenesList_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -49,6 +33,27 @@ namespace MyLights.Windows
             var scene = (Scene)button.DataContext;
 
             Locator.Get.Library.RemoveScene(scene);
+        }
+
+        private Dictionary<LightEffectsInfo, ILightEffect> effects = new();
+
+        private void GlobalMod_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is Button button && button.DataContext is LightEffectsInfo lp)
+            {
+                if (effects.ContainsKey(lp))
+                {
+                    if (effects[lp].IsActive)
+                        effects[lp].Suspend();
+                    else
+                        effects[lp].Start();
+                }
+                else
+                {
+                    effects[lp] = lp.Load();
+                    effects[lp].Attach(Locator.Get.ModHost, Locator.Get.LightVMs.ToList());
+                }
+            }
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using MyLights.Bridges;
 using MyLights.Bridges.Udp;
+using MyLights.LightMods;
 using MyLights.Util;
 using MyLights.ViewModels;
 using System;
@@ -20,22 +21,27 @@ namespace MyLights.Util
         public ILightBridge LightBridge => lightBridge;
         public ObservableCollection<LightViewModel> LightVMs => lightBridge.LightVMs;
         public LibraryViewModel Library => libraryVm;
-        public LightViewModel DesignLightVM { get; private set; } 
+        public LightViewModel DesignLightVM { get; private set; }
+
+        public ModHost ModHost => modHost;
 
 
         public static Locator Get { get; } = new Locator();
 
         internal static Task StartServices()
         {
+            var mod = modHost.Load(IsInDesignMode);
             var lb = lightBridge.ConnectAsync();
             var lib = Application.Current.Dispatcher.InvokeAsync(() => libraryVm.LoadLibrary(IsInDesignMode));
-            return Task.WhenAll(lb, lib.Task);
+            return Task.WhenAll(lb, lib.Task, mod);
         }
 
         public static bool IsInDesignMode { get; }
         private static ILightBridge lightBridge;
         private static LightViewModel designLightVm;
         private static LibraryViewModel libraryVm = new LibraryViewModel();
+        private static ModHost modHost;
+
         static Locator()
         {
             IsInDesignMode = DesignerProperties.GetIsInDesignMode(new DependencyObject());
@@ -54,6 +60,8 @@ namespace MyLights.Util
             {
                 libraryVm.LoadLibrary(true);
             }
+
+            modHost = new ModHost(IsInDesignMode);
         }
     }
 }

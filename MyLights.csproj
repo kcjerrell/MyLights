@@ -16,9 +16,18 @@
 
   <ItemGroup>
     <Compile Remove="Bridges\Rest\**" />
+    <Compile Remove="Util\Framework\**" />
     <EmbeddedResource Remove="Bridges\Rest\**" />
+    <EmbeddedResource Remove="Util\Framework\**" />
     <None Remove="Bridges\Rest\**" />
+    <None Remove="Util\Framework\**" />
     <Page Remove="Bridges\Rest\**" />
+    <Page Remove="Util\Framework\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="Util\ModHostX.cs" />
+    <Compile Remove="Util\PluginLoadContext.cs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -72,7 +81,11 @@
 
   <ItemGroup>
     <Folder Include="Etc\" />
-    <Folder Include="Util\Framework\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Util\ModHostX.cs" />
+    <None Include="Util\PluginLoadContext.cs" />
   </ItemGroup>
 
   <ItemGroup>

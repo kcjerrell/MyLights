@@ -1,4 +1,5 @@
-﻿using MyLights.Models;
+﻿using MyLights.LightMods;
+using MyLights.Models;
 using MyLights.Util;
 using MyLights.ViewModels;
 using System;
@@ -88,7 +89,6 @@ namespace MyLights.Controls
                 viewModel.Color = color;
         }
 
-
         public LightControlDisplayMode DisplayMode
         {
             get { return (LightControlDisplayMode)GetValue(DisplayModeProperty); }
@@ -99,8 +99,10 @@ namespace MyLights.Controls
             DependencyProperty.Register("DisplayMode", typeof(LightControlDisplayMode), typeof(LightControl),
                 new PropertyMetadata(LightControlDisplayMode.LightModeProperties, (s, e) => ((LightControl)s).OnDisplayModeChanged(e)));
 
+        private LightControlDisplayMode prevDispMode;
         private void OnDisplayModeChanged(DependencyPropertyChangedEventArgs e)
         {
+            prevDispMode = (LightControlDisplayMode)e.OldValue;
             var mode = (LightControlDisplayMode)e.NewValue;
 
             dispModeLightModeContainer.Visibility = Visibility.Collapsed;
@@ -127,7 +129,37 @@ namespace MyLights.Controls
 
         private void dmButtonSpecial_Click(object sender, RoutedEventArgs e)
         {
-            DisplayMode = LightControlDisplayMode.Special;
+            if (DisplayMode == LightControlDisplayMode.Special)
+                DisplayMode = prevDispMode;
+            else
+                DisplayMode = LightControlDisplayMode.Special;
+        }
+
+        private Dictionary<LightEffectsInfo, ILightEffect> effects = new();
+        private void LightModButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is Button button && button.DataContext is LightEffectsInfo lp)
+            {
+                if (effects.ContainsKey(lp))
+                {
+                    if (effects[lp].IsActive)
+                        effects[lp].Suspend();
+                    else
+                        effects[lp].Start();
+                }
+                else
+                {
+                    effects[lp] = lp.Load();
+                    effects[lp].Attach(Locator.Get.ModHost, new List<LightViewModel>() { viewModel });
+                    effects[lp].Start();
+                }
+            }
+        }
+
+        private void lightModeListBox_MouseButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            if (DisplayMode != LightControlDisplayMode.LightModeProperties)
+                DisplayMode = LightControlDisplayMode.LightModeProperties;
         }
     }
 

@@ -62,8 +62,6 @@ namespace MyLights.Models
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        // [DoNotNotify]
-        // public int Index { get; private set; }
         [DoNotNotify]
         public string Name { get; private set; }
         public HSV Color { get => color.Value; }
@@ -72,29 +70,29 @@ namespace MyLights.Models
         public double Brightness { get => brightness.Value; }
         public double ColorTemp { get => colorTemp.Value; }
 
-        public void SetColor(HSV value)
+        public void SetColor(HSV value, bool immediate = false)
         {
-            color.Set(value, immediate: false);
+            color.Set(value, immediate);
         }
 
-        public void SetPower(bool value)
+        public void SetPower(bool value, bool immediate = false)
         {
-            power.Set(value, immediate: false);
+            power.Set(value, immediate);
         }
 
-        public void SetMode(LightMode value)
+        public void SetMode(LightMode value, bool immediate = false)
         {
-            mode.Set(value, immediate: false);
+            mode.Set(value, immediate);
         }
 
-        public void SetBrightness(double value)
+        public void SetBrightness(double value, bool immediate = false)
         {
-            brightness.Set(value, immediate: false);
+            brightness.Set(value, immediate);
         }
 
-        public void SetColorTemp(double value)
+        public void SetColorTemp(double value, bool immediate = false)
         {
-            colorTemp.Set(value, immediate: false);
+            colorTemp.Set(value, immediate);
         }
     }
 }

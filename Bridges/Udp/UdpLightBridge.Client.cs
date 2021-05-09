@@ -19,7 +19,8 @@ namespace MyLights.Bridges.Udp
             //But I think something like "UpdateAll" and building a list of devices should belong
             //somewhere else. This just connects, sends and receives messages.
             //At some point I should rename LightMessage/LightDgram, because even within the scope of
-            //all this, I might have a switch/plug/sensor at some point.
+            //all this, I might have a switch/plug/sensor* at some point. (although sensors aren't
+            //supported by tuyapi
             public Client(string address, int port, int listeningPort = DefaultPort)
             {
                 Address = address;
@@ -90,7 +91,7 @@ namespace MyLights.Bridges.Udp
             public async Task<int> SendMessage(string msg)
             {
                 //log.Log($"sending message: {msg}");
-                Trace.WriteLine(msg);
+                //Trace.WriteLine(msg);
                 var buffer = Encoding.UTF8.GetBytes(msg);
                 return await udp.SendAsync(buffer, buffer.Length);
             }
