@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace MyLights.LightMods
 {
-    [LightEffect("Sweeper", "/Resource/Puzzles-256.png")]
+    [SingleLightEffect("Blinker", "/Resource/Puzzles-256.png")]
     public class BlinkerEffect : ILightEffect
     {
         IList<LightViewModel> lights;

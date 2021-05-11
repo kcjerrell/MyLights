@@ -37,15 +37,15 @@ namespace MyLights.LightMods
 
                     var singlefx = from t in a.GetTypes()
                                    where t.GetInterface(nameof(ILightEffect)) != null
-                                   where Attribute.IsDefined(t, typeof(LightEffectAttribute))
-                                   select new LightEffectsInfo(t);
+                                   where Attribute.IsDefined(t, typeof(SingleLightEffectAttribute))
+                                   select new LightEffectsInfo(t, (SingleLightEffectAttribute)Attribute.GetCustomAttribute(t, typeof(SingleLightEffectAttribute)));
 
                     SingleEffectTypes.AddRange(singlefx);
 
                     var doublelefx = from t in a.GetTypes()
                                      where t.GetInterface(nameof(ILightEffect)) != null
                                      where Attribute.IsDefined(t, typeof(MultiLightEffectAttribute))
-                                     select new LightEffectsInfo(t);
+                                     select new LightEffectsInfo(t, (MultiLightEffectAttribute)Attribute.GetCustomAttribute(t, typeof(MultiLightEffectAttribute)));
 
                     MultiEffectTypes.AddRange(doublelefx);
                 }
@@ -56,9 +56,8 @@ namespace MyLights.LightMods
 
     public class LightEffectsInfo
     {
-        public LightEffectsInfo(Type type)
+        public LightEffectsInfo(Type type, LightEffectAttribute attr)
         {
-            var attr = (LightEffectAttribute)Attribute.GetCustomAttribute(type, typeof(LightEffectAttribute));
             Name = attr.Name;
             ImageSource Icon = new BitmapImage(new Uri("/Puzzles-256.png", UriKind.Relative));
             this.Type = type;

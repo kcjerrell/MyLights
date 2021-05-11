@@ -27,7 +27,7 @@ namespace MyLights.Bridges.Udp
         public bool TryFindBulb(BulbRef key, out Light light)
         {
             var match = (from l in Lights
-                         where key.Name == l.Name
+                         where key.Id == l.Id
                          select l).ToList();
 
             if (match.Count == 1)
@@ -76,7 +76,7 @@ namespace MyLights.Bridges.Udp
             }
             else
             {
-                if (msg.Property == LightProperties.Name)
+                if (msg.Property == LightProperties.Id)
                 {
                     log.Log("creating props", 4);
                     var props = new UdpPropertiesProvider();
@@ -118,7 +118,7 @@ namespace MyLights.Bridges.Udp
                 await Task.Delay(2000);
 
             log.Log("requesting lights");
-            var msg = new LightDgram(DgramVerbs.Wonder, BulbsRequest, LightProperties.Name);
+            var msg = new LightDgram(DgramVerbs.Wonder, BulbsRequest, LightProperties.Id);
             await udpClient.SendMessage(msg);
         }
 

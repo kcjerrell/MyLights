@@ -11,7 +11,7 @@ namespace MyLights.Bridges
         {
             nCreated += 1;
             Index = nCreated;
-            Name = $"TestLight{Index}";
+            Id = $"TestLight{Index}";
 
             if (nCreated % 2 == 0)
                 ModeProperty = new TestProperty<LightMode>("Mode", LightMode.Color);
@@ -23,7 +23,7 @@ namespace MyLights.Bridges
 
         public int Index { get; init; }
 
-        public string Name { get; init; }
+        public string Id { get; init; }
 
         public IDeviceProperty<bool> PowerProperty { get; } = new TestProperty<bool>("Power", true);
 

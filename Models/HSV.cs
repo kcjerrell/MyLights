@@ -82,7 +82,7 @@ namespace MyLights.Util
         {
             return new HSV(h.IsNaN() ? color.H : h, 
                            s.IsNaN() ? color.S : s,
-                           v.IsNaN() ? color.V : h);
+                           v.IsNaN() ? color.V : v);
         }
 
         public static string ToTuya(this HSV color)

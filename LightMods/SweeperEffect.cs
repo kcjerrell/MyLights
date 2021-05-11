@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MyLights.LightMods
 {
-    [LightEffect("Sweeper", "/Resource/Puzzles-256.png")]
+    [SingleLightEffect("Sweeper", "/Resource/Puzzles-256.png")]
     [MultiLightEffect("Sweeper", "/Resource/Puzzles-256.png")]
     public class SweeperEffect : ILightEffect
     {

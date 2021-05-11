@@ -52,6 +52,7 @@ namespace MyLights.Windows
                 {
                     effects[lp] = lp.Load();
                     effects[lp].Attach(Locator.Get.ModHost, Locator.Get.LightVMs.ToList());
+                    effects[lp].Start();
                 }
             }
         }

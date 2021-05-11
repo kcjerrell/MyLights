@@ -16,7 +16,7 @@ namespace MyLights.Models
         public Light(ILightPropertiesProvider propertiesProvider)
         {
             // Index = propertiesProvider.Index;
-            Name = propertiesProvider.Name;
+            Id = propertiesProvider.Id;
 
             power = propertiesProvider.PowerProperty;
             color = propertiesProvider.ColorProperty;
@@ -63,7 +63,7 @@ namespace MyLights.Models
         public event PropertyChangedEventHandler PropertyChanged;
 
         [DoNotNotify]
-        public string Name { get; private set; }
+        public string Id { get; private set; }
         public HSV Color { get => color.Value; }
         public bool Power { get => power.Value; }
         public LightMode Mode { get => mode.Value; }

@@ -35,7 +35,7 @@ namespace MyLights.Util
         public bool TryFindBulb(BulbRef key, out Light light)
         {
             var match = (from l in Lights
-                         where l.Name == key.Name
+                         where l.Id == key.Id
                          select l).ToArray();
 
             if (match.Length == 1)
@@ -81,7 +81,7 @@ namespace MyLights.Util
                 jbulbs.Add(new JsonBulb()
                 {
                     Index = 0,
-                    Name = "DesignBulb1",
+                    Id = "DesignBulb1",
                     Color = new HSV() { H = 0.2, S = 0.8, V = 1 },
                     Power = true,
                     Mode = LightMode.White
@@ -89,7 +89,7 @@ namespace MyLights.Util
                 jbulbs.Add(new JsonBulb()
                 {
                     Index = 1,
-                    Name = "DesignBulb2",
+                    Id = "DesignBulb2",
                     Color = new HSV() { H = 0.5, S = 0.6, V = 1 },
                     Power = true,
                     Mode = LightMode.Color

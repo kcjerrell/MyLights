@@ -1,4 +1,5 @@
-﻿using MyLights.Models;
+﻿using MyLights.Bridges;
+using MyLights.Models;
 using MyLights.Util;
 using PropertyChanged;
 using System;
@@ -13,16 +14,26 @@ namespace MyLights.ViewModels
 {
     public class LightViewModel : INotifyPropertyChanged
     {
+        private string name;
+
         public LightViewModel(Light light)
         {
             this.Light = light;
-            light.PropertyChanged += Light_PropertyChanged; 
+            light.PropertyChanged += Light_PropertyChanged;
 
-            Name = light.Name;
+            Name = KnownDevices.GetName(light.Id);
         }
 
         public Light Light { get; init; }
-        public string Name { get; init; }
+        public string Name
+        {
+            get => name;
+            set
+            {
+                name = value;
+                KnownDevices.UpdateName(Light.Id, value);
+            }
+        }
         public LightMode Mode
         {
             get => Light.Mode;
@@ -97,7 +108,7 @@ namespace MyLights.ViewModels
         {
             var handler = PropertyChanged;
             handler?.Invoke(this, e);
-            
+
             if (e.PropertyName == "Color")
             {
                 handler?.Invoke(this, new PropertyChangedEventArgs("H"));

@@ -146,9 +146,9 @@ namespace MyLights.ViewModels
 
         internal void ApplyScene(Scene scene)
         {
-            foreach ((string bulbName, LightState state) in scene.LightStates)
+            foreach ((string id, LightState state) in scene.LightStates)
             {
-                if (Locator.Get.LightBridge.TryFindBulb(new BulbRef() { Name = bulbName }, out Light light))
+                if (Locator.Get.LightBridge.TryFindBulb(new BulbRef() { Id = id }, out Light light))
                 {
                     state.Apply(light);
                 }

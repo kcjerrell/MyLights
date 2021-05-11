@@ -46,5 +46,17 @@ namespace MyLights.Properties {
                 this["FavColors"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string DevicePreferences {
+            get {
+                return ((string)(this["DevicePreferences"]));
+            }
+            set {
+                this["DevicePreferences"] = value;
+            }
+        }
     }
 }

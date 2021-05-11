@@ -112,7 +112,7 @@ namespace MyLights.Bridges.Udp
 
         public int Index { get; private set; }
 
-        public string Name { get; private set; }
+        public string Id { get; private set; }
 
         public IDeviceProperty<bool> PowerProperty => power;
 
@@ -131,7 +131,7 @@ namespace MyLights.Bridges.Udp
             ResourceId = msg.Target;
             Index = int.Parse(ResourceId.Split("-")[1]);
 
-            Name = msg.Data;
+            Id = msg.Data;
 
             this.client = client;
 

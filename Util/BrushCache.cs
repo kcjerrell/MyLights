@@ -93,7 +93,7 @@ namespace MyLights.Util
                 }
                 else if (ls.Mode == LightMode.Color)
                 {
-                    outColor = ls.Color.Alter(1).ToColor();
+                    outColor = ls.Color.Alter(v: 1.0).ToColor();
                     return GetBrush(outColor);
                 }
                 else if (ls.Mode == LightMode.White)

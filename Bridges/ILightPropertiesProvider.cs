@@ -10,7 +10,7 @@ namespace MyLights.Bridges
     public interface ILightPropertiesProvider
     {
         int Index { get; }
-        string Name { get; }
+        string Id { get; }
         IDeviceProperty<bool> PowerProperty { get; }
         IDeviceProperty<HSV> ColorProperty { get; }
         IDeviceProperty<LightMode> ModeProperty { get; }

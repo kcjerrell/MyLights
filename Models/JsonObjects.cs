@@ -16,7 +16,7 @@ namespace MyLights.Models
         public int Index { get; set; }
 
         [JsonProperty("name")]
-        public string Name { get; set; }
+        public string Id { get; set; }
 
         [JsonProperty("power")]
         public bool Power { get; set; }

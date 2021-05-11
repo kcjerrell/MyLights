@@ -48,6 +48,7 @@ namespace MyLights.Controls
 
         private void EndEditing()
         {
+            ReleaseMouseCapture();
             this.Text = inputElement.Text;
 
             labelElement.Visibility = Visibility.Visible;
