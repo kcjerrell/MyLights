@@ -1,27 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace MyLights.Controls
 {
     public class EditLabel : Control
     {
-        public EditLabel()
-        {
-        }
-
         private TextBox inputElement;
         private TextBlock labelElement;
 
@@ -40,7 +24,9 @@ namespace MyLights.Controls
             labelElement.Visibility = Visibility.Collapsed;
             inputElement.Visibility = Visibility.Visible;
 
-            CaptureMouse();
+            var window = Window.GetWindow(this);
+            window.PreviewMouseDown += Window_PreviewMouseDown;
+
             inputElement.Focus();
             inputElement.CaretIndex = inputElement.Text.Length;
             inputElement.SelectAll();
@@ -48,7 +34,9 @@ namespace MyLights.Controls
 
         private void EndEditing()
         {
-            ReleaseMouseCapture();
+            var window = Window.GetWindow(this);
+            window.PreviewMouseDown -= Window_PreviewMouseDown;
+
             this.Text = inputElement.Text;
 
             labelElement.Visibility = Visibility.Visible;
@@ -70,9 +58,19 @@ namespace MyLights.Controls
             base.OnApplyTemplate();
         }
 
-        private void InputElement_LostFocus(object sender, RoutedEventArgs e)
+        protected override void OnMouseDoubleClick(MouseButtonEventArgs e)
         {
-            EndEditing();
+            e.Handled = true;
+            StartEditing();
+        }
+        #endregion
+
+
+        #region EventHandlers
+        private void Window_PreviewMouseDown(object sender, MouseButtonEventArgs e)
+        {
+            if (!IsMouseOver)
+                EndEditing();
         }
 
         private void InputElement_KeyDown(object sender, KeyEventArgs e)
@@ -89,15 +87,10 @@ namespace MyLights.Controls
             }
         }
 
-        protected override void OnMouseDoubleClick(MouseButtonEventArgs e)
+        private void InputElement_LostFocus(object sender, RoutedEventArgs e)
         {
-            e.Handled = true;
-            StartEditing();
+            EndEditing();
         }
-        #endregion
-
-
-        #region EventHandlers
         #endregion
 
 
