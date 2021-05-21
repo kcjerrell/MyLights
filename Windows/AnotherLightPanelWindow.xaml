@@ -12,7 +12,8 @@
         xmlns:ctrl="clr-namespace:MyLights.Controls"
         xmlns:mod="clr-namespace:MyLights.LightMods"
         mc:Ignorable="d"
-        Title="AnotherLightPanelWindow" Height="450" Width="850" Background="{Binding Color, ElementName=hueSlider, Converter={StaticResource BrushCache}}">
+        Title="AnotherLightPanelWindow" Height="450" Width="850"
+        Background="#333333">
 
   <Window.DataContext>
     <wvm:AnotherLightPanelViewModel/>
@@ -32,6 +33,10 @@
       <ColumnDefinition Width="*"/>
       <ColumnDefinition Width="220"/>
     </Grid.ColumnDefinitions>
+    <Grid.RowDefinitions>
+      <RowDefinition Height="*"/>
+      <RowDefinition Height="30"/>
+    </Grid.RowDefinitions>
 
     <!-- lightcontrols -->
     <ItemsControl x:Name="itemsControl" ItemsSource="{Binding LightVMs}">
@@ -59,6 +64,10 @@
 
     </ItemsControl>
 
+    <StackPanel Orientation="Horizontal" Grid.Row="1">
+      <Button Content="Sequence Editor" Click="Button_Click"/>
+    </StackPanel>
+    
     <!-- Sidebar -->
 
     <TabControl Grid.Column="1" SelectedIndex="1">

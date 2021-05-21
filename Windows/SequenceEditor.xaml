@@ -1,0 +1,51 @@
+﻿<Window x:Class="MyLights.Windows.SequenceEditor"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:wvm="clr-namespace:MyLights.Windows.ViewModels"
+        xmlns:vm="clr-namespace:MyLights.ViewModels"
+        xmlns:local="clr-namespace:MyLights.Windows"
+        mc:Ignorable="d"
+        Title="SequenceEditor" Height="450" Width="800">
+  <Window.DataContext>
+    <wvm:SequenceEditorViewModel/>
+  </Window.DataContext>
+  
+    <Grid>
+    <Grid.RowDefinitions>
+      <RowDefinition Height="30"/>
+      <RowDefinition Height="30"/>
+      <RowDefinition Height="*"/>
+    </Grid.RowDefinitions>
+
+    <ComboBox ItemsSource="{Binding LightVMs, Mode=OneWay, Source={StaticResource Locator}}" SelectedItem="{Binding TestLight}" Width="160">
+      <ComboBox.ItemTemplate>
+        <DataTemplate DataType="{x:Type vm:LightViewModel}">
+          <TextBlock Text="{Binding Name}"/>
+        </DataTemplate>
+      </ComboBox.ItemTemplate>
+    </ComboBox>
+
+    <StackPanel Grid.Row="1" Orientation="Horizontal">
+      <Button Content="Start" Command="{Binding StartCommand}"/>
+      <Button Content="Stop" Command="{Binding StopCommand}"/>
+      <TextBox Width="100" Text="{Binding Interval}"/>
+    </StackPanel>
+
+    <ItemsControl Grid.Row="2" ItemsSource="{Binding Sequence}">
+      <ItemsControl.ItemsPanel>
+        <ItemsPanelTemplate>
+          <StackPanel Orientation="Horizontal"/>
+        </ItemsPanelTemplate>        
+      </ItemsControl.ItemsPanel>
+
+      <ItemsControl.ItemTemplate>
+        <DataTemplate DataType="{x:Type wvm:SequenceStep}">
+          <ToggleButton Width="20" Height="20" Margin="4" IsChecked="{Binding StateA}"/>
+        </DataTemplate>
+      </ItemsControl.ItemTemplate>
+    </ItemsControl>
+      
+  </Grid>
+</Window>

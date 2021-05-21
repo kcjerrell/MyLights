@@ -56,5 +56,11 @@ namespace MyLights.Windows
                 }
             }
         }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            var sequenceWindow = new SequenceEditor();
+            sequenceWindow.Show();
+        }
     }
 }

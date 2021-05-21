@@ -81,9 +81,10 @@ namespace MyLights.Bridges.Udp
             {
                 hitCount += 1;
                 if (hitCount % 10 == 0)
-                    Trace.Write(hitCount);
+                    Trace.WriteLine(hitCount);
 
-                //log.Log($"sending message: {dgram.GetFormatted()}");
+                Trace.WriteLine($"sending message: {dgram.ToString()}");
+                //log.Log($"sending message: {dgram.ToString()}");
                 dgram.GetBuffer(out byte[] bytes, out int length);
                 return await udp.SendAsync(bytes, length);
             }
@@ -91,7 +92,7 @@ namespace MyLights.Bridges.Udp
             public async Task<int> SendMessage(string msg)
             {
                 //log.Log($"sending message: {msg}");
-                //Trace.WriteLine(msg);
+                Trace.WriteLine($"sending message: {msg}");
                 var buffer = Encoding.UTF8.GetBytes(msg);
                 return await udp.SendAsync(buffer, buffer.Length);
             }
