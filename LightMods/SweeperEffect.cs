@@ -10,9 +10,24 @@ namespace MyLights.LightMods
     [MultiLightEffect("Sweeper", "/Resource/Puzzles-256.png")]
     public class SweeperEffect : ILightEffect
     {
+        public SweeperEffect()
+        {
+            Settings = new();
+            intervalSetting = new NumericPluginSetting(200, 50, 20000);
+            intervalSetting.PropertyChanged += IntervalSetting_PropertyChanged;
+            Settings.Add(intervalSetting);
+        }
+
+        private void IntervalSetting_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            this.interval = (int)intervalSetting.Value;
+        }
+
         private IList<LightViewModel> lights;
         private CancellationTokenSource cancelSource;
         private Task sweepTask;
+        private NumericPluginSetting intervalSetting;
+        private int interval = 200;
 
         public bool IsActive { get; private set; }
         public List<PluginSetting> Settings { get; }
@@ -30,7 +45,7 @@ namespace MyLights.LightMods
                     light.SetColor(col, true);
                 }
 
-                await Task.Delay(200);
+                await Task.Delay(interval);
 
                 if (token.IsCancellationRequested)
                 {

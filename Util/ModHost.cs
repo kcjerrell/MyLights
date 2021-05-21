@@ -50,6 +50,14 @@ namespace MyLights.LightMods
                     MultiEffectTypes.AddRange(doublelefx);
                 }
             }
+            else
+            {
+                var t = typeof(LightMods.SweeperEffect);
+                var info = new LightEffectsInfo(t, (MultiLightEffectAttribute)Attribute.GetCustomAttribute(t, typeof(MultiLightEffectAttribute)));
+                MultiEffectTypes.Add(info);
+                var handler = PropertyChanged;
+                handler?.Invoke(this, new PropertyChangedEventArgs(nameof(MultiEffectTypes)));
+            }
         }
         public event PropertyChangedEventHandler PropertyChanged;
     }

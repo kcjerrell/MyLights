@@ -13,8 +13,8 @@ namespace MyLights.Util
         internal static Color ColorTempToColor(double colorTemp)
         {
             double x = colorTemp.Clamp(0, 1000) / 1000.0;
-            double rg = x * 69 + 186;
-            double b = x * -32 + 240;
+            double rg = 255 - x * 69;
+            double b = 208 + x * 32;
 
             return Color.FromRgb((byte)rg, (byte)rg, (byte)b);
         }

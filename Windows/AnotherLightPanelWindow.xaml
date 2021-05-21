@@ -25,16 +25,20 @@
 
   </Window.Resources>
 
+  <!-- layout root -->
+
   <Grid Background="Gray">
     <Grid.ColumnDefinitions>
       <ColumnDefinition Width="*"/>
       <ColumnDefinition Width="220"/>
     </Grid.ColumnDefinitions>
+
+    <!-- lightcontrols -->
     <ItemsControl x:Name="itemsControl" ItemsSource="{Binding LightVMs}">
       <ItemsControl.ItemTemplate>
         <DataTemplate DataType="{x:Type vm:LightViewModel}">
           <Viewbox>
-          <ctrl:LightControl/>            
+            <ctrl:LightControl/>
           </Viewbox>
         </DataTemplate>
       </ItemsControl.ItemTemplate>
@@ -52,80 +56,86 @@
           </ScrollViewer>
         </ControlTemplate>
       </ItemsControl.Template>
-      
+
     </ItemsControl>
 
-    <Grid Grid.Column="1">
-      <Grid.RowDefinitions>
-        <RowDefinition Height="Auto"/>
-        <RowDefinition Height="*"/>
-        <RowDefinition Height="Auto"/>
-      </Grid.RowDefinitions>
-      <Grid.ColumnDefinitions>
-        <ColumnDefinition Width="*"/>
-      </Grid.ColumnDefinitions>
+    <!-- Sidebar -->
 
-      <Button Content="Save as scene..." HorizontalAlignment="Left" Padding="2" Margin="2" Command="{Binding Library.SaveStateAsSceneCommand}"/>
+    <TabControl Grid.Column="1" SelectedIndex="1">
+      <TabItem Header="Scenes">
 
-      <ListBox x:Name="scenesList" Grid.Row="1" ItemsSource="{Binding Library.Scenes}" Background="#88222222" Margin="2" 
+
+        <!-- Scenes Tab -->
+
+        <Grid>
+          <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+          </Grid.RowDefinitions>
+          <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+          </Grid.ColumnDefinitions>
+
+          <Button Content="Save as scene..." HorizontalAlignment="Left" Padding="2" Margin="2" Command="{Binding Library.SaveStateAsSceneCommand}"/>
+
+          <ListBox x:Name="scenesList" Grid.Row="1" ItemsSource="{Binding Library.Scenes}" Background="#88222222" Margin="2" 
                SelectionChanged="scenesList_SelectionChanged">
-        <ListBox.ItemTemplate>
-          <DataTemplate>
-            <Grid x:Name="sceneItemRoot">
-              <Grid.RowDefinitions>
-                <RowDefinition Height="5"/>
-                <RowDefinition Height="Auto"/>
-              </Grid.RowDefinitions>
-              <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="Auto"/>
-              </Grid.ColumnDefinitions>
+            <ListBox.ItemTemplate>
+              <DataTemplate>
+                <Grid x:Name="sceneItemRoot">
+                  <Grid.RowDefinitions>
+                    <RowDefinition Height="5"/>
+                    <RowDefinition Height="Auto"/>
+                  </Grid.RowDefinitions>
+                  <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                  </Grid.ColumnDefinitions>
 
-              <ItemsControl Grid.ColumnSpan="2" ItemsSource="{Binding LightStates.Values}">
-                <ItemsControl.ItemsPanel>
-                  <ItemsPanelTemplate>
-                    <ctrl:UniformStackPanel IsItemsHost="True"/>
-                  </ItemsPanelTemplate>
-                </ItemsControl.ItemsPanel>
-                <ItemsControl.ItemTemplate>
-                  <DataTemplate DataType="{x:Type models:LightState}">
-                    <Grid>
-                      <Border x:Name="lightStateBackground"
+                  <ItemsControl Grid.ColumnSpan="2" ItemsSource="{Binding LightStates.Values}">
+                    <ItemsControl.ItemsPanel>
+                      <ItemsPanelTemplate>
+                        <ctrl:UniformStackPanel IsItemsHost="True"/>
+                      </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                      <DataTemplate DataType="{x:Type models:LightState}">
+                        <Grid>
+                          <Border x:Name="lightStateBackground"
                               BorderBrush="Black" BorderThickness="0.5,0" 
                               Background="{Binding Converter={StaticResource BrushCache}}"/>
-                    </Grid>
-                  </DataTemplate>
-                </ItemsControl.ItemTemplate>
-              </ItemsControl>
+                        </Grid>
+                      </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                  </ItemsControl>
 
-              <ctrl:EditLabel x:Name="sceneItemLabel" Grid.Row="1" Text="{Binding Name, Mode=TwoWay}" FontSize="18" Padding="8,4" 
+                  <ctrl:EditLabel x:Name="sceneItemLabel" Grid.Row="1" Text="{Binding Name, Mode=TwoWay}" FontSize="18" Padding="8,4" 
                                Margin="2,1" Visibility="Visible"/>
-              <Button Width="20" Height="20" Grid.Row="1" Grid.Column="1" Opacity=".5" VerticalAlignment="Bottom" Click="Button_Click_1"
+                  <Button Width="20" Height="20" Grid.Row="1" Grid.Column="1" Opacity=".5" VerticalAlignment="Bottom" Click="Button_Click_1"
                       Margin="1">
-                <Grid RenderTransformOrigin="0.5,0.5">
-                  <Grid.RenderTransform>
-                    <RotateTransform Angle="45"/>
-                  </Grid.RenderTransform>
-                  <Border Width="3" Height="15" Background="Red"/>
-                  <Border Width="15" Height="3" Background="Red"/>
+                    <Grid RenderTransformOrigin="0.5,0.5">
+                      <Grid.RenderTransform>
+                        <RotateTransform Angle="45"/>
+                      </Grid.RenderTransform>
+                      <Border Width="3" Height="15" Background="Red"/>
+                      <Border Width="15" Height="3" Background="Red"/>
+                    </Grid>
+                  </Button>
                 </Grid>
-              </Button>
-            </Grid>
-          </DataTemplate>
-        </ListBox.ItemTemplate>
+              </DataTemplate>
+            </ListBox.ItemTemplate>
 
-        <ListBox.ItemContainerStyle>
-          <Style TargetType="ListBoxItem">
-            <Setter Property="Background" Value="#88DDDDDD"/>
-            <Setter Property="Margin" Value="2"/>
-            <Setter Property="Padding" Value="0"/>
-            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
-            <Setter Property="VerticalContentAlignment" Value="Stretch"/>
-          </Style>
-        </ListBox.ItemContainerStyle>
-        
-        
-      </ListBox>
+            <ListBox.ItemContainerStyle>
+              <Style TargetType="ListBoxItem">
+                <Setter Property="Background" Value="#88DDDDDD"/>
+                <Setter Property="Margin" Value="2"/>
+                <Setter Property="Padding" Value="0"/>
+                <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                <Setter Property="VerticalContentAlignment" Value="Stretch"/>
+              </Style>
+            </ListBox.ItemContainerStyle>
+          </ListBox>
 
           <ItemsControl Grid.Row="2" ItemsSource="{Binding ModHost.MultiEffectTypes, Mode=OneWay, Source={StaticResource Locator}}">
             <ItemsControl.ItemTemplate>
@@ -141,10 +151,39 @@
                 <WrapPanel IsItemsHost="True" Orientation="Horizontal"/>
               </ItemsPanelTemplate>
             </ItemsControl.ItemsPanel>
-            
+
           </ItemsControl>
-      
-    </Grid>
+
+        </Grid>
+      </TabItem>
+
+      <!-- Plugins Tab -->
+
+      <TabItem Header="Plugins">
+        <ItemsControl ItemsSource="{Binding ModHost.MultiEffectTypes, Mode=OneWay, Source={StaticResource Locator}}">
+          <ItemsControl.ItemTemplate>
+            <DataTemplate DataType="{x:Type mod:LightEffectsInfo}">
+              <Border>
+                <Grid>
+                  <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                  </Grid.RowDefinitions>
+                  <StackPanel Orientation="Horizontal">
+                    <Image Source="{Binding Icon}" Height="24" Width="24"/>
+                    <TextBlock Text="{Binding Name}"/>
+                  </StackPanel>
+                  <ItemsControl>
+                    
+                  </ItemsControl>
+                </Grid>
+              </Border>
+            </DataTemplate>
+          </ItemsControl.ItemTemplate>
+        </ItemsControl>
+      </TabItem>
+
+    </TabControl>
 
   </Grid>
 </Window>
