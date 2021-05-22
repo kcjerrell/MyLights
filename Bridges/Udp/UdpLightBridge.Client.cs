@@ -20,7 +20,7 @@ namespace MyLights.Bridges.Udp
             //somewhere else. This just connects, sends and receives messages.
             //At some point I should rename LightMessage/LightDgram, because even within the scope of
             //all this, I might have a switch/plug/sensor* at some point. (although sensors aren't
-            //supported by tuyapi
+            //supported by tuyapi)
             public Client(string address, int port, int listeningPort = DefaultPort)
             {
                 Address = address;
@@ -72,6 +72,7 @@ namespace MyLights.Bridges.Udp
                 while (IsListening)
                 {
                     var rawMessage = await udp.ReceiveAsync();
+                    Trace.WriteLine(rawMessage);
                     ProcessMessage(rawMessage);
                 }
             }
