@@ -88,7 +88,7 @@ namespace MyLights.Bridges.Udp
                 else
                 {
                     log.Log("unknown target referenced, requesting more info");
-                    var req = new LightDgram(DgramVerbs.Wonder, msg.Target, LightProperties.Name);
+                    var req = new LightDgram(DgramVerbs.Wonder, msg.Target, LightProperties.Id);
                     await udpClient.SendMessage(req);
                 }
             }
