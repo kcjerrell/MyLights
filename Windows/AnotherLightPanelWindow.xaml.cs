@@ -56,5 +56,17 @@ namespace MyLights.Windows
                 }
             }
         }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            var sequenceWindow = new SequenceEditor();
+            sequenceWindow.Show();
+        }
+
+        private void Button_Click_2(object sender, RoutedEventArgs e)
+        {
+            var lb = (Bridges.Udp.UdpLightBridge)Locator.Get.LightBridge;
+            lb.Reload();
+        }
     }
 }

@@ -9,5 +9,6 @@
         Enloop = 4,     // Request to be updated of all changes in a remote resource property
         Holler = 5,
         Nod = 6,
+        Reload = 7,
     }
 }
