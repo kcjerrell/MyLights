@@ -35,7 +35,7 @@
     </Grid.ColumnDefinitions>
     <Grid.RowDefinitions>
       <RowDefinition Height="*"/>
-      <RowDefinition Height="30"/>
+      <RowDefinition Height="Auto"/>
     </Grid.RowDefinitions>
 
     <!-- lightcontrols -->
@@ -65,7 +65,8 @@
     </ItemsControl>
 
     <StackPanel Orientation="Horizontal" Grid.Row="1">
-      <Button Content="Sequence Editor" Click="Button_Click"/>
+      <Button Content="Reload" Margin="3" Padding="5" Click="Button_Click_2"/>
+      <Button Content="Sequence Editor" Click="Button_Click" Margin="3" Padding="5"/>
     </StackPanel>
     
     <!-- Sidebar -->

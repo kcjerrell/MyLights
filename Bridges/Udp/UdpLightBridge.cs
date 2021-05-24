@@ -42,6 +42,11 @@ namespace MyLights.Bridges.Udp
             }
         }
 
+        public async void Reload()
+        {
+            await udpClient.SendMessage(new LightDgram(DgramVerbs.Reload, "bridge"));
+        }
+
 
         #region Static
 
