@@ -84,5 +84,7 @@ namespace MyLights.LightMods
 
         public bool IsActive { get; set; }
         public IEnumerable<PluginSetting> Settings { get; }
+
+        public event IsActiveChangedEventHandler IsActiveChanged;
     }
 }

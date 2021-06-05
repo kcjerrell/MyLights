@@ -22,14 +22,14 @@ namespace MyLights.Util
         public ObservableCollection<LightViewModel> LightVMs => lightBridge.LightVMs;
         public LibraryViewModel Library => libraryVm;
         public LightViewModel DesignLightVM { get; private set; }
-
+        public Random Rand { get => rand; }
         public ModHost ModHost => modHost;
-
 
         public static Locator Get { get; } = new Locator();
 
         internal static Task StartServices()
         {
+            System.Diagnostics.Trace.WriteLine("does it work in design mode");
             var mod = modHost.Load(IsInDesignMode);
             var lb = lightBridge.ConnectAsync();
             var lib = Application.Current.Dispatcher.InvokeAsync(() => libraryVm.LoadLibrary(IsInDesignMode));
@@ -41,6 +41,7 @@ namespace MyLights.Util
         private static LightViewModel designLightVm;
         private static LibraryViewModel libraryVm = new LibraryViewModel();
         private static ModHost modHost;
+        private static Random rand = new Random();
 
         static Locator()
         {

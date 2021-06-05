@@ -14,6 +14,8 @@
 
   <UserControl.Resources>
 
+    <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+
     <util:StringEqualToObjectsConverter x:Key="StringEqualToVisibilityConverter" IgnoreCase="True" TrueValue="Visible"
                                         FalseValue="Collapsed" ReturnEnum="True" EnumType="{x:Type Visibility}"/>
 
@@ -146,6 +148,8 @@
       <Grid.RowDefinitions>
         <RowDefinition Height="*"/>
       </Grid.RowDefinitions>
+
+      <Border Grid.RowSpan="1" Grid.ColumnSpan="5" Background="#220000ff" Visibility="{Binding IsLinked, Converter={StaticResource BooleanToVisibilityConverter}}"/>
 
       <!-- Label for the LightControl -->
 
@@ -309,10 +313,10 @@
         <!-- LightControl Special -->
 
         <Grid x:Name="dispModeSpecialContainer" Visibility="Collapsed">
-          <ItemsControl ItemsSource="{Binding ModHost.SingleEffectTypes, Mode=OneWay, Source={StaticResource Locator}}">
+          <ItemsControl x:Name="lightModItemsControl" ItemsSource="{Binding ModHost.SingleEffectTypes, Mode=OneWay, Source={StaticResource Locator}}">
             <ItemsControl.ItemTemplate>
               <DataTemplate DataType="{x:Type lm:ILightEffect}">
-                <Button Click="LightModButton_Click">
+                <Button x:Name="lightModButton" Click="LightModButton_Click">
                   <Image Source="{Binding Icon}" Width="48" Height="48"/>
                 </Button>
               </DataTemplate>
@@ -320,7 +324,7 @@
 
             <ItemsControl.ItemsPanel>
               <ItemsPanelTemplate>
-                <StackPanel Orientation="Vertical" HorizontalAlignment="Left"/>
+                <ctrl:UniformishWrapPanel MinChildWidth="32" MaxChildWidth="48" AspectRatio="1"/>
               </ItemsPanelTemplate>
             </ItemsControl.ItemsPanel>
 

@@ -22,9 +22,12 @@ namespace MyLights.LightMods
     [DoNotNotify]
     public class NumericPluginSetting : PluginSetting
     {
-        public NumericPluginSetting(double initialValue, double minValue, double maxValue)
+        public NumericPluginSetting(double initialValue, double minValue, double maxValue, string name)
         {
-
+            this.Name = name;
+            this.MinValue = MinValue;
+            this.MaxValue = MaxValue;
+            this.Value = initialValue;
         }
 
         public double MinValue { get; set; }

@@ -161,6 +161,12 @@ namespace MyLights.Controls
             if (DisplayMode != LightControlDisplayMode.LightModeProperties)
                 DisplayMode = LightControlDisplayMode.LightModeProperties;
         }
+
+        protected override void OnMouseRightButtonDown(MouseButtonEventArgs e)
+        {
+            if (viewModel != null)
+                viewModel.IsLinked = !viewModel.IsLinked;
+        }
     }
 
     public enum LightControlDisplayMode

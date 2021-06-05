@@ -1,4 +1,5 @@
-﻿using MyLights.Models;
+﻿using MyLights.LightMods;
+using MyLights.Models;
 using MyLights.Util;
 using MyLights.ViewModels;
 using System;
@@ -21,6 +22,7 @@ namespace MyLights.Windows.ViewModels
         }
 
         public ObservableCollection<LightViewModel> LightVMs { get; set; }
+        public ILightEffect SelectedMultiLightEffect { get; set; }
 
         public LibraryViewModel Library { get; set; }
         public event PropertyChangedEventHandler PropertyChanged;

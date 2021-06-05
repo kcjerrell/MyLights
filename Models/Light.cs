@@ -11,7 +11,7 @@ using System.Windows.Threading;
 namespace MyLights.Models
 {
     [DoNotNotify]
-    public class Light : INotifyPropertyChanged
+    public class Light : INotifyPropertyChanged, ILight
     {
         public Light(ILightPropertiesProvider propertiesProvider)
         {

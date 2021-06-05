@@ -68,7 +68,7 @@
       <Button Content="Reload" Margin="3" Padding="5" Click="Button_Click_2"/>
       <Button Content="Sequence Editor" Click="Button_Click" Margin="3" Padding="5"/>
     </StackPanel>
-    
+
     <!-- Sidebar -->
 
     <TabControl Grid.Column="1" SelectedIndex="1">
@@ -170,27 +170,47 @@
       <!-- Plugins Tab -->
 
       <TabItem Header="Plugins">
-        <ItemsControl ItemsSource="{Binding ModHost.MultiEffectTypes, Mode=OneWay, Source={StaticResource Locator}}">
-          <ItemsControl.ItemTemplate>
-            <DataTemplate DataType="{x:Type mod:LightEffectsInfo}">
-              <Border>
-                <Grid>
-                  <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="*"/>
-                  </Grid.RowDefinitions>
+        <Grid>
+          <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+          </Grid.RowDefinitions>
+
+          <ListBox SelectionChanged="ListBox_SelectionChanged" ItemsSource="{Binding ModHost.MultiEffectTypes, Mode=OneWay, Source={StaticResource Locator}}">
+            <ItemsControl.ItemTemplate>
+              <DataTemplate DataType="{x:Type mod:LightEffectsInfo}">
+                <Border>
                   <StackPanel Orientation="Horizontal">
                     <Image Source="{Binding Icon}" Height="24" Width="24"/>
                     <TextBlock Text="{Binding Name}"/>
                   </StackPanel>
-                  <ItemsControl>
-                    
-                  </ItemsControl>
-                </Grid>
-              </Border>
-            </DataTemplate>
-          </ItemsControl.ItemTemplate>
-        </ItemsControl>
+                </Border>
+              </DataTemplate>
+            </ItemsControl.ItemTemplate>
+          </ListBox>
+
+          <Grid Grid.Row="1" Background="#999999">
+
+            <ItemsControl ItemsSource="{Binding SelectedMultiLightEffect.Settings}">
+              <ItemsControl.Resources>
+                <DataTemplate DataType="{x:Type mod:NumericPluginSetting}">
+                  <Grid>
+                    <Grid.RowDefinitions>
+                      <RowDefinition Height="Auto"/>
+                      <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <TextBlock Text="{Binding Name}"/>
+                    <Slider Grid.Row="1" Minimum="{Binding MinValue}" Maximum="{Binding MaxValue}" Value="{Binding Value}"/>
+
+                  </Grid>
+                </DataTemplate>
+              </ItemsControl.Resources>
+            </ItemsControl>
+
+          </Grid>
+
+        </Grid>
       </TabItem>
 
     </TabControl>

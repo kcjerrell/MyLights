@@ -48,6 +48,21 @@ namespace MyLights.Util
             return Math.Min(Math.Max(x, min), max);
         }
 
+        public static double PlusOrMinus(this double x, double maxVariance)
+        {
+            return x + (Locator.Get.Rand.NextDouble() - 0.5) * maxVariance * 2;
+        }
+
+        public static int PlusOrMinus(this int x, int maxVariance)
+        {
+            return x + Locator.Get.Rand.Next(-1 * maxVariance, maxVariance);
+        }
+
+        public static int IncWrap(this int i, int max)
+        {
+            return (i + 1) % max;
+        }
+
         public static HSV ToHSV(this Color color)
         {
             Helpers.ColorToHSV(color, out double h, out double s, out double v);
@@ -72,6 +87,15 @@ namespace MyLights.Util
         public static bool IsNaN(this double x)
         {
             return double.IsNaN(x);
+        }
+
+        public static IEnumerable<T> Without<T>(this IEnumerable<T> source, T excludeItem)
+        {
+            foreach (T item in source)
+            {
+                if (!item.Equals(excludeItem))
+                    yield return item;
+            }
         }
     }
 }

@@ -35,7 +35,7 @@ namespace MyLights.Windows
             Locator.Get.Library.RemoveScene(scene);
         }
 
-        private Dictionary<LightEffectsInfo, ILightEffect> effects = new();
+        private readonly Dictionary<LightEffectsInfo, ILightEffect> effects = new();
 
         private void GlobalMod_Click(object sender, RoutedEventArgs e)
         {
@@ -67,6 +67,24 @@ namespace MyLights.Windows
         {
             var lb = (Bridges.Udp.UdpLightBridge)Locator.Get.LightBridge;
             lb.Reload();
+        }
+
+        private void ListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            var listBox = (ListBox)sender;
+            var selectedInfo = (LightEffectsInfo)listBox.SelectedItem;
+
+            if (selectedInfo != null)
+            {
+                if (!effects.ContainsKey(selectedInfo))
+                {
+                    var effect = selectedInfo.Load();
+                    effects[selectedInfo] = effect;
+                }
+
+                if (this.DataContext is ViewModels.AnotherLightPanelViewModel vm)
+                    vm.SelectedMultiLightEffect = effects[selectedInfo];
+            }
         }
     }
 }
