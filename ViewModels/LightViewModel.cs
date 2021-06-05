@@ -103,8 +103,7 @@ namespace MyLights.ViewModels
         }
 
         public bool IsSelected { get; set; }
-        private bool isLinked;
-        public bool IsLinked { get => isLinked; set => isLinked = SetLink(this, value); }
+        public bool IsLinked { get; set; }
 
         private void Light_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
@@ -139,48 +138,6 @@ namespace MyLights.ViewModels
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
-
-        // Probably a bad idea getting all static here, but I'm gonna do it anyway
-
-        static List<LightViewModel> linkedLights = new();
-
-        private static bool SetLink(LightViewModel light, bool value)
-        {
-            if (value && !light.isLinked)
-            {
-                linkedLights.Add(light);
-                light.PropertyChanged += LinkedLight_PropertyChanged;
-            }
-            else if (!value && light.isLinked)
-            {
-                linkedLights.Remove(light);
-                light.PropertyChanged -= LinkedLight_PropertyChanged;
-            }
-
-            return value;
-        }
-
-        private static void LinkedLight_PropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            LightViewModel source = (LightViewModel)sender;
-            Action<LightViewModel> linkedSet = e.PropertyName switch
-            {
-                nameof(LightViewModel.Power) => (LightViewModel target) => target.Power = source.Power,
-                nameof(LightViewModel.Mode) => (LightViewModel target) => target.Mode = source.Mode,
-                nameof(LightViewModel.Brightness) => (LightViewModel target) => target.Brightness = source.Brightness,
-                nameof(LightViewModel.ColorTemp) => (LightViewModel target) => target.ColorTemp = source.ColorTemp,
-                nameof(LightViewModel.Color) => (LightViewModel target) => target.Color = source.Color,
-                _ => null
-            };
-
-            if (linkedSet == null)
-                return;
-
-            foreach (LightViewModel lvm in linkedLights.Without(source))
-            {
-                linkedSet(lvm);
-            }
-        }
     }
 
     public class ModeOptions

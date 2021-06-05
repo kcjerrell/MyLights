@@ -11,6 +11,7 @@ namespace MyLights.Views
 {
     /// <summary>
     /// Interaction logic for LightTrack.xaml
+    /// #remove
     /// </summary>
     public partial class LightPanel : UserControl
     {
@@ -49,7 +50,7 @@ namespace MyLights.Views
                     {
                         //lightGroup.LightGroup.Add(s.Light);
                     }
-                    args.Source = lightGroup;                    
+                    //args.Source = lightGroup;                    
                 }
 
                 args.FlyoutClosedCallBack = FlyoutClosedCallBack;
@@ -65,7 +66,7 @@ namespace MyLights.Views
         private bool mouseDragging = false;
         private bool selecting = false;
         // #lightgroup 
-        private LightGroupViewModel lightGroup = new LightGroupViewModel(new Models.LightGroup());
+        //private LightGroupViewModel lightGroup = new LightGroupViewModel(new Models.LightGroup());
         
 
         private void LightPanelItem_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)

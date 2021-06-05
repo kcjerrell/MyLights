@@ -18,8 +18,11 @@ namespace MyLights.Windows.ViewModels
         public AnotherLightPanelViewModel()
         {
             LightVMs = Locator.Get.LightVMs;
+            linker = new LightViewModelLinker(LightVMs);
             Library = Locator.Get.Library;
         }
+
+        private LightViewModelLinker linker;
 
         public ObservableCollection<LightViewModel> LightVMs { get; set; }
         public ILightEffect SelectedMultiLightEffect { get; set; }
