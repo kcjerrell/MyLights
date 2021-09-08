@@ -14,6 +14,7 @@ namespace MyLights.Models
         White = 1,
         Color = 2,
         Music = 3,
+        Scene = 4,
     }
 
     public enum LightProperties
@@ -26,6 +27,7 @@ namespace MyLights.Models
         Brightness = 22,
         ColorTemp = 23,
         Color = 24,
+        Scene = 25,
         Hue = 240,
         Saturation = 241,
         Value = 242,
@@ -49,27 +51,15 @@ namespace MyLights.Util
 {
     internal static partial class Helpers
     {
-        public static LightMode ValidateMode(string value)
-        {
-            value = value.ToLower();
-            if (value == "colour")
-                value = "color";
-
-            if (Enum.TryParse<LightMode>(value, true, out LightMode mode))
-                return mode;
-
-            else
-                return LightMode.None;
-        }
-
         public static string ModeToString(LightMode mode)
         {
             return mode switch
             {
                 LightMode.None => "",
-                LightMode.Color => "color",
+                LightMode.Color => "colour",
                 LightMode.White => "white",
                 LightMode.Music => "music",
+                LightMode.Scene => "scene",
                 _ => ""
             };
         }
@@ -82,6 +72,7 @@ namespace MyLights.Util
                 "color" => LightMode.Color,
                 "white" => LightMode.White,
                 "music" => LightMode.Music,
+                "scene" => LightMode.Scene,
                 _ => LightMode.None
             };
         }

@@ -25,7 +25,7 @@ namespace MyLights.ViewModels
         private void SaveStateAsScene()
         {
             var lvms = Locator.Get.LightVMs;
-            var scene = new Scene("New Scene");
+            var scene = new StateSet("New Scene");
 
             foreach (var lvm in lvms)
             {
@@ -40,7 +40,7 @@ namespace MyLights.ViewModels
 
         private void AddScene()
         {
-            var scene = new SceneViewModel(EditCommand);
+            var scene = new StateSetViewModel(EditCommand);
             //Scenes.Add(scene);
             Edit(scene);
         }
@@ -70,9 +70,9 @@ namespace MyLights.ViewModels
                 try
                 {
                     string scenes = Properties.Settings.Default.Scenes;
-                    var array = JsonConvert.DeserializeObject<Scene[]>(scenes);
+                    var array = JsonConvert.DeserializeObject<StateSet[]>(scenes);
 
-                    foreach (var s in array ?? Array.Empty<Scene>())
+                    foreach (var s in array ?? Array.Empty<StateSet>())
                     {
                         Scenes.Add(s);
                     }
@@ -118,7 +118,7 @@ namespace MyLights.ViewModels
 
         }
 
-        internal void RemoveScene(Scene scene)
+        internal void RemoveScene(StateSet scene)
         {
             if (Scenes.Remove(scene))
                 SaveScenes();
@@ -144,7 +144,7 @@ namespace MyLights.ViewModels
             SaveColors();
         }
 
-        internal void ApplyScene(Scene scene)
+        internal void ApplyScene(StateSet scene)
         {
             foreach ((string id, LightState state) in scene.LightStates)
             {
@@ -162,7 +162,7 @@ namespace MyLights.ViewModels
         public LibraryItemViewModel EditorItem { get; set; }
 
         public ObservableCollection<SequenceViewModel> Sequences { get; private set; } = new();
-        public ObservableCollection<Scene> Scenes { get; private set; } = new();
+        public ObservableCollection<StateSet> Scenes { get; private set; } = new();
 
         public ObservableCollection<HSV> FavColors { get; private set; } = new();
 

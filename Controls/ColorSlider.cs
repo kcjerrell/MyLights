@@ -331,8 +331,6 @@ namespace MyLights.Controls
             //    e = ThumbOffset / TrackLength + 0.5;
 
             return e.Clamp(0.0, 1.0);
-
-
         }
         private object CoerceSaturation(double e)
         {

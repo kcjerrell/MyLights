@@ -26,16 +26,20 @@ namespace MyLights.Models
         internal void Apply(Light light)
         {
             light.SetPower(Power);
-            light.SetMode(Mode);
 
-            if (Mode == LightMode.Color)
+            if (Power)
             {
-                light.SetColor(Color);
-            }
-            else if (Mode == LightMode.White)
-            {
-                light.SetBrightness(Brightness);
-                light.SetColorTemp(ColorTemp);
+                light.SetMode(Mode);
+
+                if (Mode == LightMode.Color)
+                {
+                    light.SetColor(Color);
+                }
+                else if (Mode == LightMode.White)
+                {
+                    light.SetBrightness(Brightness);
+                    light.SetColorTemp(ColorTemp);
+                }
             }
         }
     }

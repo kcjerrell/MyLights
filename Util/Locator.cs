@@ -54,7 +54,8 @@ namespace MyLights.Util
             }
             else
             {
-                lightBridge = new UdpLightBridge();
+                //lightBridge = new UdpLightBridge();
+                lightBridge = new Bridges.Udp2.Bridge();
             }
 
             if (IsInDesignMode)

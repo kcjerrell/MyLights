@@ -4,6 +4,7 @@ using MyLights.Util;
 using PropertyChanged;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Text;
@@ -21,8 +22,14 @@ namespace MyLights.ViewModels
             this.Light = light;
             light.PropertyChanged += Light_PropertyChanged;
 
+            this.SceneStops = new(light.Scene.Stops);
+            SceneStops.CollectionChanged += SceneStops_CollectionChanged;
+            SetSceneCommand = new RelayCommand(() => SetScene());
+
             Name = KnownDevices.GetName(light.Id);
         }
+
+
 
         public Light Light { get; init; }
         public string Name
@@ -102,6 +109,8 @@ namespace MyLights.ViewModels
             }
         }
 
+        public ObservableCollection<SceneStop> SceneStops { get; private set; } 
+
         public bool IsSelected { get; set; }
         public bool IsLinked { get; set; }
 
@@ -116,7 +125,29 @@ namespace MyLights.ViewModels
                 handler?.Invoke(this, new PropertyChangedEventArgs("S"));
                 handler?.Invoke(this, new PropertyChangedEventArgs("V"));
             }
+
+            else if (e.PropertyName == "Scene")
+            {
+                SceneStops = new ObservableCollection<SceneStop>(Light.Scene.Stops);
+            }
+
+            else if (e.PropertyName == nameof(Light.Id))
+            {
+                Name = KnownDevices.GetName(Light.Id);
+            }
         }
+
+        private void SceneStops_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+        }
+
+        private void SetScene()
+        {
+            var scene = new Scene(SceneStops);
+            Light.SetScene(scene);
+        }
+
+        public RelayCommand SetSceneCommand { get; }
 
         private void UpdateColor(double h = -1.0, double s = -1.0, double v = -1.0)
         {
@@ -147,6 +178,7 @@ namespace MyLights.ViewModels
             var options = new List<string>();
             options.Add("color");
             options.Add("white");
+            options.Add("scene");
             return options;
         }
     }

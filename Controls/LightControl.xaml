@@ -64,7 +64,37 @@
           </Border>
         </DataTemplate>
       </util:LightModeTemplateSelector.Color>
+
+        <!-- SceneMode -->
+
+      <util:LightModeTemplateSelector.Scene>
+        <DataTemplate>
+          <Border Width="24" Height="24" Background="AliceBlue" CornerRadius="15" BorderThickness="1" BorderBrush="#FF444444">
+            <Grid Margin="4">
+              <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+              </Grid.ColumnDefinitions>
+              <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition/>
+              </Grid.RowDefinitions>
+
+              <Ellipse Width="5" Height="5" Fill="Red"/>
+              <Ellipse Grid.Row="1" Width="5" Height="5" Fill="Blue"/>
+              <Ellipse Grid.Row="1" Grid.Column="1" Width="5" Height="5" Fill="Green"/>
+              <Ellipse Grid.Column="1" Width="5" Height="5" Fill="Yellow"/>
+
+            </Grid>
+          </Border>
+        </DataTemplate>
+      </util:LightModeTemplateSelector.Scene>
+
+
     </util:LightModeTemplateSelector>
+
+
+
 
     <!-- Binding source options for mode -->
 
@@ -223,8 +253,7 @@
 
         </StackPanel>
       </Border>
-          <Button x:Name="dmButtonSpecial" Grid.Column="1" Width="24" Height="24" 
-                  VerticalAlignment="Bottom" Margin="2,4" Click="dmButtonSpecial_Click"/>
+
 
       <!-- Container for the property control -->
 
@@ -235,7 +264,7 @@
         </Grid.RowDefinitions>
 
         <!-- Container for the LightMode properties -->
-        
+
         <Grid x:Name="dispModeLightModeContainer">
 
           <!-- Color controls -->
@@ -288,6 +317,20 @@
           </Grid>
 
         </Grid>
+        
+        <!-- Scene Controls -->
+
+        <Grid x:Name="sceneRoot" Panel.ZIndex="100" Background="Gray"
+              Visibility="{Binding Mode, Converter={StaticResource StringEqualToVisibilityConverter}, ConverterParameter=scene}">
+          <ItemsControl ItemsSource="{Binding SceneStops}">
+            <ItemsControl.ItemTemplate>
+              <DataTemplate>
+                <TextBlock Text="{Binding}"/>
+              </DataTemplate>
+            </ItemsControl.ItemTemplate>
+          </ItemsControl>
+        </Grid>      
+     
 
         <!-- favColors  -->
 
@@ -330,11 +373,12 @@
 
           </ItemsControl>
         </Grid>
-        
+
         <!-- Brightness/Value slider and color buttons -->
         <Grid Grid.Row="1">
           <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="Auto"/>
             <ColumnDefinition Width="Auto"/>
             <ColumnDefinition Width="Auto"/>
           </Grid.ColumnDefinitions>
@@ -355,7 +399,10 @@
             </Grid>
           </Button>
 
-          <ToggleButton x:Name="dmButtonFavColor" Grid.Column="2" Width="24"
+          <Button x:Name="dmButtonSpecial" Grid.Column="2" Width="24" Height="24" 
+                  VerticalAlignment="Bottom" Margin="2,4" Click="dmButtonSpecial_Click"/>
+
+          <ToggleButton x:Name="dmButtonFavColor" Grid.Column="3" Width="24"
                             Height="24" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" 
                         Margin="2" Checked="dmButtonFavColor_Checked" Unchecked="dmButtonFavColor_Unchecked">
 
@@ -386,7 +433,7 @@
                     </VisualStateGroup>
                   </VisualStateManager.VisualStateGroups>
 
-                  
+
                   <Grid>
                     <Grid x:Name="favColorsIcon">
                       <Grid.Resources>

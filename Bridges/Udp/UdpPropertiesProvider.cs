@@ -3,6 +3,7 @@ using MyLights.Util;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -124,6 +125,8 @@ namespace MyLights.Bridges.Udp
 
         public IDeviceProperty<double> ColorTempProperty => colorTemp;
 
+        public IDeviceProperty<Scene> SceneProperty { get; }
+
         public string ResourceId { get; private set; }
 
         public async Task Enloop(LightDgram msg, Client client)
@@ -181,5 +184,6 @@ namespace MyLights.Bridges.Udp
         }
 
         public event EventHandler PropertiesInitialized;
+        public event PropertyChangedEventHandler PropertyChanged;
     }
 }

@@ -1,13 +1,14 @@
 ﻿using MyLights.Models;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace MyLights.Bridges
 {
-    public interface ILightPropertiesProvider
+    public interface ILightPropertiesProvider : INotifyPropertyChanged
     {
         int Index { get; }
         string Id { get; }
@@ -16,5 +17,7 @@ namespace MyLights.Bridges
         IDeviceProperty<LightMode> ModeProperty { get; }
         IDeviceProperty<double> BrightnessProperty { get; }
         IDeviceProperty<double> ColorTempProperty { get; }
+
+        IDeviceProperty<Scene> SceneProperty { get; }
     }
 }

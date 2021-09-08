@@ -22,7 +22,7 @@ namespace MyLights.Windows
         {
             if (e.AddedItems.Count >= 1)
             {
-                var scene = (Scene)e.AddedItems[0];
+                var scene = (StateSet)e.AddedItems[0];
                 Locator.Get.Library.ApplyScene(scene);
             }
         }
@@ -30,7 +30,7 @@ namespace MyLights.Windows
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
             var button = (Button)sender;
-            var scene = (Scene)button.DataContext;
+            var scene = (StateSet)button.DataContext;
 
             Locator.Get.Library.RemoveScene(scene);
         }
@@ -65,8 +65,7 @@ namespace MyLights.Windows
 
         private void Button_Click_2(object sender, RoutedEventArgs e)
         {
-            var lb = (Bridges.Udp.UdpLightBridge)Locator.Get.LightBridge;
-            lb.Reload();
+            Locator.Get.LightBridge.Reload();
         }
 
         private void ListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -79,11 +78,14 @@ namespace MyLights.Windows
                 if (!effects.ContainsKey(selectedInfo))
                 {
                     var effect = selectedInfo.Load();
+                    effect.Attach(Locator.Get.ModHost, Locator.Get.LightVMs);
                     effects[selectedInfo] = effect;
                 }
 
                 if (this.DataContext is ViewModels.AnotherLightPanelViewModel vm)
                     vm.SelectedMultiLightEffect = effects[selectedInfo];
+
+                effects[selectedInfo].Start();
             }
         }
     }

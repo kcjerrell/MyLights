@@ -28,7 +28,7 @@ namespace MyLights.Views
 
         private void scenesList_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (scenesList.SelectedItem != null && scenesList.SelectedItem is SceneViewModel svm)
+            if (scenesList.SelectedItem != null && scenesList.SelectedItem is StateSetViewModel svm)
                 svm.Activate();
         }
     }

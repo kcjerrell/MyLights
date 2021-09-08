@@ -21,6 +21,7 @@ namespace MyLights.Util
                     //LightModes.Off => Off,
                     LightMode.Color => Color,
                     LightMode.White => White,
+                    LightMode.Scene => Scene,
                     _ => null
                 };
             }
@@ -31,6 +32,8 @@ namespace MyLights.Util
                     return Color;
                 else if (text == "white")
                     return White;
+                else if (text == "scene")
+                    return Scene;
             }
             return null;
         }
@@ -40,6 +43,8 @@ namespace MyLights.Util
         public DataTemplate Color { get; set; }
 
         public DataTemplate White { get; set; }
+
+        public DataTemplate Scene { get; set; }
 
     }
 }

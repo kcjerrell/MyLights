@@ -71,6 +71,29 @@ namespace MyLights.Models
         {
             return $"(HSV: {H.ToString("F3")}, {S.ToString("F3")}, {V.ToString("F3")})";
         }
+
+        public string ToTuya()
+        {
+            int h = (int)(H * 360);
+            int s = (int)(S * 1000);
+            int v = (int)(V * 1000);
+
+            return $"{h.ToString("X4")}{s.ToString("X4")}{v.ToString("X4")}";
+        }
+
+        public static HSV FromTuya(string tuya)
+        {
+            string hh = tuya.Substring(0, 4);
+            int h = int.Parse(hh, System.Globalization.NumberStyles.HexNumber);
+
+            string hs = tuya.Substring(4, 4);
+            int s = int.Parse(hs, System.Globalization.NumberStyles.HexNumber);
+
+            string hv = tuya.Substring(8, 4);
+            int v = int.Parse(hv, System.Globalization.NumberStyles.HexNumber);
+
+            return new HSV(h / 360.0, s / 1000.0, v / 1000.0);
+        }
     }
 }
 
@@ -85,13 +108,5 @@ namespace MyLights.Util
                            v.IsNaN() ? color.V : v);
         }
 
-        public static string ToTuya(this HSV color)
-        {
-            int h = (int)(color.H * 360);
-            int s = (int)(color.S * 1000);
-            int v = (int)(color.V * 1000);
-
-            return $"{h.ToString().PadLeft(4, '0')}{s.ToString().PadLeft(4, '0')}{v.ToString().PadLeft(4, '0')}";
-        }
     }
 }

@@ -2,6 +2,7 @@
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -42,6 +43,10 @@ namespace MyLights.Models
         public IDeviceProperty<double> BrightnessProperty => new DpsBrightness(Index.ToString(), Brightness);
 
         public IDeviceProperty<double> ColorTempProperty => new DpsColorTemp(Index.ToString(), ColorTemp);
+
+        public IDeviceProperty<Scene> SceneProperty { get; }
+
+        public event PropertyChangedEventHandler PropertyChanged;
 
         //public string whatever { get; set; }
     }

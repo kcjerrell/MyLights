@@ -182,4 +182,67 @@
     </Style.Triggers>
   </Style>
 
+
+  <Style TargetType="{x:Type ctrl:Knob}">
+    <Style.Resources>
+      <BooleanToVisibilityConverter x:Key="BoolToVisConverter"/>
+    </Style.Resources>
+
+    <Setter Property="Template">
+      <Setter.Value>
+        <ControlTemplate TargetType="{x:Type ctrl:Knob}">
+          <Border Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}">
+
+            <Grid>
+
+              <!--<Ellipse Panel.ZIndex="10" Width="80" Height="80" Fill="#777777" Stroke="#222222" StrokeThickness="4"/>
+
+              <ctrl:CircleSegment x:Name="Outline" Panel.ZIndex="0" Width="95" Height="95" Stroke="Red" StrokeThickness="4" StartAngle="105"  ArcLength="330" ShowInnerStroke="False"/>
+              
+              <ctrl:CircleSegment x:Name="Inline" Panel.ZIndex="20" Width="65" Height="65" Stroke="#222222" StrokeThickness="2" StartAngle="105"  ArcLength="330" ShowInnerStroke="False"/>
+
+              <Rectangle x:Name="Notch" Panel.ZIndex="20" Width="4" Height="15" Fill="#222222" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,0,0,10">
+                <Rectangle.RenderTransform>
+                  <RotateTransform x:Name="NotchTransform" Angle="345" CenterX="1" CenterY="-25"/>
+                </Rectangle.RenderTransform>
+              </Rectangle>-->
+
+              <!--<Ellipse Panel.ZIndex="10" Fill="#777777" Stroke="#222222" StrokeThickness="3" Margin="6"/>
+
+              <ctrl:CircleSegment x:Name="Outline" Panel.ZIndex="0" Margin="1" StrokeThickness="3" StartAngle="105"  ArcLength="0" ShowInnerStroke="False" Visibility="{Binding ShowOutline, Converter={StaticResource BoolToVisConverter}, RelativeSource={RelativeSource TemplatedParent}}"/>
+
+              <ctrl:CircleSegment x:Name="Inline" Panel.ZIndex="20" Margin="11" Stroke="#222222" StrokeThickness="1" StartAngle="105"  ArcLength="330" ShowInnerStroke="False"/>
+
+              <Canvas Panel.ZIndex="20">
+                <Rectangle x:Name="Notch" 
+                           Width="2" Height="10"                           
+                           Fill="#222222" 
+                           HorizontalAlignment="Center" VerticalAlignment="Bottom"/>
+                <Canvas.RenderTransform>
+                    <RotateTransform x:Name="NotchTransform"/>                  
+                </Canvas.RenderTransform>
+              </Canvas>-->
+
+              <Ellipse Panel.ZIndex="0" Margin="0" Fill="#22222222"/>
+              <ctrl:CircleSegment x:Name="Outline" Panel.ZIndex="30" Margin="0" Stroke="#222222" StrokeThickness="2" StartAngle="130" ShowInnerStroke="False" Visibility="{Binding ShowOutline, Converter={StaticResource BoolToVisConverter}, RelativeSource={RelativeSource TemplatedParent}}"/>
+              <ctrl:CircleSegment x:Name="Inline" Panel.ZIndex="20" Margin="0" Stroke="#777777" StrokeThickness="1" StartAngle="130"  ArcLength="280" ShowInnerStroke="False"/>
+              
+              <Canvas Panel.ZIndex="20">
+                <Rectangle x:Name="Notch" 
+                           Width="2" Height="8"                           
+                           Fill="#222222"/>
+                <Canvas.RenderTransform>
+                  <RotateTransform x:Name="NotchTransform"/>
+                </Canvas.RenderTransform>
+              </Canvas>
+              
+            </Grid>
+
+          </Border>
+        </ControlTemplate>
+      </Setter.Value>
+    </Setter>
+  </Style>
 </ResourceDictionary>

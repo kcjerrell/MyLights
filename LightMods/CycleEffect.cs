@@ -47,21 +47,29 @@ namespace MyLights.LightMods
 
             while (!token.IsCancellationRequested)
             {
-                n = Locator.Get.Rand.Next(Lights.Count);
-                var light = Lights[n];
-                var color = new HSV(hues[prog[n]].PlusOrMinus(hueVary),
-                                              sat.PlusOrMinus(satVary),
-                                              val.PlusOrMinus(valVary));
+                //n = Locator.Get.Rand.Next(Lights.Count);
+                //var light = Lights[n];
+                //var color = new HSV(hues[prog[n]].PlusOrMinus(hueVary),
+                //                              sat.PlusOrMinus(satVary),
+                //                              val.PlusOrMinus(valVary));
 
-                light.Light.SetColor(color, true);
+                //light.Light.SetColor(color, true);
 
-                prog[n] = (prog[n] + 1) % hues.Length;
-                // n = n.IncWrap(Lights.Count);
+                //prog[n] = (prog[n] + 1) % hues.Length;
+                //// n = n.IncWrap(Lights.Count);
 
-                await Task.Delay(procDelay);
+                //await Task.Delay(procDelay);
 
-                //if (n == 0)
-                //    await Task.Delay(6000);
+                ////if (n == 0)
+                ////    await Task.Delay(6000);
+                ///
+
+                foreach (var light in Lights)
+                {
+                    light.Light.SetPower(!light.Power, true);
+                }
+
+                await Task.Delay(500);
             }
         }
     }

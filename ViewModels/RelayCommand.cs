@@ -13,6 +13,11 @@ namespace MyLights.ViewModels
             this._execute = execute;
         }
 
+        public RelayCommand(Action execute)
+        {
+            this._execute = (_) => execute();
+        }
+
         public RelayCommand(Action<object> execute, Predicate<object> canExecute)
         {
             this._execute = execute;

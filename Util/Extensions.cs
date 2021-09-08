@@ -48,6 +48,14 @@ namespace MyLights.Util
             return Math.Min(Math.Max(x, min), max);
         }
 
+        public static int Clamp(this int x, int min, int max)
+        {
+            if (max < min)
+                throw new ArgumentException("get your shit straight");
+
+            return Math.Min(Math.Max(x, min), max);
+        }
+
         public static double PlusOrMinus(this double x, double maxVariance)
         {
             return x + (Locator.Get.Rand.NextDouble() - 0.5) * maxVariance * 2;

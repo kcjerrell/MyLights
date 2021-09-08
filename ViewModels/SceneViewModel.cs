@@ -1,51 +1,23 @@
-﻿using System;
+﻿using MyLights.Models;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace MyLights.ViewModels
 {
-    public class SceneViewModel : LibraryItemViewModel
+    public class SceneViewModel : INotifyPropertyChanged
     {
-        public SceneViewModel(RelayCommand<LibraryItemViewModel> editCommand)
+        public SceneViewModel(Scene scene)
         {
-            this.EditCommand = editCommand;
-            SceneItems = new ObservableCollection<SceneSetter>();
+
         }
 
-        public RelayCommand<LibraryItemViewModel> EditCommand { get; }
-        public ObservableCollection<SceneSetter> SceneItems { get; private set; }
+        ObservableCollection<SceneStop> Stops { get; } = new();
 
-        public void Add(SceneSetter item)
-        {
-            SceneItems.Add(item);
-        }
-
-        internal override void Activate()
-        {
-            foreach (var item in SceneItems)
-            {
-                item.FindBulb();
-                item.Set();
-            }
-        }
-
-        internal override void StartEditing()
-        {
-            foreach (var item in SceneItems)
-            {
-                item.FindBulb();
-                item.Set();
-                item.IsLive = true;
-            }
-        }
-
-        public class NewItem : SceneViewModel
-        {
-            public NewItem(RelayCommand<LibraryItemViewModel> editCommand)
-                : base(editCommand)
-            {
-
-            }
-        }
+        public event PropertyChangedEventHandler PropertyChanged;
     }
 }

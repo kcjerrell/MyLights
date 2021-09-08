@@ -50,10 +50,10 @@ namespace MyLights.Util
             }
         }
 
-        public static Scene GetScene(int nLights, bool white, bool random)
+        public static StateSet GetScene(int nLights, bool white, bool random)
         {
             int n = Bump("scene");
-            var scene = new Scene($"Test Scene #{n}");
+            var scene = new StateSet($"Test Scene #{n}");
 
             for (int i = 0; i < nLights; i++)
             {

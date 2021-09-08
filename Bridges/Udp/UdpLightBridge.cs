@@ -17,7 +17,7 @@ namespace MyLights.Bridges.Udp
 
         }
 
-        private const string BulbsRequest = "*bulb-.*";
+        private const string BulbsRequest = "bulb-*";
             //"bulb-1"; // 
 
         public OCL Lights => lights;
@@ -133,7 +133,7 @@ namespace MyLights.Bridges.Udp
                 return;
 
             var procs = ProcessCommandLine.SearchProcCommandLine("node", "sockets");
-            if (procs.Count == 0)
+            if (false) //(procs.Count == 0)
             {
                 var startInfo = new ProcessStartInfo("node");
                 startInfo.ArgumentList.Add("--trace-warnings");

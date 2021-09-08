@@ -1,27 +1,96 @@
-﻿using System.Collections.Generic;
+﻿using MyLights.Util;
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace MyLights.Models
 {
     public class Scene
     {
-        public Scene(string name)
+        public Scene()
         {
-            this.Name = name;
+
         }
 
-        public Dictionary<string, LightState> LightStates { get; } = new();
-        public string Name { get; set; }
-
-        public void Add(Light light)
+        public Scene(IEnumerable<SceneStop> sceneStops)
         {
-            var state = new LightState(light);
-
-            Add(light.Id, state);
+            foreach (var ss in sceneStops)
+            {
+                Stops.Add(ss);
+            }
         }
 
-        public void Add(string name, LightState state)
+        public List<SceneStop> Stops { get; } = new();
+
+        public string Encode()
         {
-            LightStates.Add(name, state);
+            var stops = from stop in Stops
+                        select stop.Encode();
+            return $"07{string.Join("", stops)}";
         }
+
+        public static Scene Decode(string encoded)
+        {
+            Scene scene = new();
+
+            for (int i = 2; i < encoded.Length; i += 26)
+            {
+                string sub = encoded.Substring(i, 26);
+                scene.Stops.Add(SceneStop.Decode(sub));
+            }
+
+            return scene;
+        }
+    }
+
+
+    public class SceneStop : INotifyPropertyChanged
+    {
+        public SceneStop(HSV color, int speed, SceneTransition transition)
+        {
+            this.Color = color;
+            this.Speed = speed.Clamp(40,100);
+            this.Transition = transition;
+        }
+
+        public HSV Color { get; set; }
+        public int Speed { get; set; }
+        public SceneTransition Transition { get; set; }
+
+        public string Encode()
+        {
+            string speed = Speed.ToString("X2");
+            string transition = ((int)(Transition)).ToString();
+            string color = Color.ToTuya();
+
+            return $"{speed}{speed}0{transition}{color}00000000";
+        }
+
+        public static SceneStop Decode(string sceneStop)
+        {
+            int speed = int.Parse(sceneStop.Substring(0, 2), System.Globalization.NumberStyles.HexNumber);
+            SceneTransition transition = (SceneTransition) int.Parse(sceneStop.Substring(5, 1));
+            HSV color = HSV.FromTuya(sceneStop.Substring(6, 12));
+
+            return new SceneStop(color, speed, transition);
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        public override string ToString()
+        {
+            return $"{Transition} - {Speed} - {Color}";
+        }
+    }
+
+    public enum SceneTransition
+    {
+        Static = 0,
+        Flash = 1,
+        Breath = 2
     }
 }

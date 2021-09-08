@@ -127,5 +127,10 @@ namespace MyLights.Util
         {
             throw new NotImplementedException();
         }
+
+        public void Reload()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

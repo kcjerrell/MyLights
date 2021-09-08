@@ -42,5 +42,10 @@ namespace MyLights.Bridges
         static ObservableCollection<Light> lights = new();
 
         static ObservableCollection<LightViewModel> lightVMs = new();
+
+        public void Reload()
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

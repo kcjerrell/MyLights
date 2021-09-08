@@ -37,7 +37,7 @@ namespace MyLights.LightMods
         private Task sweepTask;
         private NumericPluginSetting periodSetting;
         //private int interval = 200;
-        private TimeSpan period = TimeSpan.FromSeconds(360);
+        private TimeSpan period = TimeSpan.FromSeconds(60);
 
         public bool IsActive { get; private set; }
         public List<PluginSetting> Settings { get; }

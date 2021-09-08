@@ -24,7 +24,7 @@ namespace MyLights
 
         private async void App_Startup(object sender, StartupEventArgs e)
         {
-            await Locator.StartServices();
+            // await Locator.StartServices();
         }
 
         private DevConsole devConsole;

@@ -4,11 +4,11 @@
              xmlns:local="clr-namespace:MyLights"
              xmlns:util="clr-namespace:MyLights.Util">
 
-    <Application.StartupUri>Windows\AnotherLightPanelWindow.xaml</Application.StartupUri>
+  <Application.StartupUri>Windows\Scratch2.xaml</Application.StartupUri>
 
-    <Application.Resources>
-        <util:Locator x:Key="Locator"/>
-        <util:BoolToObjectsConverter x:Key="PowerCircleColorConverter" FalseValue="Red" TrueValue="#FF5DFF00" />
-        <util:BrushCache x:Key="BrushCache"/>
-    </Application.Resources>
+  <Application.Resources>
+    <util:Locator x:Key="Locator"/>
+    <util:BoolToObjectsConverter x:Key="PowerCircleColorConverter" FalseValue="Red" TrueValue="#FF5DFF00" />
+    <util:BrushCache x:Key="BrushCache"/>
+  </Application.Resources>
 </Application>

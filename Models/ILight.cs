@@ -11,6 +11,8 @@ namespace MyLights.Models
         LightMode Mode { get; }
         bool Power { get; }
 
+        Scene Scene { get; }
+
         event PropertyChangedEventHandler PropertyChanged;
 
         void SetBrightness(double value, bool immediate = false);
@@ -18,5 +20,7 @@ namespace MyLights.Models
         void SetColorTemp(double value, bool immediate = false);
         void SetMode(LightMode value, bool immediate = false);
         void SetPower(bool value, bool immediate = false);
+
+        void SetScene(Scene value, bool immediate = false);
     }
 }

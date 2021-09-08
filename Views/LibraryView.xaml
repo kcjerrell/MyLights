@@ -103,7 +103,7 @@
         <Border x:Name="editorFrame" Visibility="{Binding ShowEditor, Converter={StaticResource EditorBoolToVis}}" Panel.ZIndex="50">
             <ContentControl Content="{Binding EditorItem}">
                 <ContentControl.Resources>
-                    <DataTemplate DataType="{x:Type vm:SceneViewModel}">
+                    <DataTemplate DataType="{x:Type vm:StateSetViewModel}">
                         <local:SceneEditor/>
                     </DataTemplate>
                 </ContentControl.Resources>

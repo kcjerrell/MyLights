@@ -34,6 +34,7 @@ namespace MyLights.Bridges
         public IDeviceProperty<double> BrightnessProperty { get; } = new TestProperty<double>("Brightness", 0.9);
 
         public IDeviceProperty<double> ColorTempProperty { get; } = new TestProperty<double>("ColorTemp", 0.9);
+        public IDeviceProperty<Scene> SceneProperty { get; } = new TestProperty<Scene>("Scene", new Scene());
 
         class TestProperty<T> : IDeviceProperty<T>
         {
@@ -66,15 +67,18 @@ namespace MyLights.Bridges
 
             public event PropertyChangedEventHandler Updated;
 
-            public async Task Set(T value, bool immediate = false)
+            public Task Set(T value, bool immediate = false)
             {
                 Value = value;
+                return Task.CompletedTask;
             }
 
-            public async Task Update()
+            public Task Update()
             {
-
+                return Task.CompletedTask;
             }
         }
+
+        public event PropertyChangedEventHandler PropertyChanged;
     }
 }

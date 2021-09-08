@@ -16,13 +16,14 @@ namespace MyLights.Models
         public Light(ILightPropertiesProvider propertiesProvider)
         {
             // Index = propertiesProvider.Index;
-            Id = propertiesProvider.Id;
+            provider = propertiesProvider;
 
             power = propertiesProvider.PowerProperty;
             color = propertiesProvider.ColorProperty;
             mode = propertiesProvider.ModeProperty;
             brightness = propertiesProvider.BrightnessProperty;
             colorTemp = propertiesProvider.ColorTempProperty;
+            scene = propertiesProvider.SceneProperty;
 
             WireEvents();
         }
@@ -34,6 +35,21 @@ namespace MyLights.Models
             power.Updated += Dps_Updated;
             brightness.Updated += Dps_Updated;
             colorTemp.Updated += Dps_Updated;
+            scene.Updated += Dps_Updated;
+
+            provider.PropertyChanged += Provider_PropertyChanged;
+        }
+
+        private void Provider_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(provider.Id))
+            {
+                Dispatch(() =>
+                {
+                    var handler = PropertyChanged;
+                    handler?.Invoke(this, e);
+                });
+            }
         }
 
         private void Dps_Updated(object sender, PropertyChangedEventArgs e)
@@ -52,23 +68,42 @@ namespace MyLights.Models
             }
         }
 
+        private void Dispatch(Action action)
+        {
+            if (uiDispatcher == null)
+                uiDispatcher = App.Current.Dispatcher;
+
+            if (Thread.CurrentThread.ManagedThreadId != uiDispatcher.Thread.ManagedThreadId)
+            {
+                uiDispatcher.Invoke(action);
+            }
+            else
+            {
+                action();
+            }
+        }
+
         private static Dispatcher uiDispatcher;
+
+        private ILightPropertiesProvider provider;
 
         protected IDeviceProperty<HSV> color;
         protected IDeviceProperty<LightMode> mode;
         protected IDeviceProperty<bool> power;
         protected IDeviceProperty<double> brightness;
         protected IDeviceProperty<double> colorTemp;
+        protected IDeviceProperty<Scene> scene;
 
         public event PropertyChangedEventHandler PropertyChanged;
 
         [DoNotNotify]
-        public string Id { get; private set; }
+        public string Id { get => provider.Id; }
         public HSV Color { get => color.Value; }
         public bool Power { get => power.Value; }
         public LightMode Mode { get => mode.Value; }
         public double Brightness { get => brightness.Value; }
         public double ColorTemp { get => colorTemp.Value; }
+        public Scene Scene { get => scene.Value; }
 
         public void SetColor(HSV value, bool immediate = false)
         {
@@ -93,6 +128,11 @@ namespace MyLights.Models
         public void SetColorTemp(double value, bool immediate = false)
         {
             colorTemp.Set(value, immediate);
+        }
+
+        public void SetScene(Scene value, bool immediate = false)
+        {
+            scene.Set(value, immediate);
         }
     }
 }

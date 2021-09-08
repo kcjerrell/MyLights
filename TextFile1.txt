@@ -1,4 +1,5 @@
-TODO	- Command/Interface to reload devices (need on server side as well)
+240711  I need to implement scene mode somehow
+		And then some kind of color transition thing that uses scene mode, for the lightmods to use
 
 210427	I need to figure out a way to enable immediate property sets, that bypass the grouping delay
 		and gate. In a way that will work for different bridges/providers. Which means modifying the 
