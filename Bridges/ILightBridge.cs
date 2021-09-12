@@ -15,7 +15,6 @@ namespace MyLights.Bridges
         public ObservableCollection<LightViewModel> LightVMs { get; }
 
         public bool TryFindBulb(BulbRef key, out Light light);
-
         public Task ConnectAsync();
         void Reload();
     }

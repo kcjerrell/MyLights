@@ -65,5 +65,31 @@ namespace MyLights.Util
 
             modHost = new ModHost(IsInDesignMode);
         }
+
+
+        private Design _designVMs;
+        public Design DesignVMs
+        {
+            get
+            {
+                if (_designVMs == null) { _designVMs = new Design(); }
+                return _designVMs;
+            }
+        }
+
+
+        public class Design
+        {
+            private MyLights.Models.SceneStop _sceneStop;
+            public MyLights.Models.SceneStop DesignSceneStop
+            {
+                get
+                {
+                    if (_sceneStop == null) { _sceneStop = new(new(1, 1, 1), 50, Models.SceneTransition.Breath); }
+                    return _sceneStop;
+                }
+            }
+
+        }
     }
 }

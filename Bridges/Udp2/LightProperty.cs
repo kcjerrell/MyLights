@@ -28,8 +28,7 @@ namespace MyLights.Bridges.Udp2
             protected set
             {
                 _value = value;
-                var handler = Updated;
-                handler?.Invoke(this, UpdateEventArgs);
+                RaiseUpdated();
             }
         }
 
@@ -50,6 +49,12 @@ namespace MyLights.Bridges.Udp2
         public virtual void UpdateValue(T value)
         {
             Value = value;
+        }
+
+        protected void RaiseUpdated()
+        {
+            var handler = Updated;
+            handler?.Invoke(this, UpdateEventArgs);
         }
 
         protected abstract PropertyChangedEventArgs UpdateEventArgs { get; }
@@ -185,6 +190,12 @@ namespace MyLights.Bridges.Udp2
             public Scene()
             {
                 Value = new Models.Scene();
+                Value.SceneChanged += Value_SceneChanged;
+            }
+
+            private void Value_SceneChanged(object sender, EventArgs e)
+            {
+                RaiseUpdated();
             }
 
             static PropertyChangedEventArgs updateEventArgs = new("ColorTemp");
@@ -199,8 +210,8 @@ namespace MyLights.Bridges.Udp2
 
             public void UpdateValue(string value)
             {
-                var scene = Models.Scene.Decode(value);
-                base.UpdateValue(scene);
+                Value.Decode(value);
+                RaiseUpdated();
             }
 
             public override string GetProperty(bool clearPendingStatus = false)

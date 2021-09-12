@@ -8,9 +8,8 @@
              xmlns:util="clr-namespace:MyLights.Util"
              xmlns:vm="clr-namespace:MyLights.ViewModels"
              xmlns:mod="clr-namespace:MyLights.Models"
-             xmlns:lm="clr-namespace:MyLights.LightMods"
-             mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="500">
+             xmlns:lm="clr-namespace:MyLights.LightMods" d:DataContext="{d:DesignInstance Type=vm:LightViewModel}"
+             mc:Ignorable="d">
 
   <UserControl.Resources>
 
@@ -322,10 +321,10 @@
 
         <Grid x:Name="sceneRoot" Panel.ZIndex="100" Background="Gray"
               Visibility="{Binding Mode, Converter={StaticResource StringEqualToVisibilityConverter}, ConverterParameter=scene}">
-          <ItemsControl ItemsSource="{Binding SceneStops}">
+          <ItemsControl ItemsSource="{Binding Scene.Stops, Mode=OneWay}">
             <ItemsControl.ItemTemplate>
-              <DataTemplate>
-                <TextBlock Text="{Binding}"/>
+              <DataTemplate DataType="{x:Type mod:SceneStop}">
+                <views:SceneStop/>
               </DataTemplate>
             </ItemsControl.ItemTemplate>
           </ItemsControl>
