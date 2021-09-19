@@ -5,8 +5,6 @@ using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MyLights.Models
 {
@@ -16,9 +14,6 @@ namespace MyLights.Models
         {
             Stops.CollectionChanged += Stops_CollectionChanged;
         }
-
-        string lastDecode = "";
-        bool supressChangedEvent = false;
 
         private void Stops_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
@@ -38,11 +33,8 @@ namespace MyLights.Models
                 }
             }
 
-            if (!supressChangedEvent)
-            {
-                var handler = SceneChanged;
-                handler?.Invoke(this, EventArgs.Empty);
-            }
+            var handler = SceneChanged;
+            handler?.Invoke(this, EventArgs.Empty);
         }
 
         private void Item_PropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -68,26 +60,17 @@ namespace MyLights.Models
             return $"07{string.Join("", stops)}";
         }
 
-        public void Decode(string encoded)
+        public static Scene Decode(string encoded)
         {
-            if (lastDecode != encoded)
+            Scene scene = new Scene();
+
+            for (int i = 2; i < encoded.Length; i += 26)
             {
-                supressChangedEvent = true;
-                Stops.Clear();
-
-                for (int i = 2; i < encoded.Length; i += 26)
-                {
-                    string sub = encoded.Substring(i, 26);
-                    Stops.Add(SceneStop.Decode(sub));
-                }
-
-                supressChangedEvent = false;
-
-                var handler = SceneChanged;
-                handler?.Invoke(this, EventArgs.Empty);
+                string sub = encoded.Substring(i, 26);
+                scene.Stops.Add(SceneStop.Decode(sub));
             }
 
-            lastDecode = encoded;
+            return scene;
         }
 
         public event EventHandler SceneChanged;

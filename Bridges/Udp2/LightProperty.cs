@@ -185,41 +185,19 @@ namespace MyLights.Bridges.Udp2
             }
         }
 
-        public class Scene : LightProperty<Models.Scene>
-        {
-            public Scene()
-            {
-                Value = new Models.Scene();
-                Value.SceneChanged += Value_SceneChanged;
-            }
-
-            private void Value_SceneChanged(object sender, EventArgs e)
-            {
-                RaiseUpdated();
-            }
-
+        public class Scene : LightProperty<string>
+        {     
             static PropertyChangedEventArgs updateEventArgs = new("ColorTemp");
 
             protected override PropertyChangedEventArgs UpdateEventArgs => updateEventArgs;
             protected override LightProperties AssociatedProperty => LightProperties.Scene;
-
-            public override Task Set(Models.Scene value, bool immediate = false)
-            {
-                return base.Set(value, immediate);
-            }
-
-            public void UpdateValue(string value)
-            {
-                Value.Decode(value);
-                RaiseUpdated();
-            }
 
             public override string GetProperty(bool clearPendingStatus = false)
             {
                 if (clearPendingStatus)
                     HasPendingChange = false;
 
-                return Value.Encode();
+                return Value;
             }
         }
     }

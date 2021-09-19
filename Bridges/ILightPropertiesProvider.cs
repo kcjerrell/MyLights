@@ -18,6 +18,6 @@ namespace MyLights.Bridges
         IDeviceProperty<double> BrightnessProperty { get; }
         IDeviceProperty<double> ColorTempProperty { get; }
 
-        IDeviceProperty<Scene> SceneProperty { get; }
+        IDeviceProperty<string> SceneProperty { get; }
     }
 }

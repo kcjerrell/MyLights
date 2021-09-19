@@ -105,7 +105,7 @@ namespace MyLights.ViewModels
             }
         }
 
-        public Scene Scene { get => Light.Scene; } 
+        public Scene Scene { get; set; } 
 
         public bool IsSelected { get; set; }
         public bool IsLinked { get; set; }
@@ -115,11 +115,16 @@ namespace MyLights.ViewModels
             var handler = PropertyChanged;
             handler?.Invoke(this, e);
 
-            if (e.PropertyName == "Color")
+            if (e.PropertyName == nameof(Light.Color))
             {
                 handler?.Invoke(this, new PropertyChangedEventArgs("H"));
                 handler?.Invoke(this, new PropertyChangedEventArgs("S"));
                 handler?.Invoke(this, new PropertyChangedEventArgs("V"));
+            }
+
+            else if (e.PropertyName == nameof(Light.Scene))
+            {
+
             }
 
             else if (e.PropertyName == nameof(Light.Id))
