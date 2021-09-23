@@ -44,7 +44,7 @@ namespace MyLights.Models
 
         public IDeviceProperty<double> ColorTempProperty => new DpsColorTemp(Index.ToString(), ColorTemp);
 
-        public IDeviceProperty<Scene> SceneProperty { get; }
+        public IDeviceProperty<string> SceneProperty { get; }
 
         public event PropertyChangedEventHandler PropertyChanged;
 

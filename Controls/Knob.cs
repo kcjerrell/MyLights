@@ -20,6 +20,7 @@ using FPMO = System.Windows.FrameworkPropertyMetadataOptions;
 
 namespace MyLights.Controls
 {
+    // This should be derived from RangeBase.
     public class Knob : Control
     {
         public Knob()
@@ -63,6 +64,27 @@ namespace MyLights.Controls
             get { return (double)GetValue(MaximumProperty); }
             set { SetValue(MaximumProperty, value); }
         }
+
+        [CategoryAttribute("Common")]
+        public KnobControlStyle ControlStyle
+        {
+            get { return (KnobControlStyle)GetValue(ControlStyleProperty); }
+            set { SetValue(ControlStyleProperty, value); }
+        }
+
+        [CategoryAttribute("Appearance")]
+        public bool ShowOutline
+        {
+            get { return (bool)GetValue(ShowOutlineProperty); }
+            set { SetValue(ShowOutlineProperty, value); }
+        }
+
+        [CategoryAttribute("Appearance")]
+        public bool ColorOutline
+        {
+            get { return (bool)GetValue(ColorOutlineProperty); }
+            set { SetValue(ColorOutlineProperty, value); }
+        }
         #endregion
 
         #region Methods
@@ -103,7 +125,7 @@ namespace MyLights.Controls
             }
         }
 
-        private void UpdateValue(double deltaX, double deltaY)
+        private void NudgeValue(double deltaX, double deltaY)
         {
             // double dx = position.X - clickOriginZero.X;
             //double dx = position.X - zeroX;
@@ -112,6 +134,12 @@ namespace MyLights.Controls
 
             double change = (deltaX - deltaY) / 2.0 / valueToPixelRatio;
             Value += change * (Maximum - Minimum);
+        }
+
+        private void SetValue(double r)
+        {
+            double range = Maximum - Minimum;
+            Value = r * range + Minimum;
         }
         #endregion
 
@@ -162,9 +190,31 @@ namespace MyLights.Controls
         {
             if (IsMouseCaptured)
             {
-                //UpdateValue(e.GetPosition(this));
                 Point pos = e.GetPosition(this);
-                UpdateValue(pos.X - lastMousePos.X, pos.Y - lastMousePos.Y);
+
+                switch (ControlStyle)
+                {
+                    case KnobControlStyle.X:
+                        NudgeValue(pos.X - lastMousePos.X, 0);
+                        break;
+                    case KnobControlStyle.Y:
+                        NudgeValue(0, pos.Y - lastMousePos.Y);
+                        break;
+                    case KnobControlStyle.XY:
+                        NudgeValue(pos.X - lastMousePos.X, pos.Y - lastMousePos.Y);
+                        break;
+                    case KnobControlStyle.Radial:
+
+                        break;
+                    default:
+                        break;
+                }
+
+                Point center = new Point(RenderSize.Width / 2.0, RenderSize.Height / 2.0);
+                double angle = 180.0 * (Math.PI - Math.Atan2(center.X - pos.X, center.Y - pos.Y)) / Math.PI;
+                double zero = (360.0 - arcLength) / 2.0;
+                angle = angle.Clamp(zero, 360.0 - zero) - zero;
+
                 lastMousePos = pos;
             }
         }
@@ -188,11 +238,11 @@ namespace MyLights.Controls
 
             if (proc - lastWheel > TimeSpan.FromMilliseconds(250))
             {
-                UpdateValue(e.Delta * mouseWheelMultiplier / 3.0, 0);
+                NudgeValue(e.Delta * mouseWheelMultiplier / 3.0, 0);
             }
             else
             {
-                UpdateValue(e.Delta * mouseWheelMultiplier, 0);
+                NudgeValue(e.Delta * mouseWheelMultiplier, 0);
             }
 
             lastWheel = proc;
@@ -234,25 +284,6 @@ namespace MyLights.Controls
         }
         #endregion
 
-        public bool ShowOutline
-        {
-            get { return (bool)GetValue(ShowOutlineProperty); }
-            set { SetValue(ShowOutlineProperty, value); }
-        }
-
-        public static readonly DependencyProperty ShowOutlineProperty =
-            DependencyProperty.Register("ShowOutline", typeof(bool), typeof(Knob),
-                new FrameworkPropertyMetadata(true, FPMO.AffectsRender));
-
-        public bool ColorOutline
-        {
-            get { return (bool)GetValue(ColorOutlineProperty); }
-            set { SetValue(ColorOutlineProperty, value); }
-        }
-
-        public static readonly DependencyProperty ColorOutlineProperty =
-            DependencyProperty.Register("ColorOutline", typeof(bool), typeof(Knob),
-                new FrameworkPropertyMetadata(true, FPMO.AffectsRender, (s, e) => ((Knob)s).OnColorOutlineChanged(e)));
 
 
 
@@ -288,11 +319,31 @@ namespace MyLights.Controls
                 new PropertyMetadata(100.0, (s, e) => ((Knob)s).OnMaximumChanged(e),
                                            (s, e) => ((Knob)s).CoerceMaximum((double)e)));
 
+        public static readonly DependencyProperty ControlStyleProperty =
+            DependencyProperty.Register("ControlStyle", typeof(KnobControlStyle), typeof(Knob),
+                new PropertyMetadata(KnobControlStyle.X));
+
+        public static readonly DependencyProperty ShowOutlineProperty =
+            DependencyProperty.Register("ShowOutline", typeof(bool), typeof(Knob),
+                new FrameworkPropertyMetadata(true, FPMO.AffectsRender));
+
+        public static readonly DependencyProperty ColorOutlineProperty =
+            DependencyProperty.Register("ColorOutline", typeof(bool), typeof(Knob),
+                new FrameworkPropertyMetadata(true, FPMO.AffectsRender, (s, e) => ((Knob)s).OnColorOutlineChanged(e)));
+
         static Knob()
         {
             DefaultStyleKeyProperty.OverrideMetadata(typeof(Knob), new FrameworkPropertyMetadata(typeof(Knob)));
         }
 
         #endregion
+    }
+
+    public enum KnobControlStyle
+    {
+        X,
+        Y,
+        XY,
+        Radial
     }
 }

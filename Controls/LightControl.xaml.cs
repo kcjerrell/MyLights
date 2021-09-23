@@ -167,6 +167,23 @@ namespace MyLights.Controls
             if (viewModel != null)
                 viewModel.IsLinked = !viewModel.IsLinked;
         }
+
+        private void sceneRoot_MouseRightButtonUp(object sender, MouseButtonEventArgs e)
+        {
+
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            viewModel.Scene.Stops.Add(new SceneStop());
+        }
+
+        private void SceneStop_DeleteRequested(object sender, EventArgs e)
+        {
+            var ssv = (MyLights.Views.SceneStop)sender;
+            var ss = (SceneStop)ssv.DataContext;
+            viewModel.Scene.Stops.Remove(ss);
+        }
     }
 
     public enum LightControlDisplayMode

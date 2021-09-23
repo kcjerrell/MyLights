@@ -34,7 +34,7 @@ namespace MyLights.Bridges
         public IDeviceProperty<double> BrightnessProperty { get; } = new TestProperty<double>("Brightness", 0.9);
 
         public IDeviceProperty<double> ColorTempProperty { get; } = new TestProperty<double>("ColorTemp", 0.9);
-        public IDeviceProperty<Scene> SceneProperty { get; } = new TestProperty<Scene>("Scene", new Scene());
+        public IDeviceProperty<string> SceneProperty { get; } = new TestProperty<string>("Scene", "");
 
         class TestProperty<T> : IDeviceProperty<T>
         {

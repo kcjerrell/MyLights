@@ -104,6 +104,10 @@ namespace MyLights.Controls
         protected override Size MeasureOverride(Size availableSize)
         {
             double side = Math.Min(availableSize.Width, availableSize.Height);
+
+            if (double.IsInfinity(side))
+                side = 100.0;
+
             return new Size(side, side);
         }
 

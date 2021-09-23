@@ -1,0 +1,64 @@
+﻿<UserControl
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:MyLights.Views"
+             xmlns:mod="clr-namespace:MyLights.Models"
+             xmlns:ctrl="clr-namespace:MyLights.Controls"
+             xmlns:v="clr-namespace:MyLights.Views"
+             xmlns:Converters="clr-namespace:MyLights.Converters" xmlns:util="clr-namespace:MyLights.Util" x:Class="MyLights.Views.SceneStop"
+             mc:Ignorable="d" 
+             Height="24"
+             d:DataContext="{Binding DesignVMS.DesignSceneStop, Source={StaticResource Locator}}" MouseDoubleClick="UserControl_MouseDoubleClick">
+
+  <UserControl.Resources>
+    <util:SceneTransitionTemplateSelector x:Key="transitionSelector">
+      <util:SceneTransitionTemplateSelector.Static>
+        <DataTemplate>          
+        <Border>
+            <TextBlock>S</TextBlock>
+        </Border>
+        </DataTemplate>
+      </util:SceneTransitionTemplateSelector.Static>
+            <util:SceneTransitionTemplateSelector.Flash>
+        <DataTemplate>          
+        <Border>
+            <TextBlock>F</TextBlock>
+          </Border>
+        </DataTemplate>
+      </util:SceneTransitionTemplateSelector.Flash>
+            <util:SceneTransitionTemplateSelector.Breath>
+        <DataTemplate>          
+        <Border>
+            <TextBlock>B</TextBlock>
+          </Border>
+        </DataTemplate>
+      </util:SceneTransitionTemplateSelector.Breath>
+    </util:SceneTransitionTemplateSelector>
+  </UserControl.Resources>
+
+  <Grid>
+    <StackPanel Orientation="Horizontal">
+      <Button VerticalAlignment="Center" Click="Button_Click">x</Button>
+      
+      <ListBox SelectedValue="{Binding Transition}" ItemTemplateSelector="{StaticResource transitionSelector}">
+        <ListBox.ItemsPanel>
+          <ItemsPanelTemplate>
+            <StackPanel Orientation="Horizontal"/>
+          </ItemsPanelTemplate>
+        </ListBox.ItemsPanel>
+        <ListBox.ItemsSource>
+          <x:Array Type="mod:SceneTransition" 
+             xmlns:sys="clr-namespace:System;assembly=mscorlib">
+            <mod:SceneTransition>Static</mod:SceneTransition>
+            <mod:SceneTransition>Breath</mod:SceneTransition>
+            <mod:SceneTransition>Flash</mod:SceneTransition>
+          </x:Array>
+        </ListBox.ItemsSource>
+      </ListBox>
+      <ctrl:Knob Minimum="40" Maximum="100" Value="{Binding Speed, Mode=TwoWay}"/>
+      <local:ColorPickerButton Color="{Binding Color, Converter={StaticResource BrushCache}, Mode=TwoWay}" Width="20" Height="20"/>
+    </StackPanel>
+  </Grid>
+</UserControl>

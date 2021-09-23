@@ -22,14 +22,12 @@ namespace MyLights.ViewModels
             this.Light = light;
             light.PropertyChanged += Light_PropertyChanged;
 
-            this.SceneStops = new(light.Scene.Stops);
-            SceneStops.CollectionChanged += SceneStops_CollectionChanged;
             SetSceneCommand = new RelayCommand(() => SetScene());
 
             Name = KnownDevices.GetName(light.Id);
+            Scene = new Scene(light.Scene);
+            Scene.SceneChanged += Scene_SceneChanged;
         }
-
-
 
         public Light Light { get; init; }
         public string Name
@@ -109,7 +107,7 @@ namespace MyLights.ViewModels
             }
         }
 
-        public ObservableCollection<SceneStop> SceneStops { get; private set; } 
+        public Scene Scene { get; set; }
 
         public bool IsSelected { get; set; }
         public bool IsLinked { get; set; }
@@ -119,16 +117,16 @@ namespace MyLights.ViewModels
             var handler = PropertyChanged;
             handler?.Invoke(this, e);
 
-            if (e.PropertyName == "Color")
+            if (e.PropertyName == nameof(Light.Color))
             {
                 handler?.Invoke(this, new PropertyChangedEventArgs("H"));
                 handler?.Invoke(this, new PropertyChangedEventArgs("S"));
                 handler?.Invoke(this, new PropertyChangedEventArgs("V"));
             }
 
-            else if (e.PropertyName == "Scene")
+            else if (e.PropertyName == nameof(Light.Scene))
             {
-                SceneStops = new ObservableCollection<SceneStop>(Light.Scene.Stops);
+                Scene.Decode(Light.Scene);
             }
 
             else if (e.PropertyName == nameof(Light.Id))
@@ -137,14 +135,18 @@ namespace MyLights.ViewModels
             }
         }
 
-        private void SceneStops_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        private void Scene_SceneChanged(object sender, EventArgs e)
         {
+            Light.SetScene(Scene.Encoded);
+
+            var handler = PropertyChanged;
+            handler?.Invoke(this, new PropertyChangedEventArgs(nameof(Scene)));
         }
 
         private void SetScene()
         {
-            var scene = new Scene(SceneStops);
-            Light.SetScene(scene);
+            // var scene = new Scene(SceneStops);
+            // Light.SetScene(scene);
         }
 
         public RelayCommand SetSceneCommand { get; }

@@ -88,7 +88,7 @@ namespace MyLights.Bridges.Udp2
         public IDeviceProperty<LightMode> ModeProperty => this.mode;
         public IDeviceProperty<double> BrightnessProperty => this.brightness;
         public IDeviceProperty<double> ColorTempProperty => this.colorTemp;
-        public IDeviceProperty<Scene> SceneProperty => this.scene;
+        public IDeviceProperty<string> SceneProperty => this.scene;
 
         internal void Update(string key, string value)
         {            

@@ -92,7 +92,7 @@ namespace MyLights.Models
         protected IDeviceProperty<bool> power;
         protected IDeviceProperty<double> brightness;
         protected IDeviceProperty<double> colorTemp;
-        protected IDeviceProperty<Scene> scene;
+        protected IDeviceProperty<string> scene;
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -103,7 +103,7 @@ namespace MyLights.Models
         public LightMode Mode { get => mode.Value; }
         public double Brightness { get => brightness.Value; }
         public double ColorTemp { get => colorTemp.Value; }
-        public Scene Scene { get => scene.Value; }
+        public string Scene { get => scene.Value; }
 
         public void SetColor(HSV value, bool immediate = false)
         {
@@ -130,7 +130,7 @@ namespace MyLights.Models
             colorTemp.Set(value, immediate);
         }
 
-        public void SetScene(Scene value, bool immediate = false)
+        public void SetScene(string value, bool immediate = false)
         {
             scene.Set(value, immediate);
         }
