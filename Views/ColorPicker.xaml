@@ -7,7 +7,8 @@
              xmlns:viewmodels="clr-namespace:MyLights.ViewModels" 
              xmlns:ctrl="clr-namespace:MyLights.Controls"
              mc:Ignorable="d" 
-             d:DesignHeight="224" d:DesignWidth="260">
+             d:DesignHeight="224" d:DesignWidth="260"
+             x:Name="colorPicker">
     
     <Grid>
         <Border>
@@ -25,7 +26,7 @@
                 <Grid Grid.Row="0" Grid.RowSpan="2">
 
                     <ctrl:XYSelector x:Name="xySelector" 
-                                     ThumbFill="{Binding SelectedShade, Converter={StaticResource BrushCache}, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:ColorPicker}}}" 
+                                     ThumbFill="{Binding SelectedShade, Mode=TwoWay, Converter={StaticResource BrushCache}, ElementName=colorPicker}" 
                                      ThumbStroke="Black" ThumbStrokeSize="1" BorderThickness="2" BorderBrush="Black" Background="#00000000"
                                      ThumbSize="16" TextVisibility="Visible" ValueRange="0,0,1,1" Panel.ZIndex="50"/>
 
@@ -33,10 +34,10 @@
                 </Grid>
 
                 <Border x:Name="selectedColorBorder" Grid.Column="1" Grid.Row="0" Grid.RowSpan="2" Margin="0,8,8,8" BorderBrush="Black" 
-                        BorderThickness="1" Width="25" Visibility="Visible"/>
+                        BorderThickness="1" Width="25" Visibility="Visible" Background="{Binding SelectedColor, ElementName=colorPicker}"/>
 
                 <Border x:Name="valueBorder" Grid.Row="2" Grid.ColumnSpan="2" 
-                        Margin="8,0,8,8" BorderThickness="1" BorderBrush="Black" Background="{Binding SelectedShade, Converter={StaticResource BrushCache}, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:ColorPicker}}}">
+                        Margin="8,0,8,8" BorderThickness="1" BorderBrush="Black" Background="{Binding SelectedShade, Mode=TwoWay, Converter={StaticResource BrushCache}, ElementName=colorPicker}">
                     <Border Padding="4">
                         <Border.Background>
                             <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">

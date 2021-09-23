@@ -21,10 +21,12 @@ namespace MyLights.ViewModels
         {
             this.Light = light;
             light.PropertyChanged += Light_PropertyChanged;
-            
+
             SetSceneCommand = new RelayCommand(() => SetScene());
 
             Name = KnownDevices.GetName(light.Id);
+            Scene = new Scene(light.Scene);
+            Scene.SceneChanged += Scene_SceneChanged;
         }
 
         public Light Light { get; init; }
@@ -105,7 +107,7 @@ namespace MyLights.ViewModels
             }
         }
 
-        public Scene Scene { get; set; } 
+        public Scene Scene { get; set; }
 
         public bool IsSelected { get; set; }
         public bool IsLinked { get; set; }
@@ -124,7 +126,7 @@ namespace MyLights.ViewModels
 
             else if (e.PropertyName == nameof(Light.Scene))
             {
-
+                Scene.Decode(Light.Scene);
             }
 
             else if (e.PropertyName == nameof(Light.Id))
@@ -133,8 +135,12 @@ namespace MyLights.ViewModels
             }
         }
 
-        private void SceneStops_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        private void Scene_SceneChanged(object sender, EventArgs e)
         {
+            Light.SetScene(Scene.Encoded);
+
+            var handler = PropertyChanged;
+            handler?.Invoke(this, new PropertyChangedEventArgs(nameof(Scene)));
         }
 
         private void SetScene()

@@ -214,9 +214,6 @@ namespace MyLights.Controls
                 double angle = 180.0 * (Math.PI - Math.Atan2(center.X - pos.X, center.Y - pos.Y)) / Math.PI;
                 double zero = (360.0 - arcLength) / 2.0;
                 angle = angle.Clamp(zero, 360.0 - zero) - zero;
-                
-
-                System.Diagnostics.Trace.WriteLine(angle);
 
                 lastMousePos = pos;
             }

@@ -17,7 +17,6 @@ namespace MyLights.Bridges
         IDeviceProperty<LightMode> ModeProperty { get; }
         IDeviceProperty<double> BrightnessProperty { get; }
         IDeviceProperty<double> ColorTempProperty { get; }
-
         IDeviceProperty<string> SceneProperty { get; }
     }
 }

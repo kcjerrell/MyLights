@@ -187,8 +187,7 @@ namespace MyLights.Bridges.Udp2
 
         public class Scene : LightProperty<string>
         {     
-            static PropertyChangedEventArgs updateEventArgs = new("ColorTemp");
-
+            static PropertyChangedEventArgs updateEventArgs = new("Scene");
             protected override PropertyChangedEventArgs UpdateEventArgs => updateEventArgs;
             protected override LightProperties AssociatedProperty => LightProperties.Scene;
 
@@ -197,7 +196,7 @@ namespace MyLights.Bridges.Udp2
                 if (clearPendingStatus)
                     HasPendingChange = false;
 
-                return Value;
+                return $"scene/{Value}";
             }
         }
     }

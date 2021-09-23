@@ -24,5 +24,19 @@ namespace MyLights.Views
         {
             InitializeComponent();
         }
+
+        private void UserControl_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            var handler = DeleteRequested;
+            handler?.Invoke(this, EventArgs.Empty);
+        }
+
+        public event EventHandler DeleteRequested;
+
     }
 }

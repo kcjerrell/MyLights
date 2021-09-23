@@ -15,6 +15,16 @@ namespace MyLights.Models
             Stops.CollectionChanged += Stops_CollectionChanged;
         }
 
+        public Scene(string encoded)
+            : this()
+        {
+            Decode(encoded);
+        }
+
+        bool supressEvent = false;
+
+        public string Encoded { get; private set; }
+
         private void Stops_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             if (e.NewItems != null)
@@ -33,52 +43,66 @@ namespace MyLights.Models
                 }
             }
 
-            var handler = SceneChanged;
-            handler?.Invoke(this, EventArgs.Empty);
+            if (!supressEvent)
+                RaiseSceneChanged();
         }
 
         private void Item_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            var handler = SceneChanged;
-            handler?.Invoke(this, EventArgs.Empty);
-        }
-
-        public Scene(IEnumerable<SceneStop> sceneStops)
-        {
-            foreach (var ss in sceneStops)
-            {
-                Stops.Add(ss);
-            }
+            if (!supressEvent)
+                RaiseSceneChanged();
         }
 
         public ObservableCollection<SceneStop> Stops { get; } = new();
 
-        public string Encode()
+        private string Encode()
         {
             var stops = from stop in Stops
                         select stop.Encode();
             return $"07{string.Join("", stops)}";
         }
 
-        public static Scene Decode(string encoded)
+        public void Decode(string encoded)
         {
-            Scene scene = new Scene();
+            if (encoded == Encoded)
+                return;
 
-            for (int i = 2; i < encoded.Length; i += 26)
+            supressEvent = true;
+            Stops.Clear();
+
+            if (encoded != null)
             {
-                string sub = encoded.Substring(i, 26);
-                scene.Stops.Add(SceneStop.Decode(sub));
+                for (int i = 2; i < encoded.Length; i += 26)
+                {
+                    string sub = encoded.Substring(i, 26);
+                    Stops.Add(SceneStop.Decode(sub));
+                }
             }
 
-            return scene;
+            supressEvent = false;
+            RaiseSceneChanged();
         }
 
         public event EventHandler SceneChanged;
+        private void RaiseSceneChanged()
+        {
+            Encoded = Encode();
+
+            var handler = SceneChanged;
+            handler?.Invoke(this, EventArgs.Empty);
+        }
     }
 
 
     public class SceneStop : INotifyPropertyChanged
     {
+        public SceneStop()
+        {
+            this.Color = new HSV(1, 1, 1);
+            this.Speed = 40;
+            this.Transition = SceneTransition.Breath;
+        }
+
         public SceneStop(HSV color, int speed, SceneTransition transition)
         {
             this.Color = color;
@@ -87,12 +111,12 @@ namespace MyLights.Models
         }
 
         public HSV Color { get; set; }
-        public int Speed { get; set; }
+        public double Speed { get; set; }
         public SceneTransition Transition { get; set; }
 
         public string Encode()
         {
-            string speed = Speed.ToString("X2");
+            string speed = ((int)Speed).ToString("X2");
             string transition = ((int)(Transition)).ToString();
             string color = Color.ToTuya();
 

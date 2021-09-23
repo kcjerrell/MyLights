@@ -26,12 +26,12 @@ namespace MyLights.Views
             InitializeComponent();
         }
 
-        static ColorPickerPopup popup;
-        static Task<Color> getColorTask;
-        static Color selectedColor;
-        static EventWaitHandle handle;
+        Task<Color> getColorTask;
+        Color finalColor;
+        Color initialColor;
+        EventWaitHandle handle;
 
-        public static async Task<Color> GetColor(Color color = default, FrameworkElement placementTarget = null)
+        public async Task<Color> GetColor(Color color = default, FrameworkElement placementTarget = null)
         {
             if (getColorTask != null && !getColorTask.IsCompleted)
             {
@@ -39,20 +39,21 @@ namespace MyLights.Views
                 //also make sure you are initialized on the right thread derp
             }
 
-            if (popup == null)
-                popup = new ColorPickerPopup();
+            finalColor = color;
+            initialColor = color;
 
             if (placementTarget != null)
-                popup.PlacementTarget = placementTarget;
-            popup.IsOpen = true;
-            
+                this.PlacementTarget = placementTarget;
+            this.IsOpen = true;
+            CaptureMouse();
+
             handle = new EventWaitHandle(false, EventResetMode.ManualReset);
 
-           getColorTask = new Task<Color>(() =>
-            {
-                handle.WaitOne();
-                return selectedColor;
-            });
+            getColorTask = new Task<Color>(() =>
+             {
+                 handle.WaitOne();
+                 return finalColor;
+             });
 
             getColorTask.Start();
 
@@ -61,9 +62,20 @@ namespace MyLights.Views
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            selectedColor = colorPicker.SelectedColor;
-            popup.IsOpen = false;
+            finalColor = colorPicker.SelectedColor;
+            IsOpen = false;
             handle.Set();
+        }
+
+        protected override void OnMouseDown(MouseButtonEventArgs e)
+        {
+            if (IsMouseCaptured && !IsMouseOver)
+            {
+                finalColor = initialColor;
+                ReleaseMouseCapture();
+                IsOpen = false;
+                handle.Set();
+            }
         }
     }
 }

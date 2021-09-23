@@ -320,14 +320,21 @@
         <!-- Scene Controls -->
 
         <Grid x:Name="sceneRoot" Panel.ZIndex="100" Background="Gray"
-              Visibility="{Binding Mode, Converter={StaticResource StringEqualToVisibilityConverter}, ConverterParameter=scene}">
+              Visibility="{Binding Mode, Converter={StaticResource StringEqualToVisibilityConverter}, ConverterParameter=scene}"
+              MouseRightButtonUp="sceneRoot_MouseRightButtonUp">
+          <ScrollViewer>
+            <StackPanel>
+              
           <ItemsControl ItemsSource="{Binding Scene.Stops, Mode=OneWay}">
             <ItemsControl.ItemTemplate>
               <DataTemplate DataType="{x:Type mod:SceneStop}">
-                <views:SceneStop/>
+                <views:SceneStop DeleteRequested="SceneStop_DeleteRequested"/>
               </DataTemplate>
             </ItemsControl.ItemTemplate>
           </ItemsControl>
+              <Button HorizontalAlignment="Left" Click="Button_Click">+</Button>
+            </StackPanel>
+          </ScrollViewer>
         </Grid>      
      
 
