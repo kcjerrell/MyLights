@@ -19,7 +19,13 @@ namespace MyLights
     {
         public App()
         {
-            Startup += App_Startup;            
+            Startup += App_Startup;
+
+#if SCRATCH
+            StartupUri = new Uri("Windows\\Scratch2.xaml", UriKind.Relative);
+            #else
+            StartupUri = new Uri("Windows\\AnotherLightPanelWindow.xaml", UriKind.Relative);
+#endif
         }
 
         private async void App_Startup(object sender, StartupEventArgs e)

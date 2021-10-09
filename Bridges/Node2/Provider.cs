@@ -7,14 +7,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MyLights.Bridges.Udp2
+namespace MyLights.Bridges.Node2
 {
     class Provider : ILightPropertiesProvider
     {
-        public Provider(int index, Client udpClient)
+        public Provider(int index, NodeService nodeService)
         {
             Index = index;
-            client = udpClient;
+            this.nodeService = nodeService;
 
             power = new Udp2LightProperties.Power();
             power.ChangeRequested += OnChangeRequested;
@@ -59,7 +59,7 @@ namespace MyLights.Bridges.Udp2
 
                 foreach (var prop in props)
                 {
-                    await client.SendMessage("set", Index.ToString(), prop);
+                    await nodeService.SendMessage("set", Index.ToString(), prop);
                 }
 
                 await Task.Delay(25);
@@ -70,7 +70,7 @@ namespace MyLights.Bridges.Udp2
             outgoing = null;
         }
 
-        private Client client;
+        private NodeService nodeService;
         private Task outgoing;
 
         private Udp2LightProperties.Power power;

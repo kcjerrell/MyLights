@@ -8,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MyLights.Bridges.Udp2
+namespace MyLights.Bridges.Node2
 {
     public class Udp2LightProperties
     {

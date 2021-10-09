@@ -7,9 +7,9 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace MyLights.Bridges.Udp2
+namespace MyLights.Bridges.Node2
 {
-    public class Client : IDisposable, IClient
+    public class Client : IDisposable
     {
         public Client(string address, int port, int listeningPort = DefaultPort)
         {
@@ -123,5 +123,17 @@ namespace MyLights.Bridges.Udp2
                 udp.Dispose();
             }
         }
+    }
+
+    public delegate void MessageReceivedEventHandler(object sender, MessageReceivedEventArgs e);
+
+    public class MessageReceivedEventArgs : EventArgs
+    {
+        public MessageReceivedEventArgs(string message)
+        {
+            this.Message = message;
+        }
+
+        public string Message { get; }
     }
 }
